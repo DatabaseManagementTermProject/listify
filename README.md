@@ -4,7 +4,7 @@ An aggregator for different media types.
 
 ## Table of Contents
 ---
-*[General Info](#General-Information)
+* [General Info](#General-Information)
 
 
 # General Information
