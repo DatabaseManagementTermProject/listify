@@ -10,7 +10,7 @@ An aggregator for different media types.
 
 # General Information
 
-This is a database management term project which is meant to be a database-driven web-based application.
+This is a database management course term project which is meant to be a database-driven web-based application.
 
 # Technologies
 
