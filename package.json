@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/DatabaseManagementTermProject/imbored-dotcom/issues"
   },
-  "homepage": "https://github.com/DatabaseManagementTermProject/imbored-dotcom#readme"
+  "homepage": "https://github.com/DatabaseManagementTermProject/imbored-dotcom#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
