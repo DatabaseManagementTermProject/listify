@@ -8,6 +8,7 @@
   },
   "author": "Daniel Proben, Steven Lu, Lauren Kouri",
   "license": "UNLICENSED",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DatabaseManagementTermProject/imbored-dotcom.git"
@@ -23,6 +24,9 @@
   },
   "homepage": "https://github.com/DatabaseManagementTermProject/imbored-dotcom#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.6.1"
   }
 }
