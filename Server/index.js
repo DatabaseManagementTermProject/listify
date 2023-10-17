@@ -69,8 +69,8 @@ app.post('/register', (req, res) => {
   const { userName, locationCountry, locationState, locationCity } = req.body;
 
 // for user input
-  const query = 'INSERT INTO users (userName, locationCountry, locationState, locationCity) VALUES (?, ?, ?, ?)';
-  connection.query(query, [userName, locationCountry, locationState, locationCity], (err, result) => {
+  const query = 'INSERT INTO users (userName, password, locationCountry, locationState, locationCity) VALUES (?, ?, ?, ?)';
+  connection.query(query, [userName, password, locationCountry, locationState, locationCity], (err, result) => {
     if (err) {
       console.error('Error registering account: ', err);
       // http 500 server error response
