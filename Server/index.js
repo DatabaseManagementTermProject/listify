@@ -10,7 +10,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import mysql from 'mysql2/promise'
 
-dotenv.config( { path : '.env' } );
+dotenv.config( { path : '.gitignore/.env' } );
 const connection = await mysql.createConnection(process.env.DATABASE_URL)
 
 connection.connect((err) => {
@@ -21,7 +21,17 @@ connection.connect((err) => {
   console.log('Connected to PlanetScale!');
 });
 
+// ------------------- Set up express server
+
 const app = express()
+
+// Needed for express POST requests to parse a JSON req.body
+app.use(express.json());
+
+// Not sure what this is needed for yet lol
+app.use(express.urlencoded({ extended: false}));
+
+// ------------------- Endpoints
 
 // get all books
 app.get('/books', async (req, res) => {
@@ -41,9 +51,9 @@ app.get('/books/:id', async (req, res) => {
     try {
 		const {id} = req.params;
 		const query = 'SELECT * FROM books WHERE bookId=?;';
-
 		const [rows] = await connection.query(query, [id]);
 
+		// probably change this error message into something more UI friendly later
 		if (!rows[0]){
 			return res.json({msg: "Couldn't find that book."})
 		}
@@ -52,23 +62,6 @@ app.get('/books/:id', async (req, res) => {
       console.error(err);
     }
 })
-
-// user registration
-// users table auto_increments userID value for each user so no need to modify that value
-app.post('/register', (req, res) => {
-  const { userName, locationCountry, locationState, locationCity } = req.body;
-
-// for user input when registering
-  const query = 'INSERT INTO users (userName, locationCountry, locationState, locationCity) VALUES (?, ?, ?, ?)';
-  connection.query(query, [userName, locationCountry, locationState, locationCity], (err, result) => {
-    if (err) {
-      console.error('Error registering account: ', err);
-      res.status(500).json({ error: 'Registration failed' });
-    } else {
-      res.status(201).json({ message: 'Account made' });
-    }
-  });
-});
 
 // test to see if the connection is working
 app.listen(3001, () => {
