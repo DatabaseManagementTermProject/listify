@@ -1,36 +1,34 @@
-from urllib.request import urlopen
-
 title = []
 genre = []
 yearMade = []
 coverImg = []
+with open("parsedVideoGameList.txt", encoding="utf8", errors='ignore') as f:
+# f = open("parsedVideoGameList.txt", "r")
+    Lines = f.readlines()
+    for line in Lines:
+        line = line.strip()
 
-f = open("parsedVideoGameList.txt", "r")
-Lines = f.readlines()
-for line in Lines:
-    line = line.strip()
+        # parse the title and yearMade
+        if len(line) > 20 and line[0:19] == "<div class=\"title\">":
+            line = line[21:]
+            if line[0] == ".":
+                line = line[2:]
+            elif line[1] == ".":
+                line = line[3:]
+            else:
+                line = line[1:]
+            line = line.split("(")
+            title.append(line[0][0:-1])
+            yearMade.append(line[1][0:4])
 
-    # parse the title and yearMade
-    if len(line) > 20 and line[0:19] == "<div class=\"title\">":
-        line = line[21:]
-        if line[0] == ".":
-            line = line[2:]
-        elif line[1] == ".":
-            line = line[3:]
-        else:
-            line = line[1:]
-        line = line.split("(")
-        title.append(line[0])
-        yearMade.append(line[1][0:3])
-
-    # parse the genre, the link is link to wikipedia
-    if len(line) > 20 and line[0:9] == "Platforms":
-        genre.append(line.split("|")[1][8:-1])
-        
-    # parse the image
-    if len(line) > 20 and line[0:18] == "<div class=\"image\"":
-        coverImg.append(line.split("url(")[1][0:-10])
-f.close()
+        # parse the genre, the link is link to wikipedia
+        if len(line) > 20 and line[0:9] == "Platforms":
+            genre.append(line.split("|")[1][8:-1])
+            
+        # parse the image
+        if len(line) > 20 and line[0:18] == "<div class=\"image\"":
+            coverImg.append(line.split("url(")[1][0:-10])
+    f.close()
 
 print("title length: " , len(title))
 print("genre length: ", len(genre))
@@ -73,7 +71,18 @@ for i in range(496):
     #     print(temp)
     Output.append(temp)
 
+# create the SQL query
+maxTitleLength = 0
+maxGenreLength = 0
+maxCoverImgLength = 0
 f = open("SQLQuery.txt", "a")
 for index, o in enumerate(Output):
-    f.write( "(" + str(index) + ", \"" + title[index] + "\", " + genre[index] + "\", " + str(yearMade[index]) + ", \"" + coverImg[i] + "\"),\n")
+    f.write( "(" + str(index) + ", \"" + title[index] + "\", \"" + genre[index] + "\", " + str(yearMade[index]) + ", \"" + coverImg[index] + "\"),\n")
+    maxTitleLength = max(maxTitleLength, len(title[index]))
+    maxGenreLength = max(maxGenreLength, len(genre[index]))
+    maxCoverImgLength = max(maxCoverImgLength, len(coverImg[index]))
 f.close()
+
+print("Max Title Length: ", maxTitleLength)
+print("Max Genre Length: ", maxGenreLength)
+print("Max CoverImg Length: ", maxCoverImgLength)
