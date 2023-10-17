@@ -21,7 +21,7 @@ connection.connect((err) => {
     console.log('Connected to PlanetScale!');
   });
 
-const query = "SELECT * FROM books WHERE BookId = 10001;";
+const query = "SELECT * FROM books WHERE BookId = 10002;";
 const data = await connection.query(query);
 console.log(data);
 
