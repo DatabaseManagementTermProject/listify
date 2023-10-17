@@ -9,7 +9,7 @@
 import dotenv from 'dotenv'
 import mysql from 'mysql2/promise'
 
-dotenv.config( { path : 'Server/Config/.gitignore/.env' } );
+dotenv.config( { path : '.env' } );
 console.log('DATABASE_URL:', process.env.DATABASE_URL);
 const connection = await mysql.createConnection(process.env.DATABASE_URL)
 
