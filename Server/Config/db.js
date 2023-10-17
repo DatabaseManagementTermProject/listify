@@ -7,11 +7,11 @@
 
 //currently just set up for testing
 import dotenv from 'dotenv'
-import mysql from 'mysql2'
+import mysql from 'mysql2/promise'
 
-dotenv.config( { path : '.gitignore/.env' } );
+dotenv.config( { path : 'Server/Config/.gitignore/.env' } );
 console.log('DATABASE_URL:', process.env.DATABASE_URL);
-const connection = mysql.createConnection(process.env.DATABASE_URL)
+const connection = await mysql.createConnection(process.env.DATABASE_URL)
 
 connection.connect((err) => {
     if (err) {
@@ -20,5 +20,9 @@ connection.connect((err) => {
     }
     console.log('Connected to PlanetScale!');
   });
+
+const query = "SELECT * FROM books WHERE BookId = 10001;";
+const data = await connection.query(query);
+console.log(data);
 
 connection.end()

@@ -4,7 +4,7 @@
   "description": "A content aggregator for different media types (movies, TV shows, videogames, books, etc).",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon Server/index.js"
   },
   "author": "Daniel Proben, Steven Lu, Lauren Kouri",
   "license": "UNLICENSED",
@@ -28,5 +28,8 @@
     "express": "^4.18.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
