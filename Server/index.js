@@ -10,10 +10,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import mysql from 'mysql2/promise'
 
-// ------------------- Set up connection to database
-
-// loads what is in .env as an environment variable.
-dotenv.config( { path : '.env' } );
+dotenv.config( { path : '.gitignore/.env' } );
 const connection = await mysql.createConnection(process.env.DATABASE_URL)
 
 connection.connect((err) => {
@@ -66,14 +63,24 @@ app.get('/books/:id', async (req, res) => {
     }
 })
 
-app.post('/books/', async (req, res) => {
-	// TODO: input validation
-	
-	const post = req.body;
+// user registration (work in progress)
+// added AUTO_INCREMENT constraint to userID so no need to modify that value
+app.post('/register', (req, res) => {
+  const { userName, locationCountry, locationState, locationCity } = req.body;
 
-	// TODO: parse req.body (will likely be JSON) to be passed as a query to database
-	// TODO: return some type of success or failure response
-})
+// for user input
+  const query = 'INSERT INTO users (userName, password, locationCountry, locationState, locationCity) VALUES (?, ?, ?, ?)';
+  connection.query(query, [userName, password, locationCountry, locationState, locationCity], (err, result) => {
+    if (err) {
+      console.error('Error registering account: ', err);
+      // http 500 server error response
+      res.status(500).json({ error: 'Registration failed' });
+    } else {
+      // http response 201 created (the request succeed, and new resource created)
+      res.status(201).json({ message: 'Account made' });
+    }
+  });
+});
 
 // test to see if the connection is working
 app.listen(3001, () => {
