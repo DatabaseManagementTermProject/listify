@@ -10,7 +10,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import mysql from 'mysql2/promise'
 
-dotenv.config( { path : '.gitignore/.env' } );
+dotenv.config( { path : '.env' } );
 const connection = await mysql.createConnection(process.env.DATABASE_URL)
 
 connection.connect((err) => {
@@ -83,6 +83,6 @@ app.post('/register', (req, res) => {
 });
 
 // test to see if the connection is working
-app.listen(3001, () => {
+app.listen(3002, () => {
   console.log('App is running')
 })
