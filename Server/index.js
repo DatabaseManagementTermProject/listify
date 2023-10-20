@@ -77,12 +77,42 @@ app.get('/movies', async (req, res) => {
   }
 })
 
-// get book by id
+// get movie by id
 app.get('/movies/:id', async (req, res) => {
 
   try {
   const {id} = req.params;
   const query = 'SELECT * FROM movies WHERE movieID=?;';
+  const [rows] = await connection.query(query, [id]);
+
+  // probably change this error message into something more UI friendly later
+  if (!rows[0]){
+    return res.json({msg: "Couldn't find that movie."})
+  }
+  res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+  }
+})
+
+// get all video games
+app.get('/videogames', async (req, res) => {
+
+  try {
+  const query = 'SELECT * FROM videoGames;';
+  const [rows] = await connection.query(query);
+  res.send(rows);
+  } catch (err) {
+    console.error(err);
+  }
+})
+
+// get videogame by id
+app.get('/videogames/:id', async (req, res) => {
+
+  try {
+  const {id} = req.params;
+  const query = 'SELECT * FROM videoGames WHERE videoGameID=?;';
   const [rows] = await connection.query(query, [id]);
 
   // probably change this error message into something more UI friendly later

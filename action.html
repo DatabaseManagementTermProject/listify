@@ -11,7 +11,7 @@
             <select name="library" id="library">
                 <option value="books">Books</option>
                 <option value="movies">Movies</option>
-                <option value="videoGames">Video Games</option>
+                <option value="videogames">Video Games</option>
             </select>
             <select name="action" id="action">
                 <option value="getArray">getArray</option>
@@ -34,7 +34,7 @@
                 var id = document.getElementById("tableID").value;
                 var library = document.getElementById("library").value;
 
-                // build decide and build the endpoint
+                // decide and build the endpoint
                 if (id){
                     url = `http://localhost:3002/${library}/${id}`;
                 } else {
