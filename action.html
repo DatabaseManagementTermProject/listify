@@ -18,7 +18,7 @@
                 <option value="add">Add</option>
                 <option value="delete">Delete</option>
             </select>
-            TableID: <input type="tableID" name="tableID" id="tableID">
+            TableID: <input type="text" name="tableID" id="tableID">
             <br><br>
             <button type="submit">Submit</button>
         </form>
@@ -36,8 +36,12 @@
                 fetch("http://localhost:3002/books")
                     .then(res => res.json())
                     .then(data => {
-                        console.log("data123", data); 
-                        let display = data[0]["title"];
+                        console.log(data);
+
+                        // this is a super crappy way of doing this... we need to standardize our id values and column names across each table.
+                        const id = String(document.getElementById("tableID").value).slice(-2);
+                        let display = data[id]["title"];
+                        console.log(display);
                         document.getElementById("textDisplay").innerHTML = display;
                     })
                     .catch(error => console.log(error));
