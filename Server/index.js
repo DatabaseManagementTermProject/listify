@@ -65,6 +65,36 @@ app.get('/books/:id', async (req, res) => {
     }
 })
 
+// get all movies
+app.get('/movies', async (req, res) => {
+
+  try {
+  const query = 'SELECT * FROM movies;';
+  const [rows] = await connection.query(query);
+  res.send(rows);
+  } catch (err) {
+    console.error(err);
+  }
+})
+
+// get book by id
+app.get('/movies/:id', async (req, res) => {
+
+  try {
+  const {id} = req.params;
+  const query = 'SELECT * FROM movies WHERE movieID=?;';
+  const [rows] = await connection.query(query, [id]);
+
+  // probably change this error message into something more UI friendly later
+  if (!rows[0]){
+    return res.json({msg: "Couldn't find that movie."})
+  }
+  res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+  }
+})
+
 // user registration (work in progress)
 // added AUTO_INCREMENT constraint to userID so no need to modify that value
 app.post('/register', (req, res) => {

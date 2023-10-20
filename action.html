@@ -7,10 +7,10 @@
         
     </head>
     <body>
-        <form calss="form">
+        <form class="form">
             <select name="library" id="library">
                 <option value="books">Books</option>
-                <option value="movies">movies</option>
+                <option value="movies">Movies</option>
                 <option value="videoGames">Video Games</option>
             </select>
             <select name="action" id="action">
@@ -30,19 +30,31 @@
                 event.preventDefault();
                 const formData = new FormData(formEL);
 
-                // let library = formData.get("library");
-                // let action = formData.get("action");
-                // let tableID = formData.get("tableID");
-                fetch("http://localhost:3002/books")
+                var url;
+                var id = document.getElementById("tableID").value;
+                var library = document.getElementById("library").value;
+
+                // build decide and build the endpoint
+                if (id){
+                    url = `http://localhost:3002/${library}/${id}`;
+                } else {
+                    url = `http://localhost:3002/${library}`;
+                }
+
+                fetch(url)
                     .then(res => res.json())
                     .then(data => {
                         console.log(data);
 
-                        // this is a super crappy way of doing this... we need to standardize our id values and column names across each table.
-                        const id = String(document.getElementById("tableID").value).slice(-2);
-                        let display = data[id]["title"];
-                        console.log(display);
-                        document.getElementById("textDisplay").innerHTML = display;
+                        const id = Number(document.getElementById("tableID").value);
+
+                        // if there is an id, then display the the title
+                        if (id){
+                            document.getElementById("textDisplay").innerHTML = data["title"];
+                        } else {
+                            // somehow show all of the items in the array. Generate a table.
+                        }
+
                     })
                     .catch(error => console.log(error));
                 
