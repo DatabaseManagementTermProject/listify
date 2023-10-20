@@ -35,13 +35,16 @@
                 // let tableID = formData.get("tableID");
                 fetch("http://localhost:3002/books")
                     .then(res => res.json())
-                    .then(data => console.log("data123", data))
-                    .then(error => console.log("error123", error));
+                    .then(data => {
+                        console.log("data123", data); 
+                        let display = data[0]["title"];
+                        document.getElementById("textDisplay").innerHTML = display;
+                    })
+                    .catch(error => console.log(error));
                 
 
                 // let display = "library: " + library + "<br>action: " + action + "<br>tableID: " + tableID;
-                let display = data[0]["bookID"];
-                document.getElementById("textDisplay").innerHTML = display;
+
             })
         </script>
     </body>
