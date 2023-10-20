@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Simple Test</title>
+    </head>
+    <body>
+        <form action="/submit" method = "post">
+            <select name="library" id="library">
+                <option value="books">Books</option>
+                <option value="movies">movies</option>
+                <option value="videoGames">Video Games</option>
+            </select>
+            <select name="action" id="action">
+                <option value="getArray">getArray</option>
+                <option value="add">Add</option>
+                <option value="delete">Delete</option>
+            </select>
+            TableID: <input type="table" name="table" id="table">
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </body>
+</html>
