@@ -6,7 +6,7 @@
         <title>Simple Test</title>
     </head>
     <body>
-        <form action="/submit" method = "post">
+        <form calss="form">
             <select name="library" id="library">
                 <option value="books">Books</option>
                 <option value="movies">movies</option>
@@ -17,9 +17,28 @@
                 <option value="add">Add</option>
                 <option value="delete">Delete</option>
             </select>
-            TableID: <input type="table" name="table" id="table">
+            TableID: <input type="tableID" name="tableID" id="tableID">
             <br><br>
             <button type="submit">Submit</button>
         </form>
+        
+        <script>
+            const formEL = document.querySelector("form");
+            formEL.addEventListener("submit", event => {
+                event.preventDefault();
+                const formData = new FormData(formEL);
+                console.log(formData.get("library"));
+                console.log(formData.get("action"));
+                console.log(formData.get("tableID"));
+                // fetch("https://127.0.0.1/3002", {
+                //     method: "POST",
+                //     body: {
+                        
+                //     }
+                // }).then(res => res.json())
+                //   .then(data => console.log(data))
+                //   .catch(error => console.log(error))
+            })
+        </script>
     </body>
 </html>
