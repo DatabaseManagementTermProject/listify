@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Simple Test</title>
+        
     </head>
     <body>
         <form calss="form">
@@ -21,23 +22,26 @@
             <br><br>
             <button type="submit">Submit</button>
         </form>
+        <p id="textDisplay">Display here</p>
         
         <script>
             const formEL = document.querySelector("form");
             formEL.addEventListener("submit", event => {
                 event.preventDefault();
                 const formData = new FormData(formEL);
-                console.log(formData.get("library"));
-                console.log(formData.get("action"));
-                console.log(formData.get("tableID"));
-                // fetch("https://127.0.0.1/3002", {
-                //     method: "POST",
-                //     body: {
-                        
-                //     }
-                // }).then(res => res.json())
-                //   .then(data => console.log(data))
-                //   .catch(error => console.log(error))
+
+                // let library = formData.get("library");
+                // let action = formData.get("action");
+                // let tableID = formData.get("tableID");
+                fetch("http://localhost:3002/books")
+                    .then(res => res.json())
+                    .then(data => console.log("data123", data))
+                    .then(error => console.log("error123", error));
+                
+
+                // let display = "library: " + library + "<br>action: " + action + "<br>tableID: " + tableID;
+                let display = data[0]["bookID"];
+                document.getElementById("textDisplay").innerHTML = display;
             })
         </script>
     </body>

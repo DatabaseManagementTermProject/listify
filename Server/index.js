@@ -9,6 +9,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import mysql from 'mysql2/promise'
+import cors from 'cors'
 
 dotenv.config( { path : '.env' } );
 const connection = await mysql.createConnection(process.env.DATABASE_URL)
@@ -24,6 +25,7 @@ connection.connect((err) => {
 // ------------------- Set up express server
 
 const app = express()
+app.use(cors())
 
 // Needed for express POST requests to parse a JSON req.body
 app.use(express.json());
