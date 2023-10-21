@@ -30,6 +30,7 @@ const handleRegistration = async (e) => {
         // convert data in formData to json string
         body: JSON.stringify(formData),
         });
+
         // tests if submission was successful
         if (response.ok) {
         console.log('Registration successful');

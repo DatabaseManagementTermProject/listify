@@ -31,9 +31,15 @@
 .nav a {
   color: white;
   text-decoration: none;
-  font-family: verdana;
+  font-family: 'league spartan', sans-serif;
+  font-weight: bold;
   margin-bottom: 40px;
   padding: 0 80px;
+  transition: color 1s;
+}
+
+a:hover {
+  color: grey;
 }
 
 .registration-button {
