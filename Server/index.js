@@ -27,6 +27,8 @@ connection.connect((err) => {
 const app = express()
 app.use(cors())
 
+app.options('*', cors());
+
 // Needed for express POST requests to parse a JSON req.body
 app.use(express.json());
 
@@ -41,6 +43,7 @@ app.get('/books', async (req, res) => {
     try {
 		const query = 'SELECT * FROM books;';
 		const [rows] = await connection.query(query);
+    console.log(rows);
 		res.send(rows);
     } catch (err) {
       console.error(err);
