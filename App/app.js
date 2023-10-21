@@ -1,15 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './style.css'
+import './App.css';
 
 function App() {
     return (
-        <div>
-            <div className = "logo">
-                <img src="i’m bored.png"></img>
-            </div>
+        <div className = "App-header">
+            <div className = "App-logo">
+                <img src="https://i.ibb.co/dtbR9kL/i-m-bored-1.png"
+                     alt= "logo"
+                     style={{ width: '200px', height: 'auto' }}>
+                </img>
+        </div>
+        <nav class="nav">
+            <a href="#movies">Movies</a>
+            <a href="#videogames">Video Games</a>
+            <a href="#books">Books</a>
+        </nav>
         </div>
     )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+export default App;
