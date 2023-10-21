@@ -8,7 +8,6 @@ function RegistrationForm() {
         locationState: '',
         locationCity: '',
     });
-}
 
 const handleSubmit = (e) => {
     // extracts name and value from user input
@@ -82,5 +81,6 @@ return(
     <button type="submit">Register Account</button>
     </form>
 );
+}
 
-export default RegistrationForm()
+export default RegistrationForm;
