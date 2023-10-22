@@ -1,5 +1,6 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
+import { UserRegistrationButton } from './Components/user_registration';
 
 function App() {
 
@@ -30,6 +31,9 @@ function App() {
                         alt= "logo"
                         style={{ width: '200px', height: 'auto' }}>
                     </img>
+                </div>
+                <div className = "registration-button">
+                    <UserRegistrationButton />
                 </div>
                 <nav className="nav">
                     <a href="#movies">Movies</a>

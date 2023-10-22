@@ -1,3 +1,5 @@
+import React from "react";
+import { useState } from "react";
 
 function RegistrationForm() {
     const [formData, setFormData] = useState({
@@ -50,38 +52,66 @@ return(
         placeholder="Username"
         value={formData.userName}
         onChange={handleSubmit}
-    />
+    /><br></br>
     <input
         type="password"
         name="password"
         placeholder="Password"
         value={formData.password}
         onChange={handleSubmit}
-    />
+    /><br></br>
     <input
         type="text"
         name="locationcity"
         placeholder="City"
         value={formData.locationCity}
         onChange={handleSubmit}
-    />
+    /><br></br>
     <input
         type="text"
         name="locationstate"
         placeholder="State"
         value={formData.locationState}
         onChange={handleSubmit}
-    />
+    /><br></br>
     <input
         type="text"
         name="locationcountry"
         placeholder="Country"
         value={formData.locationCountry}
         onChange={handleSubmit}
-    />
+    /><br></br>
     <button type="submit">Register Account</button>
     </form>
 );
 }
 
 export default RegistrationForm;
+
+export function UserRegistrationButton() {
+    const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+  
+    const offRegistrationForm = () => {
+      setShowRegistrationForm(!showRegistrationForm);
+    };
+  
+    return (
+      <div className="user-registration-container">
+        <img
+          src="https://i.ibb.co/yYnRgdP/personalization.png"
+          style={{ width: '40px', height: 'auto' }}
+          alt="User Icon"
+          className="user-icon"
+          onMouseEnter={() => setShowRegistrationForm(true)}
+          onMouseLeave={() => setShowRegistrationForm(false)}
+        />
+        {showRegistrationForm && (
+          <div className="hoverable-area">
+            <button onClick={offRegistrationForm}>Register</button>
+            <button>Login</button>
+          </div>
+        )}
+        {showRegistrationForm && <RegistrationForm />}
+      </div>
+    );
+  }

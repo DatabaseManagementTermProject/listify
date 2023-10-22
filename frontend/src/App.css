@@ -43,5 +43,9 @@ a:hover {
 }
 
 .registration-button {
-  font-family:verdana;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  height: 5%;
+  width: auto;
 }
