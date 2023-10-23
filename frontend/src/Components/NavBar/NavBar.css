@@ -18,3 +18,10 @@
     width: 2%;
     margin: 3%;
 }
+
+.logoutButton {
+    position: absolute;
+    color: white;
+    font-size: 1rem;
+    margin: 2.5rem;
+}

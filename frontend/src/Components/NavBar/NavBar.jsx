@@ -6,8 +6,10 @@ import profileImg from './profile-img.png'
 const NavBar = () => {
     return (
         <div className="NavBarContainer">
+            
             <div className="profileImgContainer"><img src={profileImg} className="profile-img" /></div>
-            <img src={logo} className="logo"/>
+            <div className="logoImgContainer"><img src={logo} className="logo"/></div>
+
         </div>
     )
 }
