@@ -37,45 +37,52 @@ app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
-app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
-  // get the element from end point
-  const userID = req.params.userID;
-  const library = req.params.library;
-  const action = req.params.action;
-  const itemID = req.params.itemID;
+// app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
+//   // get the element from end point
+//   const userID = req.params.userID;
+//   const library = req.params.library;
+//   const action = req.params.action;
+//   const itemID = req.params.itemID;
 
-  // Base on different action, we will deal with different library
-  if (action == "getArray") {
-    if (itemID == -1){
-      try {
-        const query = 'SELECT * FROM ' + library + ';';
-        const [rows] = await connection.query(query);
-        console.log("inserver ", rows);
-        res.send(rows);
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      try {
-        const query = 'SELECT * FROM ' + library + ' WHERE bookId= ' + itemID + ';';
-        const [rows] = await connection.query(query, [itemID]);
+//   // Base on different action, we will deal with different library
+//   if (action == "getArray") {
+//     if (itemID == -1){
+//       try {
+//         const query = 'SELECT * FROM ' + library + ';';
+//         const [rows] = await connection.query(query);
+//         console.log("inserver ", rows);
+//         res.send(rows);
+//       } catch (err) {
+//         console.error(err);
+//       }
+//     } else {
+//       try {
+//         const query = 'SELECT * FROM ' + library + ' WHERE bookId= ' + itemID + ';';
+//         const [rows] = await connection.query(query, [itemID]);
 
-        // probably change this error message into something more UI friendly later
-        if (!rows[0]){
-          return res.json({msg: "Couldn't find that book."})
-        }
-        res.json(rows[0]);
-      } catch (err) {
-        console.error(err);
-      }
+//         // probably change this error message into something more UI friendly later
+//         if (!rows[0]){
+//           return res.json({msg: "Couldn't find that book."})
+//         }
+//         res.json(rows[0]);
+//       } catch (err) {
+//         console.error(err);
+//       }
+//     }
+//   }
+// })
+
+app.get('/books', async (req, res) => {
+    const query = 'SELECT * FROM books;';
+    try {
+      const [rows] = await connection.query(query);
+      console.log(rows);
+      res.send(rows);
+    } catch (err) {
+      console.log(err)
     }
-  }
 })
 
-
-// app.post('/:userID/:library/post/:action/:itemID', async (req,res) => {
-
-// })
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
