@@ -37,7 +37,7 @@ app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
-// Get statement for action just getting the list
+// Get the method from the library
 app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
   // get the element from end point
   const userID = req.params.userID;
@@ -104,10 +104,46 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
   }
 })
 
+// Request for Adding method to liked table
+app.post('/insert', async (req, res) => {
+  let libraryAdd;
+  let libraryID;
+  let itemID = "somethinginput"; // Need to change later
+  if (library == "books") { // Need to change library input
+    libraryAdd = "likedBooks";
+    libraryID = "bookID";
+  } else if (library == "movies") {
+    libraryAdd = "likedMovies";
+    libraryID = "movieID";
+  } else if (library == "videoGames") {
+    libraryAdd = "likedVideoGames";
+    libraryID = "videoGameID";
+  }
 
-// app.post('/post/:userID/:library/post/:action/:itemID', async (req,res) => {
+  const query = 'INSERT INTO ' + libraryAdd + ' ( userID, ' +  libraryID + ' ) VALUES ( ' + userID + ', ' + itemID + ' );';
+  connection.query(query, [data.value1, data.value2], (error, results, fields) => {
+    if (error) throw error;
+    res.send('Data inserted successfully');
+  });
+});
 
-// })
+// Request for Removing method from liked table
+app.delete('/delete', async(req, res) => {
+  let libraryDelete;
+  let itemID = "somethinginput"; // Need to change later
+  if (library == "books") { // Need to change library input
+    libraryDelete = "likedBooks";
+  } else if (library == "movies") {
+    libraryDelete = "likedMovies";
+  } else if (library == "videoGames") {
+    libraryDelete = "likedVideoGames";
+  }
+  const query = 'DELETE FROM ' + libraryDelete + ' WHERE id = ' + itemID;
+  connection.query(query, [data.value1, data.value2], (error, results, fields) => {
+    if (error) throw error;
+    res.send('Data deleted successfully');
+  });
+});
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
