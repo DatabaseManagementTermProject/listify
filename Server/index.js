@@ -39,6 +39,7 @@ app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
+// Get the method from the library
 app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
   // get the element from end point
   const userID = req.params.userID;
@@ -48,25 +49,56 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
 
   // Base on different action, we will deal with different library
   if (action == "getArray") {
-    if (itemID == -1){
+    if (userID == -1 && itemID == -1){
       try {
         const query = 'SELECT * FROM ' + library + ';';
         const [rows] = await connection.query(query);
         console.log("inserver ", rows);
-        res.send(rows);
+        res.status(200).send(rows);
       } catch (err) {
         console.error(err);
       }
-    } else {
+    } else if (userID == -1 && itemID >= 0) {
       try {
-        const query = 'SELECT * FROM ' + library + ' WHERE bookId= ' + itemID + ';';
+        let libraryID;
+        if (library == "books") {
+          libraryID = "bookID"
+        } else if (library == "movies") {
+          libraryID = "movieID"
+        } else if (library == "videoGames") {
+          libraryID = "videoGameID"
+        }
+
+        const query = 'SELECT * FROM ' + library + ' WHERE ' + libraryID + '= ' + itemID + ';';
         const [rows] = await connection.query(query, [itemID]);
 
         // probably change this error message into something more UI friendly later
         if (!rows[0]){
           return res.json({msg: "Couldn't find that book."})
         }
-        res.json(rows[0]);
+        res.status(200).json(rows[0]);
+      } catch (err) {
+        console.error(err);
+      }
+    } else if (userID >= 0 && itemID == -1) {
+      try {
+        let likedLibrary;
+        if (library == "books") {
+          likedLibrary = "likedBooks"
+        } else if (library == "movies") {
+          likedLibrary = "likedMovies"
+        } else if (library == "videoGames") {
+          likedLibrary = "likedVideoGames"
+        }
+
+        const query = 'SELECT * FROM ' + likedLibrary + ' WHERE userID= ' + userID + ';';
+        const [rows] = await connection.query(query, [itemID]);
+
+        // probably change this error message into something more UI friendly later
+        if (!rows[0]){
+          return res.json({msg: "Couldn't find that book."})
+        }
+        res.status(200).json(rows[0]);
       } catch (err) {
         console.error(err);
       }
@@ -74,10 +106,46 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
   }
 })
 
+// Request for Adding method to liked table
+app.post('/insert', async (req, res) => {
+  let libraryAdd;
+  let libraryID;
+  let itemID = "somethinginput"; // Need to change later
+  if (library == "books") { // Need to change library input
+    libraryAdd = "likedBooks";
+    libraryID = "bookID";
+  } else if (library == "movies") {
+    libraryAdd = "likedMovies";
+    libraryID = "movieID";
+  } else if (library == "videoGames") {
+    libraryAdd = "likedVideoGames";
+    libraryID = "videoGameID";
+  }
 
-// app.post('/:userID/:library/post/:action/:itemID', async (req,res) => {
+  const query = 'INSERT INTO ' + libraryAdd + ' ( userID, ' +  libraryID + ' ) VALUES ( ' + userID + ', ' + itemID + ' );';
+  connection.query(query, [data.value1, data.value2], (error, results, fields) => {
+    if (error) throw error;
+    res.send('Data inserted successfully');
+  });
+});
 
-// })
+// Request for Removing method from liked table
+app.delete('/delete', async(req, res) => {
+  let libraryDelete;
+  let itemID = "somethinginput"; // Need to change later
+  if (library == "books") { // Need to change library input
+    libraryDelete = "likedBooks";
+  } else if (library == "movies") {
+    libraryDelete = "likedMovies";
+  } else if (library == "videoGames") {
+    libraryDelete = "likedVideoGames";
+  }
+  const query = 'DELETE FROM ' + libraryDelete + ' WHERE id = ' + itemID;
+  connection.query(query, [data.value1, data.value2], (error, results, fields) => {
+    if (error) throw error;
+    res.send('Data deleted successfully');
+  });
+});
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
