@@ -35,7 +35,7 @@ const handleSubmit = async (event) => {
     }
 };
 
-document.body.style = 'background: black;';
+document.body.style = 'background: white;';
 
 return (
     <div className="Login">
