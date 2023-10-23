@@ -37,6 +37,7 @@ app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
+// Get statement for action just getting the list
 app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
   // get the element from end point
   const userID = req.params.userID;
@@ -57,7 +58,16 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
       }
     } else {
       try {
-        const query = 'SELECT * FROM ' + library + ' WHERE bookId= ' + itemID + ';';
+        let libraryID;
+        if (library == "books") {
+          libraryID = "bookID"
+        } else if (library == "movies") {
+          libraryID = "movieID"
+        } else if (library == "videoGames") {
+          libraryID = "videoGameID"
+        }
+
+        const query = 'SELECT * FROM ' + library + ' WHERE ' + libraryID + '= ' + itemID + ';';
         const [rows] = await connection.query(query, [itemID]);
 
         // probably change this error message into something more UI friendly later
