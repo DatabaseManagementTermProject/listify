@@ -77,14 +77,54 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
 
 // })
 
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+  db.query("SELECT * FROM users WHERE email = ?", [email], (err, results) => {
+    if (err) {
+        console.error("Error finding user:", err);
+        return res.status(500).json({ message: "Server error" });
+    }
+
+    if (results.length === 0) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    const user = results[0];
+
+    bcrypt.compare(password, user.password, (err, passwordMatch) => {
+      if (err) {
+          console.error("Password comparison error:", err);
+          return res.status(500).json({ message: "Server error" });
+      }
+
+      if (passwordMatch) {
+          // if passwords match, a token which keeps the user logged in for 3 hours (jwt = jason web token)
+          const token = jwt.sign({ email: user.email, id: user.id }, "your-secret-key", { expiresIn: "3h" });
+          // http response 200 indicates success
+          return res.status(200).json({ token });
+      } else {
+          // http response 401 indicates user is unauthorized
+          return res.status(401).json({ message: "Username or Password Invalid" });
+      }
+    });
+  });
+});
+
 // user registration (work in progress)
 // added AUTO_INCREMENT constraint to userID so no need to modify that value
 app.post('/register', (req, res) => {
-  const { userName, locationCountry, locationState, locationCity } = req.body;
+  const { userName, email, password } = req.body;
 
-// for user input
-  const query = 'INSERT INTO users (userName, password, locationCountry, locationState, locationCity) VALUES (?, ?, ?, ?)';
-  connection.query(query, [userName, password, locationCountry, locationState, locationCity], (err, result) => {
+// for user input, hashes user password before storing into database
+bcrypt.hash(password, 10, (err, hashedPassword) => {
+  if (err) {
+    console.error('Error hashing password: ', err);
+    res.status(500).json({ error: 'Registration Error' });
+  }
+  else {
+  const query = 'INSERT INTO users (userName, email, password) VALUES (?, ?, ?)';
+  connection.query(query, [userName, email, hashedPassword], (err, result) => {
     if (err) {
       console.error('Error registering account: ', err);
       // http 500 server error response
@@ -94,7 +134,8 @@ app.post('/register', (req, res) => {
       res.status(201).json({ message: 'Account made' });
     }
   });
-});
+  }
+}); });
 
 // test to see if the connection is working
 app.listen(3002, () => {
