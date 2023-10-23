@@ -36,10 +36,10 @@
                 let action = document.getElementById("action").value;
 
                 if (id){
-                    url = `http://localhost:3002/get/1/${library}/${action}/${id}`;
+                    url = `http://localhost:3002/get/-1/${library}/${action}/${id}`;
                 } else {
                     id = -1;
-                    url = `http://localhost:3002/get/1/${library}/${action}/-1`;
+                    url = `http://localhost:3002/get/-1/${library}/${action}/-1`;
                 }
                 console.log("url: ", url);
 

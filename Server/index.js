@@ -47,16 +47,16 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
 
   // Base on different action, we will deal with different library
   if (action == "getArray") {
-    if (itemID == -1){
+    if (userID == -1 && itemID == -1){
       try {
         const query = 'SELECT * FROM ' + library + ';';
         const [rows] = await connection.query(query);
         console.log("inserver ", rows);
-        res.send(rows);
+        res.status(200).send(rows);
       } catch (err) {
         console.error(err);
       }
-    } else {
+    } else if (userID == -1 && itemID >= 0) {
       try {
         let libraryID;
         if (library == "books") {
@@ -74,7 +74,29 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
         if (!rows[0]){
           return res.json({msg: "Couldn't find that book."})
         }
-        res.json(rows[0]);
+        res.status(200).json(rows[0]);
+      } catch (err) {
+        console.error(err);
+      }
+    } else if (userID >= 0 && itemID == -1) {
+      try {
+        let likedLibrary;
+        if (library == "books") {
+          likedLibrary = "likedBooks"
+        } else if (library == "movies") {
+          likedLibrary = "likedMovies"
+        } else if (library == "videoGames") {
+          likedLibrary = "likedVideoGames"
+        }
+
+        const query = 'SELECT * FROM ' + likedLibrary + ' WHERE userID= ' + userID + ';';
+        const [rows] = await connection.query(query, [itemID]);
+
+        // probably change this error message into something more UI friendly later
+        if (!rows[0]){
+          return res.json({msg: "Couldn't find that book."})
+        }
+        res.status(200).json(rows[0]);
       } catch (err) {
         console.error(err);
       }
@@ -83,7 +105,7 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
 })
 
 
-// app.post('/:userID/:library/post/:action/:itemID', async (req,res) => {
+// app.post('/post/:userID/:library/post/:action/:itemID', async (req,res) => {
 
 // })
 
