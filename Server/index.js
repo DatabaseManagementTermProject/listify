@@ -37,96 +37,45 @@ app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
-// get all books
-app.get('/books', async (req, res) => {
+app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
+  // get the element from end point
+  const userID = req.params.userID;
+  const library = req.params.library;
+  const action = req.params.action;
+  const itemID = req.params.itemID;
 
-    try {
-		const query = 'SELECT * FROM books;';
-		const [rows] = await connection.query(query);
-    console.log(rows);
-		res.send(rows);
-    } catch (err) {
-      console.error(err);
+  // Base on different action, we will deal with different library
+  if (action == "getArray") {
+    if (itemID == -1){
+      try {
+        const query = 'SELECT * FROM ' + library + ';';
+        const [rows] = await connection.query(query);
+        console.log("inserver ", rows);
+        res.send(rows);
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      try {
+        const query = 'SELECT * FROM ' + library + ' WHERE bookId= ' + itemID + ';';
+        const [rows] = await connection.query(query, [itemID]);
+
+        // probably change this error message into something more UI friendly later
+        if (!rows[0]){
+          return res.json({msg: "Couldn't find that book."})
+        }
+        res.json(rows[0]);
+      } catch (err) {
+        console.error(err);
+      }
     }
-})
-
-// get book by id
-app.get('/books/:id', async (req, res) => {
-
-    try {
-		const {id} = req.params;
-		const query = 'SELECT * FROM books WHERE bookId=?;';
-		const [rows] = await connection.query(query, [id]);
-
-		// probably change this error message into something more UI friendly later
-		if (!rows[0]){
-			return res.json({msg: "Couldn't find that book."})
-		}
-		res.json(rows[0]);
-    } catch (err) {
-      console.error(err);
-    }
-})
-
-// get all movies
-app.get('/movies', async (req, res) => {
-
-  try {
-  const query = 'SELECT * FROM movies;';
-  const [rows] = await connection.query(query);
-  res.send(rows);
-  } catch (err) {
-    console.error(err);
   }
 })
 
-// get movie by id
-app.get('/movies/:id', async (req, res) => {
 
-  try {
-  const {id} = req.params;
-  const query = 'SELECT * FROM movies WHERE movieID=?;';
-  const [rows] = await connection.query(query, [id]);
+// app.post('/:userID/:library/post/:action/:itemID', async (req,res) => {
 
-  // probably change this error message into something more UI friendly later
-  if (!rows[0]){
-    return res.json({msg: "Couldn't find that movie."})
-  }
-  res.json(rows[0]);
-  } catch (err) {
-    console.error(err);
-  }
-})
-
-// get all video games
-app.get('/videogames', async (req, res) => {
-
-  try {
-  const query = 'SELECT * FROM videoGames;';
-  const [rows] = await connection.query(query);
-  res.send(rows);
-  } catch (err) {
-    console.error(err);
-  }
-})
-
-// get videogame by id
-app.get('/videogames/:id', async (req, res) => {
-
-  try {
-  const {id} = req.params;
-  const query = 'SELECT * FROM videoGames WHERE videoGameID=?;';
-  const [rows] = await connection.query(query, [id]);
-
-  // probably change this error message into something more UI friendly later
-  if (!rows[0]){
-    return res.json({msg: "Couldn't find that movie."})
-  }
-  res.json(rows[0]);
-  } catch (err) {
-    console.error(err);
-  }
-})
+// })
 
 // user registration (work in progress)
 // added AUTO_INCREMENT constraint to userID so no need to modify that value
