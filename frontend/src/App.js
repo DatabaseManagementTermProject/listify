@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import { UserRegistrationButton } from './Components/user_registration';
+import { UserRegistrationButton } from './Components/Registration/user_registration';
 
 // router specific imports
 import ReactDOM from "react-dom/client";
@@ -11,7 +11,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./Pages/Home"; 
 import About from "./Pages/About"; 
 import ContactUs from "./Pages/ContactUs"; 
-import Login from "./Pages/Login"; 
+import LoginPage from "./Pages/Login"; 
 import Register from "./Pages/Register"; 
 
 function App() {
@@ -43,7 +43,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contactus" element={<ContactUs />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<Register />} />
             </Routes>
         </>

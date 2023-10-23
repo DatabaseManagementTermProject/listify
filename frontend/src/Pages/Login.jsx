@@ -1,8 +1,12 @@
 import React from "react";
+import Login from "../Components/Login/user_login"
 
-const Login = () => {
-
-
+const LoginPage = () => {
+    return(
+    <div className = "login-page">
+    <Login />
+    </div>
+    );
 }
 
-export default Login;
+export default LoginPage;
