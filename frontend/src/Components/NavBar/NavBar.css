@@ -1,0 +1,20 @@
+.NavBarContainer {
+    width: 100%;
+    background-color: black;
+    text-align: center;
+}
+
+.logo {
+    width: 7%;
+}
+
+.profileImgContainer {
+    width: 100%;;
+    position: absolute;
+    text-align: right;
+}
+
+.profile-img {
+    width: 2%;
+    margin: 3%;
+}

@@ -1,10 +1,10 @@
 import React from "react";
 
-import BookCards from "../Components/Home/BookCards";
+import BookCards from "../Components/AllBooks/BookCards";
 
 const Home = () => {
     return ( 
-          <BookCards />
+          <h1>Home Page</h1>
       );
 }
 
