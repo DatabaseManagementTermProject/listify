@@ -33,9 +33,11 @@ app.use(express.json());
 app.options(cors());
 
 app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors())
+app.options('*', cors());
 
 // Not sure what this is needed for yet lol
-app.use(express.urlencoded({ extended: true}));
+app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
@@ -83,16 +85,24 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
     } else if (userID >= 0 && itemID == -1) {
       try {
         let likedLibrary;
+        let libraryAttr;
         if (library == "books") {
-          likedLibrary = "likedBooks"
+          likedLibrary = "likedBooks";
+          libraryAttr = "bookID";
         } else if (library == "movies") {
-          likedLibrary = "likedMovies"
+          likedLibrary = "likedMovies";
+          libraryAttr = "movieID";
         } else if (library == "videoGames") {
-          likedLibrary = "likedVideoGames"
+          likedLibrary = "likedVideoGames";
+          libraryAttr = "videoGameID";
         }
 
-        const query = 'SELECT * FROM ' + likedLibrary + ' WHERE userID= ' + userID + ';';
-        const [rows] = await connection.query(query, [itemID]);
+        const query = 'SELECT * ' +
+                      'FROM ' + library + ' JOIN ' + likedLibrary + ' ' +
+                      'ON ' + library + '.' + libraryAttr + ' = ' + likedLibrary + '.' + libraryAttr + ' ' +
+                      'WHERE userID = ' + userID + ';';
+        console.log(query);
+        const [rows] = await connection.query(query);
 
         // probably change this error message into something more UI friendly later
         if (!rows[0]){
@@ -103,53 +113,93 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
         console.error(err);
       }
     }
+  } else if (action == "add") {
+    let addLibrary;
+    let libraryAttr;
+    try {
+      if (library == "books") {
+        addLibrary = "likedBooks";
+        libraryAttr = "bookID";
+      } else if (library == "movies") {
+        addLibrary = "likedMovies";
+        libraryAttr = "movieID";
+      } else if (library == "videoGames") {
+        addLibrary = "likedVideoGames";
+        libraryAttr = "videoGameID"
+      }
+      const query = 'INSERT INTO ' + addLibrary + ' ( userID, ' +  libraryAttr + ' ) VALUES ( ' + userID + ', ' + itemID + ' );';
+      await connection.query(query)
+      req.send("Data is added")
+    } catch (err) {
+      console.error(err);
+    }
+  } else if (action == "delete") {
+    let addLibrary;
+    let libraryAttr;
+    try {
+      if (library == "books") {
+        addLibrary = "likedBooks";
+        libraryAttr = "bookID";
+      } else if (library == "movies") {
+        addLibrary = "likedMovies";
+        libraryAttr = "movieID";
+      } else if (library == "videoGames") {
+        addLibrary = "likedVideoGames";
+        libraryAttr = "videoGameID"
+      }
+      const query = 'DELETE FROM ' + addLibrary + ' WHERE ' + libraryAttr + '= ' + itemID + ' ;';
+      await connection.query(query)
+      req.send("Data is added")
+    } catch (err) {
+      console.error(err);
+    }
   }
 })
 
-// Request for Adding method to liked table
-app.post('/add', async (req, res) => {
-  try {
-    console.log("It is FREAKING in here")
-    console.log("Body: ", req.body)
-    let addLibrary = req.addLibrary;
-    let userID = req.body["addUserID"];
-    let itemID = req.body["addItemID"];
-    console.log("check", addLibrary, itemID)
-    if (addLibrary == "books") {
-      addLibrary = "likedBooks";
-      itemID = "bookID";
-    } else if (addLibrary == "movies") {
-      addLibrary = "likedMovies";
-      itemID = "movieID";
-    } else if (addLibrary == "videoGames") {
-      addLibrary = "likedVideoGames";
-      itemID = "videoGameID";
-    }
+// // Request for Adding method to liked table
+// app.post('/add', async (req, res) => {
+//   try {
+//     console.log("It is FREAKING in here")
+//     console.log("Body: ", req.body)
+//     let addLibrary = req.addLibrary;
+//     let userID = req.body["addUserID"];
+//     let itemID = req.body["addItemID"];
+//     console.log("check", addLibrary, itemID)
+//     if (addLibrary == "books") {
+//       addLibrary = "likedBooks";
+//       itemID = "bookID";
+//     } else if (addLibrary == "movies") {
+//       addLibrary = "likedMovies";
+//       itemID = "movieID";
+//     } else if (addLibrary == "videoGames") {
+//       addLibrary = "likedVideoGames";
+//       itemID = "videoGameID";
+//     }
   
-    const query = 'INSERT INTO ' + addLibrary + ' ( userID, ' +  itemID + ' ) VALUES ( ' + userID + ', ' + itemID + ' );';
-    await connection.query(query)
-  } catch (err) {
-    console.error(err);
-  }
-});
+//     const query = 'INSERT INTO ' + addLibrary + ' ( userID, ' +  itemID + ' ) VALUES ( ' + userID + ', ' + itemID + ' );';
+//     await connection.query(query)
+//   } catch (err) {
+//     console.error(err);
+//   }
+// });
 
-// Request for Removing method from liked table
-app.delete('/delete', async(req, res) => {
-  let libraryDelete;
-  let itemID = "somethinginput"; // Need to change later
-  if (library == "books") { // Need to change library input
-    libraryDelete = "likedBooks";
-  } else if (library == "movies") {
-    libraryDelete = "likedMovies";
-  } else if (library == "videoGames") {
-    libraryDelete = "likedVideoGames";
-  }
-  const query = 'DELETE FROM ' + libraryDelete + ' WHERE id = ' + itemID;
-  connection.query(query, [data.value1, data.value2], (error, results, fields) => {
-    if (error) throw error;
-    res.send('Data deleted successfully');
-  });
-});
+// // Request for Removing method from liked table
+// app.delete('/delete', async(req, res) => {
+//   let libraryDelete;
+//   let itemID = "somethinginput"; // Need to change later
+//   if (library == "books") { // Need to change library input
+//     libraryDelete = "likedBooks";
+//   } else if (library == "movies") {
+//     libraryDelete = "likedMovies";
+//   } else if (library == "videoGames") {
+//     libraryDelete = "likedVideoGames";
+//   }
+//   const query = 'DELETE FROM ' + libraryDelete + ' WHERE id = ' + itemID;
+//   connection.query(query, [data.value1, data.value2], (error, results, fields) => {
+//     if (error) throw error;
+//     res.send('Data deleted successfully');
+//   });
+// });
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
