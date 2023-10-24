@@ -83,6 +83,28 @@ app.get('/books', async (req, res) => {
     }
 })
 
+app.get('/movies', async (req, res) => {
+  const query = 'SELECT * FROM movies;';
+  try {
+    const [rows] = await connection.query(query);
+    console.log(rows);
+    res.send(rows);
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+app.get('/videogames', async (req, res) => {
+  const query = 'SELECT * FROM videoGames;';
+  try {
+    const [rows] = await connection.query(query);
+    console.log(rows);
+    res.send(rows);
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;

@@ -5,7 +5,13 @@
 }
 
 .logo {
-    width: 7%;
+    width: 6%;
+    margin: 0%;
+}
+
+.navBarContainer {
+    background-color: black;
+    color: white;
 }
 
 .profileImgContainer {
@@ -24,4 +30,13 @@
     color: white;
     font-size: 1rem;
     margin: 2.5rem;
+}
+
+.navLink {
+    margin-right: 10%;
+    margin-left: 10%;
+}
+
+a {
+    color: #FFF;
 }
