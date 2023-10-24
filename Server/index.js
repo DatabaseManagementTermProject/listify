@@ -41,6 +41,44 @@ app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
+app.get('/books', async (req, res) => {
+    const query = 'SELECT * FROM books;';
+    try {
+      const [rows] = await connection.query(query);
+      console.log(rows);
+      res.send(rows);
+    } catch (err) {
+      console.log(err)
+    }
+})
+
+app.get('/movies', async (req, res) => {
+  const query = 'SELECT * FROM movies LIMIT 50;';
+  try {
+    const [rows] = await connection.query(query);
+    console.log(rows);
+    res.send(rows);
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+app.get('/videogames', async (req, res) => {
+  const query = 'SELECT * FROM videoGames;';
+  try {
+    const [rows] = await connection.query(query);
+    console.log(rows);
+    res.send(rows);
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+app.post('/allmovies', (req, res) => {
+	
+})
+
+=======
 // Get the method from the library
 app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
   // get the element from end point
