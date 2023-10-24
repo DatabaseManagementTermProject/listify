@@ -5,6 +5,10 @@ import Button from 'react-bootstrap/esm/Button';
 import './BookCards.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover';
+
+
 import { useState, useEffect } from 'react';
 
 
@@ -12,7 +16,7 @@ import { useState, useEffect } from 'react';
 function BookCards() {
 
     const [books, setBooks] = useState([]);
-    const [liked, setLiked] = useState(true)
+
     
     useEffect(() => {
 
@@ -31,10 +35,28 @@ function BookCards() {
     }, []);
 
     function likedBook(book){
-      setLiked(!liked);
 
-      console.log(book)
+
+        var id = book.bookID;
+
+        console.log(id)
+    
+        // replace 1 with userID of person logged on
+        var url = `http://localhost:3002/get/1/books/add/${id}`;
+    
+        fetch(url)
+            .then((res) => {
+                return res.json()
+            })
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
+
+    // fetch liked lists and if id = idx, change state variable
 
     return (
         <Row xs={1} md={7}>
@@ -42,8 +64,18 @@ function BookCards() {
             <Col key={idx} style={{display: "inline-block", width: 100}} className="mx-4 my-2">
               <Card>
                 {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
-                <Button className='likeButton' onClick={() => likedBook(books[idx])}>{liked ? "♥︎" : "♡" }</Button>
-                <Card.Img variant="top" src={books[idx].coverImg} style={{width: 100, height: 150}} className='itemImage'/>
+                <Button className='likeButton' onClick={() => likedBook(books[idx])}>♡</Button>
+                <OverlayTrigger trigger='hover' placement="auto" overlay={
+                        <Popover id="popover-basic">
+                        <Popover.Header as="h3">{books[idx].title}</Popover.Header>
+                        <Popover.Header as="h3">{books[idx].author}</Popover.Header>
+                        <Popover.Body>
+                            {books[idx].description}
+                        </Popover.Body>
+                        </Popover>
+                }>
+                  <Card.Img variant="top" src={books[idx].coverImg} style={{width: 100, height: 150}} className='itemImage'/>
+                </OverlayTrigger>
               </Card>
             </Col>
           ))}

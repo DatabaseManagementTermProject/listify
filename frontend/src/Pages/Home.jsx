@@ -1,6 +1,6 @@
 import React from "react";
 
-import BookCards from "../Components/AllBooks/BookCards";
+// import BookCards from "../Components/AllBooks/BookCards";
 import NavBar from "../Components/NavBar/NavBar";
 
 const Home = () => {

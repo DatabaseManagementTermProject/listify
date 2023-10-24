@@ -29,8 +29,27 @@ function MovieCards() {
             });
     }, []);
 
-    function AddBook() {
 
+    function likeMovie(movie){
+
+
+      var id = movie.movieID;
+
+      console.log(id)
+  
+      // replace 1 with userID of person logged on
+      var url = `http://localhost:3002/get/1/movies/add/${id}`;
+  
+      fetch(url)
+          .then((res) => {
+              return res.json()
+          })
+          .then((data) => {
+              console.log(data);
+          })
+          .catch((error) => {
+              console.log(error);
+          });
     }
 
     return (
@@ -39,7 +58,7 @@ function MovieCards() {
             <Col key={idx} style={{display: "inline-block", width: 100}} className="mx-4 my-2">
               <Card>
                 {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
-                <Button className='likeButton' onClick={() => AddBook()}>♡</Button>
+                <Button className='likeButton' onClick={() => likeMovie(movies[idx])}>♡</Button>
                 <Card.Img variant="top" src={movies[idx].coverImg} style={{width: 100, height: 150}} className='itemImage'/>
               </Card>
             </Col>

@@ -10,7 +10,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import mysql from 'mysql2/promise'
 import cors from 'cors'
-import bcrypt from 'bcrypt'
+// import bcrypt from 'bcrypt'
 
 dotenv.config( { path : '.env' } );
 const connection = await mysql.createConnection(process.env.DATABASE_URL)
@@ -32,7 +32,7 @@ app.use(express.json());
 
 app.options(cors());
 
-app.use(cors({ origin: 'http://localhost:3000' }));
+// app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(cors())
 app.options('*', cors());
 
@@ -42,7 +42,7 @@ app.use(express.urlencoded({ extended: false}));
 // ------------------- Endpoints
 
 app.get('/books', async (req, res) => {
-    const query = 'SELECT * FROM books;';
+    const query = 'SELECT * FROM books limit 10;';
     try {
       const [rows] = await connection.query(query);
       console.log(rows);
@@ -78,7 +78,6 @@ app.post('/allmovies', (req, res) => {
 	
 })
 
-=======
 // Get the method from the library
 app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
   // get the element from end point
