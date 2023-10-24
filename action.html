@@ -38,6 +38,9 @@
                 let action = document.getElementById("action").value;
                 let userID = document.getElementById("userID").value;
 
+                if (!userID) {
+                    userID = -1;
+                }
                 if (action == "getArray" && itemID){
                     url = `http://localhost:3002/get/${userID}/${library}/${action}/${itemID}`;
                 } else if (action == "getArray" && !itemID) {

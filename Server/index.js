@@ -108,7 +108,7 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
         if (!rows[0]){
           return res.json({msg: "Couldn't find that book."})
         }
-        res.status(200).json(rows[0]);
+        res.status(200).json(rows);
       } catch (err) {
         console.error(err);
       }
