@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 function BookCards() {
 
     const [books, setBooks] = useState([]);
+    const [liked, setLiked] = useState(true)
     
     useEffect(() => {
 
@@ -29,8 +30,10 @@ function BookCards() {
             });
     }, []);
 
-    function AddBook() {
+    function likedBook(book){
+      setLiked(!liked);
 
+      console.log(book)
     }
 
     return (
@@ -39,7 +42,7 @@ function BookCards() {
             <Col key={idx} style={{display: "inline-block", width: 100}} className="mx-4 my-2">
               <Card>
                 {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
-                <Button className='likeButton' onClick={() => AddBook()}>♡</Button>
+                <Button className='likeButton' onClick={() => likedBook(books[idx])}>{liked ? "♥︎" : "♡" }</Button>
                 <Card.Img variant="top" src={books[idx].coverImg} style={{width: 100, height: 150}} className='itemImage'/>
               </Card>
             </Col>

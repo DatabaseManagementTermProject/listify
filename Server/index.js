@@ -84,7 +84,7 @@ app.get('/books', async (req, res) => {
 })
 
 app.get('/movies', async (req, res) => {
-  const query = 'SELECT * FROM movies;';
+  const query = 'SELECT * FROM movies LIMIT 50;';
   try {
     const [rows] = await connection.query(query);
     console.log(rows);
@@ -103,6 +103,10 @@ app.get('/videogames', async (req, res) => {
   } catch (err) {
     console.log(err)
   }
+})
+
+app.post('/allmovies', (req, res) => {
+	
 })
 
 
