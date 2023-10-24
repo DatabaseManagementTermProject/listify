@@ -16,7 +16,7 @@ const handleSubmit = async (event) => {
 
     // Send a POST request to your backend API for login
     try {
-        const response = await fetch("/login", {
+        const response = await fetch('http://localhost:3002/login', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -61,8 +61,11 @@ return (
                         onChange={(e) => setPassword(e.target.value)}
                 />
                 </Form.Group>
-                <Button block size="lg" type="submit" disabled={!validateForm()}> Login </Button>
+                <br></br>
+                <button class="button-20" role="button" disabled={!validateForm()}> Login </button>
             </Form>
+            <p style={{color: "white", fontFamily: "'league spartan', sans-serif"}}> Don't have an account? <a href="http://localhost:3000/register">Register here.</a></p>
+
         </div>
     </div>
 );}

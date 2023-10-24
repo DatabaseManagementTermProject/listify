@@ -18,8 +18,11 @@
                 <option value="add">Add</option>
                 <option value="delete">Delete</option>
             </select>
-            TableID: <input type="text" name="tableID" id="tableID">
+
+            userID: <input type="text" name="userID" id="userID" style="width: 50px;">
+            ItemID: <input type="text" name="itemID" id="itemID" style="width: 50px;">
             <br><br>
+
             <button type="submit">Submit</button>
         </form>
         <p id="textDisplay">Display here</p>
@@ -29,17 +32,22 @@
             formEL.addEventListener("submit", event => {
                 event.preventDefault();
                 const formData = new FormData(formEL);
-
                 let url;
-                let id = document.getElementById("tableID").value;
+                let itemID = document.getElementById("itemID").value;
                 let library = document.getElementById("library").value;
                 let action = document.getElementById("action").value;
+                let userID = document.getElementById("userID").value;
 
-                if (id){
-                    url = `http://localhost:3002/get/1/${library}/${action}/${id}`;
-                } else {
-                    id = -1;
-                    url = `http://localhost:3002/get/1/${library}/${action}/-1`;
+                if (!userID) {
+                    userID = -1;
+                }
+                if (action == "getArray" && itemID){
+                    url = `http://localhost:3002/get/${userID}/${library}/${action}/${itemID}`;
+                } else if (action == "getArray" && !itemID) {
+                    itemID = -1;
+                    url = `http://localhost:3002/get/${userID}/${library}/${action}/${itemID}`;
+                } else if (action == "add" || action == "delete") {
+                    url = `http://localhost:3002/get/${userID}/${library}/${action}/${itemID}`;
                 }
                 console.log("url: ", url);
 
@@ -49,10 +57,10 @@
                         console.log("frontend", data);
 
                         // if there is an id, then display the the title
-                        if (id >= 0){
+                        if (itemID >= 0){
                             document.getElementById("textDisplay").innerHTML = data["title"];
                         } else {
-                            console.log("The id is " , id);
+                            console.log("The id is " , itemID);
                             let display = "";
                             for (let i = 0; i < data.length; i++) {
                                 display += data[i]["title"] + "<br>";
@@ -62,6 +70,8 @@
                     })
                     .catch(error => console.log(error));
             })
+
+
         </script>
     </body>
 </html>

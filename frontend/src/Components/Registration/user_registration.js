@@ -21,6 +21,7 @@ const handleSubmit = (e) => {
 const handleRegistration = async (e) => {
     // stop page from refreshing on submission
     e.preventDefault();
+
     try {
         const response = await fetch('http://localhost:3002/register', {
         // specifies the data should be sent to the server
@@ -28,10 +29,11 @@ const handleRegistration = async (e) => {
         headers: {
             // sets content of the request to json
             'Content-Type': 'application/json',
-        },
-        // convert data in formData to json string
-        body: JSON.stringify(formData),
-        });
+            'Accept': 'application/json',
+            },
+            // convert data in formData to json string
+            body: JSON.stringify(formData),
+            });
 
         // tests if submission was successful
         if (response.ok) {
@@ -45,6 +47,7 @@ const handleRegistration = async (e) => {
 };
 
 return(
+    <div className = "register">
         <Form onSubmit={handleRegistration}>
             <Form.Group controlId="username">
                 <Form.Label>Username</Form.Label>
@@ -71,7 +74,7 @@ return(
             <Form.Group controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
-                    type="password"
+                    type="text"
                     name="password"
                     placeholder="Password"
                     value={formData.password}
@@ -83,47 +86,8 @@ return(
                 Register Account
             </Button>
         </Form>
+    </div>
     );
 }
 
 export default RegistrationForm;
-
-export function UserRegistrationButton() {
-    const [showButtons, setShowButtons] = useState(false);
-    const [showRegistrationForm, setShowRegistrationForm] = useState(false);
-  
-    const toggleButtons = (show) => {
-      setShowButtons(show);
-    };
-  
-    const openRegistrationForm = () => {
-      setShowRegistrationForm(true);
-    };
-  
-    const closeRegistrationForm = () => {
-      setShowRegistrationForm(false);
-    };
-    return (
-        <div className="login-link">
-            <div className="login">
-                <p style={{ fontSize: 15, display: 'inline-block', marginRight: '10px' }}> Login/Register </p>
-                <img
-                src="https://i.ibb.co/yYnRgdP/personalization.png"
-                style={{ width: '40px', height: 'auto' }}
-                onMouseEnter={() => toggleButtons(true)}
-                onMouseLeave={() => toggleButtons(false)}
-                />
-            </div>
-        {showButtons && (
-          <div className="hoverable-area">
-            <center>
-            <button class="button-20" role="button" onClick={openRegistrationForm}>Register</button>
-            <p> or </p>
-            <button class="button-20" role="button">Login</button>
-            </center>
-            </div>
-        )}
-        {showRegistrationForm && <RegistrationForm />}
-      </div>
-    );
-  }
