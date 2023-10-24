@@ -33,7 +33,7 @@ app.options('*', cors());
 app.use(express.json());
 
 // Not sure what this is needed for yet lol
-app.use(express.urlencoded({ extended: false}));
+app.use(express.urlencoded({ extended: true}));
 
 // ------------------- Endpoints
 
@@ -105,26 +105,30 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
 })
 
 // Request for Adding method to liked table
-app.post('/insert', async (req, res) => {
-  let libraryAdd;
-  let libraryID;
-  let itemID = "somethinginput"; // Need to change later
-  if (library == "books") { // Need to change library input
-    libraryAdd = "likedBooks";
-    libraryID = "bookID";
-  } else if (library == "movies") {
-    libraryAdd = "likedMovies";
-    libraryID = "movieID";
-  } else if (library == "videoGames") {
-    libraryAdd = "likedVideoGames";
-    libraryID = "videoGameID";
+app.post('/add', async (req, res) => {
+  try {
+    console.log("It is FREAKING in here")
+    console.log("Body: ", req.body)
+    let addLibrary = req.addLibrary;
+    let userID = req.body["addUserID"];
+    let itemID = req.body["addItemID"];
+    console.log("check", addLibrary, itemID)
+    if (addLibrary == "books") {
+      addLibrary = "likedBooks";
+      itemID = "bookID";
+    } else if (addLibrary == "movies") {
+      addLibrary = "likedMovies";
+      itemID = "movieID";
+    } else if (addLibrary == "videoGames") {
+      addLibrary = "likedVideoGames";
+      itemID = "videoGameID";
+    }
+  
+    const query = 'INSERT INTO ' + addLibrary + ' ( userID, ' +  itemID + ' ) VALUES ( ' + userID + ', ' + itemID + ' );';
+    await connection.query(query)
+  } catch (err) {
+    console.error(err);
   }
-
-  const query = 'INSERT INTO ' + libraryAdd + ' ( userID, ' +  libraryID + ' ) VALUES ( ' + userID + ', ' + itemID + ' );';
-  connection.query(query, [data.value1, data.value2], (error, results, fields) => {
-    if (error) throw error;
-    res.send('Data inserted successfully');
-  });
 });
 
 // Request for Removing method from liked table

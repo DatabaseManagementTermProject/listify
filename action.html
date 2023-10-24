@@ -8,18 +8,30 @@
     </head>
     <body>
         <form class="form">
-            <select name="library" id="library">
-                <option value="books">Books</option>
-                <option value="movies">Movies</option>
-                <option value="videoGames">Video Games</option>
-            </select>
-            <select name="action" id="action">
-                <option value="getArray">getArray</option>
-                <option value="add">Add</option>
-                <option value="delete">Delete</option>
-            </select>
-            TableID: <input type="text" name="tableID" id="tableID">
+            <input type="radio" name="function" id="get">GetArray<br>
+                <select name="getLibrary" id="getLibrary">
+                    <option value="books">Books</option>
+                    <option value="movies">Movies</option>
+                    <option value="videoGames">Video Games</option>
+                </select>
+                <select name="getAction" id="getAction">
+                    <option value="getArray">getArray</option>
+                    <option value="add">Add</option>
+                    <option value="delete">Delete</option>
+                </select>
+                ItemID: <input type="text" name="getItemID" id="getItemID">
             <br><br>
+            
+            <input type="radio" name="function" id="add" checked>Add<br>
+                <select name="addLibrary" id="addLibrary">
+                    <option value="books">Books</option>
+                    <option value="movies">Movies</option>
+                    <option value="videoGames">Video Games</option>
+                </select>
+                UserID: <input type="text" name="addUserID" id="addUserID" style="width: 50px;">&ensp;
+                ItemID: <input type="text" name="addItemID" id="addItemID" style="width: 50px;">
+            <br><br>
+
             <button type="submit">Submit</button>
         </form>
         <p id="textDisplay">Display here</p>
@@ -29,39 +41,58 @@
             formEL.addEventListener("submit", event => {
                 event.preventDefault();
                 const formData = new FormData(formEL);
+                if (document.querySelector("input[type=radio]:checked").id == "get") {
+                    let url;
+                    let id = document.getElementById("getItemID").value;
+                    let library = document.getElementById("getLibrary").value;
+                    let action = document.getElementById("getAction").value;
 
-                let url;
-                let id = document.getElementById("tableID").value;
-                let library = document.getElementById("library").value;
-                let action = document.getElementById("action").value;
+                    if (id){
+                        url = `http://localhost:3002/get/-1/${library}/${action}/${id}`;
+                    } else {
+                        id = -1;
+                        url = `http://localhost:3002/get/-1/${library}/${action}/-1`;
+                    }
+                    console.log("url: ", url);
 
-                if (id){
-                    url = `http://localhost:3002/get/-1/${library}/${action}/${id}`;
-                } else {
-                    id = -1;
-                    url = `http://localhost:3002/get/-1/${library}/${action}/-1`;
-                }
-                console.log("url: ", url);
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log("frontend", data);
 
-                fetch(url)
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log("frontend", data);
-
-                        // if there is an id, then display the the title
-                        if (id >= 0){
-                            document.getElementById("textDisplay").innerHTML = data["title"];
-                        } else {
-                            console.log("The id is " , id);
-                            let display = "";
-                            for (let i = 0; i < data.length; i++) {
-                                display += data[i]["title"] + "<br>";
+                            // if there is an id, then display the the title
+                            if (id >= 0){
+                                document.getElementById("textDisplay").innerHTML = data["title"];
+                            } else {
+                                console.log("The id is " , id);
+                                let display = "";
+                                for (let i = 0; i < data.length; i++) {
+                                    display += data[i]["title"] + "<br>";
+                                }
+                                document.getElementById("textDisplay").innerHTML = display;
                             }
-                            document.getElementById("textDisplay").innerHTML = display;
-                        }
+                        })
+                        .catch(error => console.log(error));
+                } else if (document.querySelector("input[type=radio]:checked").id == "add") {
+                    let library = document.getElementById("addLibrary").value
+                    let userID = document.getElementById("addUserID").value;
+                    let itemID = document.getElementById("addItemID").value;
+                    console.log(userID)
+                    console.log(itemID)
+                    console.log(library)
+                    fetch('http://localhost:3002/add', {
+                        method: "POST",
+                        body: urlEncoded,
                     })
-                    .catch(error => console.log(error));
+                    .then(res => res.json())
+                    .then(data => {console.log(data.message)
+                    })
+                    .catch(error => { console.log(error)
+                    });
+                }
             })
+
+
         </script>
     </body>
 </html>
