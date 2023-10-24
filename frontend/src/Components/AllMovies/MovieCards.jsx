@@ -2,6 +2,8 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/esm/Button';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover';
 import './MovieCards.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -59,7 +61,17 @@ function MovieCards() {
               <Card>
                 {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
                 <Button className='likeButton' onClick={() => likeMovie(movies[idx])}>♡</Button>
-                <Card.Img variant="top" src={movies[idx].coverImg} style={{width: 100, height: 150}} className='itemImage'/>
+                <OverlayTrigger trigger='hover' placement="auto" overlay={
+                        <Popover id="popover-basic">
+                        <Popover.Header as="h3">{movies[idx].title}</Popover.Header>
+                        <Popover.Header as="p">{movies[idx].director}</Popover.Header>
+                        <Popover.Body>
+                            {movies[idx].description}
+                        </Popover.Body>
+                        </Popover>
+                }>
+                  <Card.Img variant="top" src={movies[idx].coverImg} style={{width: 100, height: 150}} className='itemImage'/>
+                </OverlayTrigger>
               </Card>
             </Col>
           ))}

@@ -4,78 +4,69 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/esm/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
-import './BookCards.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
-
+import "./likedItems.css"
 
 import { useState, useEffect } from 'react';
 
+function LikedVideoGames() {
 
-
-function BookCards() {
-
-    const [books, setBooks] = useState([]);
-
+    const [videogames, setVideoGames] = useState([]);
     
     useEffect(() => {
 
-        var url = "http://localhost:3002/books";
+        var url = "http://localhost:3002/get/1/videoGames/getArray/-1";
 
         fetch(url)
             .then((res) => {
                 return res.json()
             })
             .then((data) => {
-                setBooks(data);
+                setVideoGames(data);
             })
             .catch((error) => {
                 console.log(error);
             });
     }, []);
 
-    function likedBook(book){
+    function likeVideoGame(videoGame){
 
 
-        var id = book.bookID;
+      var id = videoGame.videoGameID;
 
-        console.log(id)
-    
-        // replace 1 with userID of person logged on
-        var url = `http://localhost:3002/get/1/books/add/${id}`;
-    
-        fetch(url)
-            .then((res) => {
-                return res.json()
-            })
-            .then((data) => {
-                console.log(data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-    // fetch liked lists and if likedID = idx, change state variable for the like button
+      console.log(id)
+  
+      // replace 1 with userID of person logged on
+      var url = `http://localhost:3002/get/1/videoGames/add/${id}`;
+  
+      fetch(url)
+          .then((res) => {
+              return res.json()
+          })
+          .then((data) => {
+              console.log(data);
+          })
+          .catch((error) => {
+              console.log(error);
+          });
+     }
 
     return (
         <Row xs={1} md={7}>
-          {Array.from({ length: books.length }).map((_, idx) => (
+          {Array.from({ length: videogames.length }).map((_, idx) => (
             <Col key={idx} style={{display: "inline-block", width: 100}} className="mx-4 my-2">
               <Card>
                 {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
-                <Button className='likeButton' onClick={() => likedBook(books[idx])}>♡</Button>
+                <Button className='likeButton' onClick={() => likeVideoGame()}>♥︎</Button>
                 <OverlayTrigger trigger='hover' placement="auto" overlay={
                         <Popover id="popover-basic">
-                        <Popover.Header as="h3">{books[idx].title}</Popover.Header>
-                        <Popover.Header as="p">{books[idx].author}</Popover.Header>
+                        <Popover.Header as="h3">{videogames[idx].title} ({videogames[idx].yearMade})</Popover.Header>
+                        <Popover.Header as="p">{videogames[idx].genre}</Popover.Header>
                         <Popover.Body>
-                            {books[idx].description}
                         </Popover.Body>
                         </Popover>
                 }>
-                  <Card.Img variant="top" src={books[idx].coverImg} style={{width: 100, height: 150}} className='itemImage'/>
+                <Card.Img variant="top" src={videogames[idx].coverImg} style={{width: 100, height: 150}} className='itemImage'/>
                 </OverlayTrigger>
               </Card>
             </Col>
@@ -84,5 +75,5 @@ function BookCards() {
       );
 }
 
-export default BookCards
+export default LikedVideoGames
 

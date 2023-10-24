@@ -4,24 +4,21 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/esm/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
-import './BookCards.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
+import './likedItems.css'
 
 
 import { useState, useEffect } from 'react';
 
 
-
-function BookCards() {
+function LikedBooks() {
 
     const [books, setBooks] = useState([]);
 
     
     useEffect(() => {
 
-        var url = "http://localhost:3002/books";
+        var url = "http://localhost:3002/get/1/books/getArray/-1";
 
         fetch(url)
             .then((res) => {
@@ -65,7 +62,7 @@ function BookCards() {
             <Col key={idx} style={{display: "inline-block", width: 100}} className="mx-4 my-2">
               <Card>
                 {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
-                <Button className='likeButton' onClick={() => likedBook(books[idx])}>♡</Button>
+                <Button className='likeButton' onClick={() => likedBook(books[idx])}>♥︎</Button>
                 <OverlayTrigger trigger='hover' placement="auto" overlay={
                         <Popover id="popover-basic">
                         <Popover.Header as="h3">{books[idx].title}</Popover.Header>
@@ -84,5 +81,5 @@ function BookCards() {
       );
 }
 
-export default BookCards
+export default LikedBooks
 

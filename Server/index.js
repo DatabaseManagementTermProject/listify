@@ -42,7 +42,7 @@ app.use(express.urlencoded({ extended: false}));
 // ------------------- Endpoints
 
 app.get('/books', async (req, res) => {
-    const query = 'SELECT * FROM books limit 10;';
+    const query = 'SELECT * FROM books LIMIT 50;';
     try {
       const [rows] = await connection.query(query);
       console.log(rows);
@@ -64,7 +64,7 @@ app.get('/movies', async (req, res) => {
 })
 
 app.get('/videogames', async (req, res) => {
-  const query = 'SELECT * FROM videoGames;';
+  const query = 'SELECT * FROM videoGames LIMIT 50;';
   try {
     const [rows] = await connection.query(query);
     console.log(rows);
@@ -72,10 +72,6 @@ app.get('/videogames', async (req, res) => {
   } catch (err) {
     console.log(err)
   }
-})
-
-app.post('/allmovies', (req, res) => {
-	
 })
 
 // Get the method from the library
