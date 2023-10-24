@@ -10,6 +10,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import mysql from 'mysql2/promise'
 import cors from 'cors'
+import bcrypt from 'bcrypt'
 
 dotenv.config( { path : '.env' } );
 const connection = await mysql.createConnection(process.env.DATABASE_URL)
@@ -25,12 +26,13 @@ connection.connect((err) => {
 // ------------------- Set up express server
 
 const app = express()
-app.use(cors())
-
-app.options('*', cors());
 
 // Needed for express POST requests to parse a JSON req.body
 app.use(express.json());
+
+app.options(cors());
+
+app.use(cors({ origin: 'http://localhost:3000' }));
 
 // Not sure what this is needed for yet lol
 app.use(express.urlencoded({ extended: true}));
@@ -152,7 +154,7 @@ app.delete('/delete', async(req, res) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  db.query("SELECT * FROM users WHERE email = ?", [email], (err, results) => {
+  connection.query("SELECT * FROM users WHERE email = ?", [email], (err, results) => {
     if (err) {
         console.error("Error finding user:", err);
         return res.status(500).json({ message: "Server error" });
@@ -196,7 +198,8 @@ bcrypt.hash(password, 10, (err, hashedPassword) => {
   }
   else {
   const query = 'INSERT INTO users (userName, email, password) VALUES (?, ?, ?)';
-  connection.query(query, [userName, email, hashedPassword], (err, result) => {
+  // inserts the hashed password into the database
+  connection.query(query, [userName, email, hashedPassword], (err) => {
     if (err) {
       console.error('Error registering account: ', err);
       // http 500 server error response
@@ -208,6 +211,10 @@ bcrypt.hash(password, 10, (err, hashedPassword) => {
   });
   }
 }); });
+
+app.get('/test', (req, res) => {
+  res.send('Server is connected to the frontend');
+});
 
 // test to see if the connection is working
 app.listen(3002, () => {
