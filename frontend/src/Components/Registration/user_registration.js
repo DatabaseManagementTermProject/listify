@@ -47,6 +47,7 @@ const handleRegistration = async (e) => {
 };
 
 return(
+    <div className = "register">
         <Form onSubmit={handleRegistration}>
             <Form.Group controlId="username">
                 <Form.Label>Username</Form.Label>
@@ -85,6 +86,7 @@ return(
                 Register Account
             </Button>
         </Form>
+    </div>
     );
 }
 
