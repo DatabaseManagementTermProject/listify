@@ -38,7 +38,7 @@ function LikedMovies() {
       console.log(id)
   
       // replace 1 with userID of person logged on
-      var url = `http://localhost:3002/get/1/movies/add/${id}`;
+      var url = `http://localhost:3002/get/1/movies/delete/${id}`;
   
       fetch(url)
           .then((res) => {

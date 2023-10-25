@@ -12,29 +12,33 @@ import { useState, useEffect } from 'react';
 function VideoGameCards() {
 
     const [videogames, setVideoGames] = useState([]);
-    
+    const [likes, setLikes] = useState([]);
+
     useEffect(() => {
 
-        var url = "http://localhost:3002/videogames";
-
-        fetch(url)
-            .then((res) => {
-                return res.json()
-            })
-            .then((data) => {
-                setVideoGames(data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        Promise.all(
+          [
+            fetch("http://localhost:3002/videogames"),
+            fetch("http://localhost:3002/get/1/videoGames/getArray/-1")
+          ]
+        ).then(([resVideoGames, resLikes]) => {
+           return Promise.all([resVideoGames.json(), resLikes.json()])
+        }).then(([dataVideoGames, dataLikes]) => {
+          setVideoGames(dataVideoGames);
+          setLikes(dataLikes);
+        })
     }, []);
 
+
+    var likesArray = [];
+    console.log(likes);
+    likes.forEach(item => {
+      likesArray.push(item.videoGameID)
+    })
+
     function likeVideoGame(videoGame){
-
-
+      
       var id = videoGame.videoGameID;
-
-      console.log(id)
   
       // replace 1 with userID of person logged on
       var url = `http://localhost:3002/get/1/videoGames/add/${id}`;
@@ -51,13 +55,14 @@ function VideoGameCards() {
           });
      }
 
+    //  
     return (
         <Row xs={1} md={7}>
           {Array.from({ length: videogames.length }).map((_, idx) => (
             <Col key={idx} style={{display: "inline-block", width: 100}} className="mx-4 my-2">
               <Card>
                 {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
-                <Button className='likeButton' onClick={() => likeVideoGame(videogames[idx])}>♡</Button>
+                <Button className='likeButton' onClick={() => likeVideoGame(videogames[idx])}>{ likesArray.includes(idx) ? "♥" : "♡" }</Button>
                 <OverlayTrigger trigger='hover' placement="auto" overlay={
                         <Popover id="popover-basic">
                         <Popover.Header as="h3">{videogames[idx].title} ({videogames[idx].yearMade})</Popover.Header>

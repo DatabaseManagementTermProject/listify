@@ -40,7 +40,7 @@ function LikedBooks() {
         console.log(id)
     
         // replace 1 with userID of person logged on
-        var url = `http://localhost:3002/get/1/books/add/${id}`;
+        var url = `http://localhost:3002/get/1/books/delete/${id}`;
     
         fetch(url)
             .then((res) => {

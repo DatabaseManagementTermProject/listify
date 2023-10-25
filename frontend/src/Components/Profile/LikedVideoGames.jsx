@@ -37,7 +37,7 @@ function LikedVideoGames() {
       console.log(id)
   
       // replace 1 with userID of person logged on
-      var url = `http://localhost:3002/get/1/videoGames/add/${id}`;
+      var url = `http://localhost:3002/get/1/videoGames/delete/${id}`;
   
       fetch(url)
           .then((res) => {
@@ -57,7 +57,7 @@ function LikedVideoGames() {
             <Col key={idx} style={{display: "inline-block", width: 100}} className="mx-4 my-2">
               <Card>
                 {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
-                <Button className='likeButton' onClick={() => likeVideoGame()}>♥︎</Button>
+                <Button className='likeButton' onClick={() => likeVideoGame(videogames[idx])}>♥︎</Button>
                 <OverlayTrigger trigger='hover' placement="auto" overlay={
                         <Popover id="popover-basic">
                         <Popover.Header as="h3">{videogames[idx].title} ({videogames[idx].yearMade})</Popover.Header>
