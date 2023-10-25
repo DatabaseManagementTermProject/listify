@@ -57,7 +57,7 @@ app.get('/home/search/:letters', async (req, res) => {
   const letters = req.params.letters
 
   console.log("Made it here")
-  const query = `SELECT * FROM books WHERE title LIKE '%${letters}%' LIMIT 30;`;
+  const query = `SELECT * FROM movies WHERE title LIKE '%${letters}%' LIMIT 30;`;
   try {
     const [rows] = await connection.query(query);
     console.log(rows);
