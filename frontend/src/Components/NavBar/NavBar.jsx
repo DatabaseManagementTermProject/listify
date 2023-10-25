@@ -15,7 +15,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Navigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function NavBar() {
+function NavBar(props) {
   return (
     <Navbar bg="dark" data-bs-theme="dark" className='navBarContainer'>
       <Container fluid>
@@ -41,8 +41,9 @@ function NavBar() {
               placeholder="Search"
               className="me-2"
               aria-label="Search"
+              onChange={props.searchDatabase}
             />
-            <Button variant="outline-success">Search</Button>
+            {/* <Button variant="outline-success" >Search</Button> */}
           </Form>
         </Navbar.Collapse>
       </Container>
