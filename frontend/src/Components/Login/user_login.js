@@ -65,7 +65,6 @@ return (
                 <button class="button-20" role="button" disabled={!validateForm()}> Login </button>
             </Form>
             <p style={{color: "white", fontFamily: "'league spartan', sans-serif"}}> Don't have an account? <a href="http://localhost:3000/register">Register here.</a></p>
-
         </div>
     </div>
 );}
