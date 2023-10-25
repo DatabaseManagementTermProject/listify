@@ -68,6 +68,7 @@ function VideoGameCards() {
                         <Popover.Header as="h3">{videogames[idx].title} ({videogames[idx].yearMade})</Popover.Header>
                         <Popover.Header as="p">{videogames[idx].genre}</Popover.Header>
                         <Popover.Body>
+                        {videogames[idx].description}
                         </Popover.Body>
                         </Popover>
                 }>
