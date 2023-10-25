@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import './registration_style.css'
 
 function RegistrationForm() {
     const [formData, setFormData] = useState({
@@ -47,9 +48,11 @@ const handleRegistration = async (e) => {
 };
 
 return(
+
     <div className = "register">
-        <Form onSubmit={handleRegistration}>
-            <Form.Group controlId="username">
+        <div className = "centered-form">
+        <Form className="col-md-4 mx-auto" onSubmit={handleRegistration}>
+        <Form.Group controlId="username">
                 <Form.Label>Username</Form.Label>
                 <Form.Control
                     type="text"
@@ -74,7 +77,7 @@ return(
             <Form.Group controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
-                    type="text"
+                    type="password"
                     name="password"
                     placeholder="Password"
                     value={formData.password}
@@ -86,8 +89,10 @@ return(
                 Register Account
             </Button>
         </Form>
+        </div>
     </div>
     );
+
 }
 
 export default RegistrationForm;

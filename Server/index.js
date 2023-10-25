@@ -11,6 +11,7 @@ import dotenv from 'dotenv'
 import mysql from 'mysql2/promise'
 import cors from 'cors'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 dotenv.config( { path : '.env' } );
 const connection = await mysql.createConnection(process.env.DATABASE_URL)
@@ -30,16 +31,80 @@ const app = express()
 // Needed for express POST requests to parse a JSON req.body
 app.use(express.json());
 
-app.options(cors());
-
-app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(cors())
-app.options('*', cors());
+app.use((req, res, next) => {
+  const origin = req.get('Origin');
+
+  if (origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
+  // Continue processing
+  next();
+});
 
 // Not sure what this is needed for yet lol
 app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
+
+// user registration (work in progress)
+// added AUTO_INCREMENT constraint to userID so no need to modify that value
+app.post('/register', async (req, res) => {
+
+    const { userName, email, password } = req.body;
+
+// for user input, hashes user password before storing into database
+try {
+  // Hash the password
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Insert the hashed password into the database
+  const queryText = 'INSERT INTO users (userName, email, password) VALUES (?, ?, ?)';
+  await connection.query(queryText, [userName, email, hashedPassword]);
+
+  res.status(201).json({ message: 'Account created' });
+} catch (error) {
+  console.error('Error during registration:', error);
+  res.status(500).json({ error: 'Registration failed' });
+}
+});
+
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!(email && password)) {
+    res.status(400).send("All input is required");
+  }
+
+  const query = 'SELECT * FROM users WHERE email = ?';
+
+  connection.query(query, [email], (err, results) => {
+    if (err) {
+      console.error('Error finding user:', err);
+      return res.status(500).json({ message: 'Server error' });
+    }
+  
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  
+    const user = results[0];
+  
+    // Compare the provided password with the hashed password in the database
+    const passwordMatch = bcrypt.compare(password, user.password);
+  
+    if (passwordMatch) {
+      // Passwords match, create a JWT token
+      const token = jwt.sign({ email: user.email, /* id: user.userID */ }, 'your-secret-key', { expiresIn: '3h' });
+      // HTTP response 200 indicates success
+      return res.status(200).json({ token });
+    } else {
+      // HTTP response 401 indicates user is unauthorized
+      return res.status(401).json({ message: 'Username or Password Invalid' });
+    }
+    });
+  });
 
 // Get the method from the library
 app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
@@ -201,72 +266,27 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
 //   });
 // });
 
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-
-  connection.query("SELECT * FROM users WHERE email = ?", [email], (err, results) => {
-    if (err) {
-        console.error("Error finding user:", err);
-        return res.status(500).json({ message: "Server error" });
-    }
-
-    if (results.length === 0) {
-        return res.status(404).json({ message: "User not found" });
-    }
-
-    const user = results[0];
-
-    bcrypt.compare(password, user.password, (err, passwordMatch) => {
-      if (err) {
-          console.error("Password comparison error:", err);
-          return res.status(500).json({ message: "Server error" });
-      }
-
-      if (passwordMatch) {
-          // if passwords match, a token which keeps the user logged in for 3 hours (jwt = jason web token)
-          const token = jwt.sign({ email: user.email, id: user.id }, "your-secret-key", { expiresIn: "3h" });
-          // http response 200 indicates success
-          return res.status(200).json({ token });
-      } else {
-          // http response 401 indicates user is unauthorized
-          return res.status(401).json({ message: "Username or Password Invalid" });
-      }
-    });
-  });
-});
-
-// user registration (work in progress)
-// added AUTO_INCREMENT constraint to userID so no need to modify that value
-app.post('/register', (req, res) => {
-  const { userName, email, password } = req.body;
-
-// for user input, hashes user password before storing into database
-bcrypt.hash(password, 10, (err, hashedPassword) => {
-  if (err) {
-    console.error('Error hashing password: ', err);
-    res.status(500).json({ error: 'Registration Error' });
-  }
-  else {
-  const query = 'INSERT INTO users (userName, email, password) VALUES (?, ?, ?)';
-  // inserts the hashed password into the database
-  connection.query(query, [userName, email, hashedPassword], (err) => {
-    if (err) {
-      console.error('Error registering account: ', err);
-      // http 500 server error response
-      res.status(500).json({ error: 'Registration failed' });
-    } else {
-      // http response 201 created (the request succeed, and new resource created)
-      res.status(201).json({ message: 'Account made' });
-    }
-  });
-  }
-}); });
-
-app.get('/test', (req, res) => {
-  res.send('Server is connected to the frontend');
-});
-
 // test to see if the connection is working
 app.listen(3002, () => {
   console.log('App is running')
 })
+
+// use in get/post functions where user authentication is required
+const verifyToken = (req, res, next) => {
+  // extract the token from the request's headers, query string, or cookies
+  const token = req.headers.authorization || req.query.token || req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized: No token provided' });
+  }
+
+  jwt.verify(token, 'your-secret-key', (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+
+    // attach the user's information to the request for subsequent routes to use
+    req.user = decoded;
+    next();
+  });
+};

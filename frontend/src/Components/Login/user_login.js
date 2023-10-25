@@ -2,17 +2,26 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./login_style.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
-function validateForm() {
-    return email.length > 0 && password.length > 0;
+    const [data, setData] = useState({
+        // matches the SQL query data for users table
+        email: '',
+        password: '',
+    });
+
+const handleSubmit = (e) => {
+    // extracts name and value from user input
+    const { name, value } = e.target;
+    // updates formData with the new data
+    setData({ ...data, [name]: value });
 }
 
-const handleSubmit = async (event) => {
-    event.preventDefault();
+const handleLogin = async (e) => {
+    e.preventDefault();
 
     // Send a POST request to your backend API for login
     try {
@@ -20,16 +29,18 @@ const handleSubmit = async (event) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                'Accept': 'application/json',
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify(data),
         });
 
-        if (response.status === 200) {
-            // Login was successful, handle the token and user session
-        } else {
-            // Display an error message to the user
-            console.error("Login failed");
-        }
+        if (response.ok) {
+            navigate('/');
+          } else if (response.status === 401) {
+            console.error("Invalid credentials. Please check your email and password.");
+          } else {
+            console.error("An error occurred. Please try again later.");
+          }
     } catch (error) {
         console.error("Error during login:", error);
     }
@@ -45,24 +56,28 @@ return (
         style={{ width: '200px', height: 'auto' }}></img>
         </div>
         <div className="centered-form">
-            <Form class="col-md-4 mx-auto" onSubmit={handleSubmit}>
+            <Form className="col-md-4 mx-auto" onSubmit={handleLogin}>
                 <Form.Group size="lg" controlId="email">
                     <Form.Control
                         autoFocus
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type="text"
+                        name="email"
+                        value={data.email}
+                        onChange={handleSubmit}
                     />
                 </Form.Group>
                 <Form.Group size="lg" controlId="password">
                     <Form.Control
                         type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        name="password"
+                        value={data.password}
+                        onChange={handleSubmit}
                 />
                 </Form.Group>
                 <br></br>
-                <button class="button-20" role="button" disabled={!validateForm()}> Login </button>
+                <Button variant="primary" type="submit">
+                Login
+                </Button>
             </Form>
             <p style={{color: "white", fontFamily: "'league spartan', sans-serif"}}> Don't have an account? <a href="http://localhost:3000/register">Register here.</a></p>
 
