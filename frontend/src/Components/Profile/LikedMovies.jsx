@@ -4,36 +4,31 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/esm/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
-import './MovieCards.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "./likedItems.css"
 
 import { useState, useEffect } from 'react';
 
-
-
-function MovieCards() {
+function LikedMovies() {
 
     const [movies, setMovies] = useState([]);
-    const [likes, setLikes] = useState([]);
     
     useEffect(() => {
-        Promise.all(
-          [
-            fetch("http://localhost:3002/movies"),
-            fetch('http://localhost:3002/get/1/movies/getArray/-1')
-          ]
-        ).then(([resMovies, resLikes]) => {
-           return Promise.all([resMovies.json(), resLikes.json()])
-        }).then(([dataMovies, dataLikes]) => {
-          setMovies(dataMovies);
-          setLikes(dataLikes);
-        })
+
+        var url = "http://localhost:3002/get/1/movies/getArray/-1";
+
+        fetch(url)
+            .then((res) => {
+                return res.json()
+            })
+            .then((data) => {
+                setMovies(data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
-    var likesArray = [];
-    likes.forEach(item => {
-      likesArray.push(item.movieID)
-    })
 
     function likeMovie(movie){
 
@@ -43,7 +38,7 @@ function MovieCards() {
       console.log(id)
   
       // replace 1 with userID of person logged on
-      var url = `http://localhost:3002/get/1/movies/add/${id}`;
+      var url = `http://localhost:3002/get/1/movies/delete/${id}`;
   
       fetch(url)
           .then((res) => {
@@ -63,7 +58,7 @@ function MovieCards() {
             <Col key={idx} style={{display: "inline-block", width: 100}} className="mx-4 my-2">
               <Card>
                 {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
-                <Button className='likeButton' onClick={() => likeMovie(movies[idx])}>{ likesArray.includes(idx) ? "♥" : "♡" }</Button>
+                <Button className='likeButton' onClick={() => likeMovie(movies[idx])}>♥︎</Button>
                 <OverlayTrigger trigger='hover' placement="auto" overlay={
                         <Popover id="popover-basic">
                         <Popover.Header as="h3">{movies[idx].title}</Popover.Header>
@@ -82,5 +77,5 @@ function MovieCards() {
       );
 }
 
-export default MovieCards
+export default LikedMovies
 

@@ -1,14 +1,23 @@
 import React from "react";
-import Login from "../Components/Login/user_login"
+import NavBar from "../Components/NavBar/NavBar";
+import LikedBooks from "../Components/Profile/LikedBooks"
+import LikedMovies from "../Components/Profile/LikedMovies";
+import LikedVideoGames from "../Components/Profile/LikedVideoGames";
+import './profile.css'
 
-const LoginPage = () => {
+const Profile = () => {
     return(
-    <div className = "login-page">
-        <body>
-            <Login />
-        </body>
-    </div>
+        <div>
+            <NavBar />
+            <h1 className="profileHeader">Profile</h1>
+            <h3 className="subheading">My Books</h3>
+            <LikedBooks />
+            <h3 className="subheading">My Movies</h3>
+            <LikedMovies />
+            <h3 className="subheading">My Video Games</h3>
+            <LikedVideoGames />
+        </div>
     );
 }
 
-export default LoginPage;
+export default Profile;

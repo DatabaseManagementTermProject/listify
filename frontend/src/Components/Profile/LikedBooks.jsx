@@ -4,45 +4,43 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/esm/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
-import './BookCards.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
+import './likedItems.css'
 
 
 import { useState, useEffect } from 'react';
 
 
-
-function BookCards() {
+function LikedBooks() {
 
     const [books, setBooks] = useState([]);
-    const [likes, setLikes] = useState([]);
 
+    
     useEffect(() => {
-        Promise.all(
-          [
-            fetch("http://localhost:3002/books"),
-            fetch('http://localhost:3002/get/1/books/getArray/-1')
-          ]
-        ).then(([resBooks, resLikes]) => {
-           return Promise.all([resBooks.json(), resLikes.json()])
-        }).then(([dataBooks, dataLikes]) => {
-          setBooks(dataBooks);
-          setLikes(dataLikes);
-        })
 
+        var url = "http://localhost:3002/get/1/books/getArray/-1";
+
+        fetch(url)
+            .then((res) => {
+                return res.json()
+            })
+            .then((data) => {
+                setBooks(data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
-	var likesArray = [];
-	likes.forEach(item => {
-		likesArray.push(item.bookID)
-	})
+    function likedBook(book){
 
-    function likedBook(id){
+
+        var id = book.bookID;
+
+        console.log(id)
     
         // replace 1 with userID of person logged on
-        var url = `http://localhost:3002/get/1/books/add/${id}`;
+        var url = `http://localhost:3002/get/1/books/delete/${id}`;
     
         fetch(url)
             .then((res) => {
@@ -58,14 +56,13 @@ function BookCards() {
 
     // fetch liked lists and if likedID = idx, change state variable for the like button
 
-
     return (
         <Row xs={1} md={7}>
           {Array.from({ length: books.length }).map((_, idx) => (
             <Col key={idx} style={{display: "inline-block", width: 100}} className="mx-4 my-2">
               <Card>
                 {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
-                <Button className='likeButton' onClick={() => likedBook(idx)}>{ likesArray.includes(idx) ? "♥" : "♡" }</Button>
+                <Button className='likeButton' onClick={() => likedBook(books[idx])}>♥︎</Button>
                 <OverlayTrigger trigger='hover' placement="auto" overlay={
                         <Popover id="popover-basic">
                         <Popover.Header as="h3">{books[idx].title}</Popover.Header>
@@ -84,5 +81,5 @@ function BookCards() {
       );
 }
 
-export default BookCards
+export default LikedBooks
 
