@@ -2,3 +2,72 @@
     margin-top: 0%;
     padding-top: 0%;
 }
+
+/* .scrollContainer {
+} */
+
+.scrollContainer::-webkit-scrollbar{
+    display: none;
+}
+
+.images {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    transition: .5s ease;
+    backface-visibility: hidden;
+}
+
+.container {
+    padding: 0;
+    margin-right: 20px;
+    display: inline-block;
+    position: relative;
+    width: 200px;
+    height: 325px;
+}
+  
+.container .overlay{
+    width: 200px;
+    height: 325px;
+    text-wrap: wrap;
+    padding: 15px;
+
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:black;
+    opacity:0;
+    transition:opacity 200ms ease-in-out;
+}
+
+.container:hover .overlay{
+    padding: 15px;
+    opacity:0.9;
+}
+
+.overlay .description {
+    text-align: left;
+    position:absolute;
+    font-size: 12px;
+    color:#fff;
+
+    display: -webkit-box; 
+    -webkit-box-orient: vertical; 
+    -webkit-line-clamp: 10; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+.bookmark {
+    margin-left: 15px;
+    margin-bottom: 15px;
+    width: 8%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}

@@ -1,4 +1,7 @@
 .NavBarContainer {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
     width: 100%;
     background-color: black;
     text-align: center;
@@ -32,11 +35,6 @@
     margin: 2.5rem;
 }
 
-.navLink {
-    margin-right: 10%;
-    margin-left: 10%;
-}
-
 a {
-    color: #FFF;
+    color: white;
 }
