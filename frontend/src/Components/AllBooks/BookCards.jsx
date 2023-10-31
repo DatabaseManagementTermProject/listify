@@ -20,6 +20,7 @@ function BookCards() {
     const [likes, setLikes] = useState([]);
 
     useEffect(() => {
+
         Promise.all(
           [
             fetch("http://localhost:3002/books"),

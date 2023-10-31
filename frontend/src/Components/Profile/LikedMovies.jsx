@@ -28,7 +28,7 @@ function LikedMovies() {
     }, []);
 
 
-    function likeMovie(movie){
+    function likeMovie(movie, index){
 
 
       var id = movie.movieID;
@@ -46,6 +46,10 @@ function LikedMovies() {
           .catch((error) => {
               console.log(error);
           });
+
+          setMovies(oldValues => {
+            return oldValues.filter((_, i) => i !== index)
+          })
     }
 
     const renderTooltip = (props) => (
@@ -70,7 +74,7 @@ function LikedMovies() {
                 delay={{ show: 0, hide: 100 }}
                 overlay={renderTooltip}
                 >
-                <img src={filledBookmark} className='bookmark' onClick={() => likeMovie(d)} />
+                <img src={filledBookmark} className='bookmark' onClick={() => likeMovie(d, i)} />
               </OverlayTrigger>
             </div>
             </div>

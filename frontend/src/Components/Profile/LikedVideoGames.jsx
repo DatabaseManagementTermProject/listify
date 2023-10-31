@@ -1,7 +1,7 @@
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./likedItems.css"
-import bookmark from './bookmark.png'
+import emptyBookmark from './bookmark.png'
 import filledBookmark from './bookmarkfill.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 
@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 function LikedVideoGames() {
 
     const [videogames, setVideoGames] = useState([]);
+    const [liked, setLiked] = useState([]);
     
     useEffect(() => {
 
@@ -27,7 +28,7 @@ function LikedVideoGames() {
             });
     }, []);
 
-    function likeVideoGame(videoGame){
+    function likeVideoGame(videoGame, index){
 
 
       var id = videoGame.videoGameID;
@@ -45,6 +46,11 @@ function LikedVideoGames() {
           .catch((error) => {
               console.log(error);
           });
+
+          // set state variable for automatic re-render... probably a better way of doing this
+          setVideoGames(oldValues => {
+            return oldValues.filter((_, i) => i !== index)
+          })
      }
 
      const renderTooltip = (props) => (
@@ -69,7 +75,7 @@ function LikedVideoGames() {
                 delay={{ show: 0, hide: 100 }}
                 overlay={renderTooltip}
                 >
-                <img src={filledBookmark} className='bookmark' onClick={() => likeVideoGame(d)} />
+                <img src={liked ? filledBookmark : emptyBookmark} className='bookmark' onClick={() => likeVideoGame(d, i)} />
               </OverlayTrigger>
             </div>
             </div>

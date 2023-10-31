@@ -177,7 +177,6 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
       }
       const query = 'INSERT INTO ' + addLibrary + ' ( userID, ' +  libraryAttr + ' ) VALUES ( ' + userID + ', ' + itemID + ' );';
       await connection.query(query)
-      req.send("Data is added")
     } catch (err) {
       console.error(err);
     }
@@ -197,7 +196,6 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
       }
       const query = 'DELETE FROM ' + addLibrary + ' WHERE ' + libraryAttr + '= ' + itemID + ' ;';
       await connection.query(query)
-      req.send("Data is added")
     } catch (err) {
       console.error(err);
     }
