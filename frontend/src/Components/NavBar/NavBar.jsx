@@ -23,7 +23,7 @@ function NavBar(props) {
   const navigate = useNavigate();
 
   return (
-    <Navbar bg="dark" data-bs-theme="dark" className='navBarContainer'>
+    <Navbar bg="dark" data-bs-theme="dark" className='sticky-top'>
       <Container fluid>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">

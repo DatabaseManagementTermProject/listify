@@ -1,38 +1,6 @@
-.NavBarContainer {
-    display: inline-block;
-    vertical-align: middle;
-    line-height: normal;
-    width: 100%;
-    background-color: black;
-    text-align: center;
-}
-
-.logo {
-    width: 6%;
-    margin: 0%;
-}
-
 .navBarContainer {
     background-color: black;
     color: white;
-}
-
-.profileImgContainer {
-    width: 100%;;
-    position: absolute;
-    text-align: right;
-}
-
-.profile-img {
-    width: 2%;
-    margin: 3%;
-}
-
-.logoutButton {
-    position: absolute;
-    color: white;
-    font-size: 1rem;
-    margin: 2.5rem;
 }
 
 a {

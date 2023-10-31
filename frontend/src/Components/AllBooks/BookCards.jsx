@@ -1,3 +1,4 @@
+
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -6,8 +7,6 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
 import './BookCards.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
 
 
 import { useState, useEffect } from 'react';
@@ -75,8 +74,9 @@ function BookCards() {
                             {books[idx].description}
                         </Popover.Body>
                         </Popover>
-                }>
-                  <Card.Img variant="top" src={books[idx].coverImg} style={{width: 100, height: 150}} className='itemImage'/>
+                }> 
+                {/* books[idx].coverImg */}
+                  <Card.Img variant="top" src={require('./images/' + 9 + '.jpg')} style={{width: 100, height: 150}} className='itemImage'/>
                 </OverlayTrigger>
               </Card>
             </Col>

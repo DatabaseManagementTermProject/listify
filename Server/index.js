@@ -42,7 +42,7 @@ app.use(express.urlencoded({ extended: false}));
 // ------------------- Endpoints
 
 app.get('/books', async (req, res) => {
-    const query = 'SELECT * FROM books LIMIT 50;';
+    const query = 'SELECT * FROM books LIMIT 32;';
     try {
       const [rows] = await connection.query(query);
       console.log(rows);
