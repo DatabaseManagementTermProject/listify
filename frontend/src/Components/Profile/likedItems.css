@@ -76,7 +76,7 @@
 }
 
 .titleContainer {
-
+    text-align: center;
     margin-bottom: 10px;
     font-size: 12px;
     font-style: normal;
@@ -92,6 +92,7 @@
 
 .categoryContainer {
 
+    text-align: center;
     color: gray;
     margin-bottom: 10px;
     font-size: 12px;

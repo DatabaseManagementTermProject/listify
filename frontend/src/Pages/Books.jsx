@@ -8,7 +8,9 @@ const AllBooks = () => {
     return (
         <div>
             <NavBar />
-            <h1>All Books</h1>
+            <div className="pageTitleContainer">
+                All Books
+            </div>
              <BookCards />
         </div>
 

@@ -1,12 +1,5 @@
-h1 {
-    margin: 1.5rem;
-    text-align: center;
-}
-
-.likeButton {
-    position: absolute;
-    border-radius: 15%;
-    margin: 0%;
-    background-color: black;
-    border-color: black;
+.pageTitleContainer {
+    margin: 3%;
+    font-size: 30px;
+    align-items: left;
 }
