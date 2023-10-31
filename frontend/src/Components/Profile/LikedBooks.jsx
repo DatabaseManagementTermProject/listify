@@ -62,17 +62,21 @@ function LikedBooks() {
         <ul style={{display: 'inline', whiteSpace: 'nowrap', overflow: 'auto'}}>
           {books.map((d, i) => (
             <div className='container'>
-              <img src={d.coverImg} className='images'/>
-              <div className='overlay'>
-                <div className='description'>{d.description}</div>
-                <OverlayTrigger
-					placement="bottom"
-					delay={{ show: 0, hide: 100 }}
-					overlay={renderTooltip}
-					>
-					<img src={filledBookmark} className='bookmark' />
-                </OverlayTrigger>
-                </div>
+				<img src={d.coverImg} className='images'/>
+				<div className='overlay'>
+				<div className='titleContainer'>{d.title}</div>
+				<div className='categoryContainer'>{d.category}</div>
+				<div className='description'>{d.description}</div>
+				<div className='buttonContainer'>
+					<OverlayTrigger
+						placement="bottom"
+						delay={{ show: 0, hide: 100 }}
+						overlay={renderTooltip}
+						>
+						<img src={filledBookmark} className='bookmark' onClick={() => likedBook(d)} />
+					</OverlayTrigger>
+				</div>
+				</div>
             </div>
           ))}
         </ul>

@@ -1,9 +1,4 @@
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/esm/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./likedItems.css"
 import bookmark from './bookmark.png'
@@ -64,18 +59,22 @@ function LikedMovies() {
         <ul style={{display: 'inline', whiteSpace: 'nowrap', overflow: 'auto'}}>
           {movies.map((d, i) => (
             <div className='container'>
-              <img src={d.coverImg} className='images'/>
-              <div className='overlay'>
-                <div className='description'>{d.description}</div>
-                <OverlayTrigger
-					placement="bottom"
-					delay={{ show: 0, hide: 100 }}
-					overlay={renderTooltip}
-					>
-					<img src={filledBookmark} className='bookmark' />
-                </OverlayTrigger>
-                </div>
+            <img src={d.coverImg} className='images'/>
+            <div className='overlay'>
+            <div className='titleContainer'>{d.title}</div>
+            <div className='categoryContainer'>{d.category}</div>
+            <div className='description'>{d.description}</div>
+            <div className='buttonContainer'>
+              <OverlayTrigger
+                placement="bottom"
+                delay={{ show: 0, hide: 100 }}
+                overlay={renderTooltip}
+                >
+                <img src={filledBookmark} className='bookmark' onClick={() => likeMovie(d)} />
+              </OverlayTrigger>
             </div>
+            </div>
+                </div>
           ))}
         </ul>
       </div>
