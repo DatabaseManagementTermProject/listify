@@ -1,18 +1,15 @@
 /*
     index.js
-
-    Establishes connection to server
-
 */
 
-// currently just set up for testing
+import supabase from './Config/db.js'
 import express from 'express'
 import dotenv from 'dotenv'
 import mysql from 'mysql2/promise'
 import cors from 'cors'
-// import bcrypt from 'bcrypt'
 
 dotenv.config( { path : '.env' } );
+
 const connection = await mysql.createConnection(process.env.DATABASE_URL)
 
 connection.connect((err) => {
@@ -31,10 +28,7 @@ const app = express()
 app.use(express.json());
 
 app.options(cors());
-
-// app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(cors())
-app.options('*', cors());
 
 // Not sure what this is needed for yet lol
 app.use(express.urlencoded({ extended: false}));
@@ -42,11 +36,16 @@ app.use(express.urlencoded({ extended: false}));
 // ------------------- Endpoints
 
 app.get('/books', async (req, res) => {
-    const query = 'SELECT * FROM books LIMIT 32;';
+
+  // already switched to supabase
     try {
-      const [rows] = await connection.query(query);
-      console.log(rows);
-      res.send(rows);
+      let { data: Books, error } = await supabase
+      .from('Books')
+      .select('*')
+      .range(0, 31)
+      .order('id', { ascending: true })
+
+      res.send(Books);
     } catch (err) {
       console.log(err)
     }
@@ -202,51 +201,6 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
   }
 })
 
-// // Request for Adding method to liked table
-// app.post('/add', async (req, res) => {
-//   try {
-//     console.log("It is FREAKING in here")
-//     console.log("Body: ", req.body)
-//     let addLibrary = req.addLibrary;
-//     let userID = req.body["addUserID"];
-//     let itemID = req.body["addItemID"];
-//     console.log("check", addLibrary, itemID)
-//     if (addLibrary == "books") {
-//       addLibrary = "likedBooks";
-//       itemID = "bookID";
-//     } else if (addLibrary == "movies") {
-//       addLibrary = "likedMovies";
-//       itemID = "movieID";
-//     } else if (addLibrary == "videoGames") {
-//       addLibrary = "likedVideoGames";
-//       itemID = "videoGameID";
-//     }
-  
-//     const query = 'INSERT INTO ' + addLibrary + ' ( userID, ' +  itemID + ' ) VALUES ( ' + userID + ', ' + itemID + ' );';
-//     await connection.query(query)
-//   } catch (err) {
-//     console.error(err);
-//   }
-// });
-
-// // Request for Removing method from liked table
-// app.delete('/delete', async(req, res) => {
-//   let libraryDelete;
-//   let itemID = "somethinginput"; // Need to change later
-//   if (library == "books") { // Need to change library input
-//     libraryDelete = "likedBooks";
-//   } else if (library == "movies") {
-//     libraryDelete = "likedMovies";
-//   } else if (library == "videoGames") {
-//     libraryDelete = "likedVideoGames";
-//   }
-//   const query = 'DELETE FROM ' + libraryDelete + ' WHERE id = ' + itemID;
-//   connection.query(query, [data.value1, data.value2], (error, results, fields) => {
-//     if (error) throw error;
-//     res.send('Data deleted successfully');
-//   });
-// });
-
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
@@ -307,10 +261,6 @@ bcrypt.hash(password, 10, (err, hashedPassword) => {
   });
   }
 }); });
-
-app.get('/test', (req, res) => {
-  res.send('Server is connected to the frontend');
-});
 
 // test to see if the connection is working
 app.listen(3002, () => {

@@ -4,8 +4,8 @@ A content aggregator for different media types (movies, TV shows, videogames, bo
 
 ## Table of Contents
 
-* [General Info](#General-Information)
-* [Technologies](#Technologies)
+- [General Info](#General-Information)
+- [Technologies](#Technologies)
 
 ## General Information
 
@@ -13,8 +13,8 @@ This is a database management course term project which is meant to be a databas
 
 ## Technologies
 
-* HTML
-* CSS
-* React.js
-* Django
-* MySQL
+- HTML
+- CSS
+- React.js
+- Node.js
+- MySQL

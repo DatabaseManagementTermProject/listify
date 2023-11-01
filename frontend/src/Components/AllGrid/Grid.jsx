@@ -14,9 +14,8 @@ import Tooltip from 'react-bootstrap/Tooltip';
 
 import { useState, useEffect } from 'react';
 
-
-
-function BookCards() {
+// 
+function AllGrid() {
 
     const [books, setBooks] = useState([]);
     const [likes, setLikes] = useState([]);
@@ -113,5 +112,5 @@ function BookCards() {
       );
 }
 
-export default BookCards
+export default AllGrid
 
