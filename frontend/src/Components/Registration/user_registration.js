@@ -3,6 +3,7 @@ import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../database.js';
+import "./registration_style.css"
 
 function UserRegistration () {
     const [username, setUsername] = useState('');
@@ -36,10 +37,10 @@ function UserRegistration () {
     }
 
 return(
-    <div className = "register">
+    <div className = "register-container">
+        <img className="login-logo" src="Listify-color.png" alt="logo"/>
         <Form onSubmit={handleRegistration}>
             <Form.Group controlId="username">
-                <Form.Label>Username</Form.Label>
                 <Form.Control
                     type="text"
                     name="username"
@@ -50,7 +51,6 @@ return(
             </Form.Group>
 
             <Form.Group controlId="email">
-                <Form.Label>Email</Form.Label>
                 <Form.Control
                     type="text"
                     name="email"
@@ -62,7 +62,6 @@ return(
             </Form.Group>
 
             <Form.Group controlId="password">
-                <Form.Label>Password</Form.Label>
                 <Form.Control
                     type="password"
                     name="password"
@@ -74,7 +73,6 @@ return(
             </Form.Group>
 
             <Form.Group controlId="confirmPassword">
-                <Form.Label>Confirm Password</Form.Label>
                 <Form.Control
                     type="password"
                     name="password"
@@ -86,8 +84,8 @@ return(
             </Form.Group>
             {passwordMatchError && <p className="error-message">{passwordMatchError}</p>}
 
-            <button type="button" onClick={handleRegistration}>
-                Register Now!
+            <button className="button-59" type="button" onClick={handleRegistration}>
+                Register Now
             </button>
         </Form>
     </div>

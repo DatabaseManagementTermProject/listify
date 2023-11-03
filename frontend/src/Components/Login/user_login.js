@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import "./login_style.css";
 import { supabase } from '../../database.js';
 import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
+
+document.body.style.backgroundColor = "black";
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -42,7 +45,8 @@ const Login = () => {
     return (
     <div className="Login">
       <div className="login-container">
-        <h2>Login</h2>
+          <img className="login-logo" src="Listify-color.png" alt="logo"/>
+          <br></br>
         <form onSubmit={handleLogin}>
           <input
             type="text"
@@ -58,8 +62,9 @@ const Login = () => {
             value={formData.password}
             onChange={handleChange}
           />
-          <button type="submit">Login</button>
+          <button className="button-59"  type="submit">Login</button>
         </form>
+        <p> Not a member yet? <Link to="/register">Register here</Link> </p>
       </div>
     </div>
     );
