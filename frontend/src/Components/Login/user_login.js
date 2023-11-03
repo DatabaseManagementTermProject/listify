@@ -1,70 +1,68 @@
 import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import "./login_style.css";
+import { supabase } from '../../database.js';
+import { useNavigate } from "react-router-dom";
 
-export default function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+const Login = () => {
+    const [formData, setFormData] = useState({
+      email: '',
+      password: '',
+    });
 
-function validateForm() {
-    return email.length > 0 && password.length > 0;
-}
-
-const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    // Send a POST request to your backend API for login
-    try {
-        const response = await fetch('http://localhost:3002/login', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
+    const navigate = useNavigate();
+  
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    };
+  
+    const handleLogin = async (e) => {
+      e.preventDefault();
+  
+      try {
+        const { user, error } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password,
         });
-
-        if (response.status === 200) {
-            // Login was successful, handle the token and user session
+  
+        if (error) {
+          console.error('Login error:', error);
         } else {
-            // Display an error message to the user
-            console.error("Login failed");
+          console.log('Logged in as:', user);
+          navigate('/allbooks');
         }
-    } catch (error) {
-        console.error("Error during login:", error);
-    }
-};
-
-document.body.style = 'background: white;';
-
-return (
+      } catch (error) {
+        console.error('Login error:', error.message);
+      }
+    };
+  
+    return (
     <div className="Login">
-        <div className="app-logo">
-        <img src="https://i.ibb.co/dtbR9kL/i-m-bored-1.png"
-        alt= "logo"
-        style={{ width: '200px', height: 'auto' }}></img>
-        </div>
-        <div className="centered-form">
-            <Form class="col-md-4 mx-auto" onSubmit={handleSubmit}>
-                <Form.Group size="lg" controlId="email">
-                    <Form.Control
-                        autoFocus
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </Form.Group>
-                <Form.Group size="lg" controlId="password">
-                    <Form.Control
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                />
-                </Form.Group>
-                <br></br>
-                <button class="button-20" role="button" disabled={!validateForm()}> Login </button>
-            </Form>
-            <p style={{color: "white", fontFamily: "'league spartan', sans-serif"}}> Don't have an account? <a href="http://localhost:3000/register">Register here.</a></p>
-        </div>
+      <div className="login-container">
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <input
+            type="text"
+            placeholder="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <button type="submit">Login</button>
+        </form>
+      </div>
     </div>
-);}
+    );
+  };
+  
+  export default Login;

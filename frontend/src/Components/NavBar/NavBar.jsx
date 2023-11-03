@@ -1,18 +1,15 @@
 // import React from "react";
 import './NavBar.css';
-import logo from './logo.png';
 // import profileImg from './profile-img.png'
 import { Link } from "react-router-dom";
 import house from './house.png'
 import profile from './profile.png'
 
-import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { Navigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function NavBar(props) {
@@ -26,8 +23,8 @@ function NavBar(props) {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link className='navLink'><Link to="/home"><img src={house} style={{width: 30}}/></Link></Nav.Link>
-            <Nav.Link className='navLink'><Link to='/profile'><img src={profile} style={{width: 30}} /></Link></Nav.Link>
+            <Nav.Link className='navLink'><Link to="/home"><img src={house} alt='house' style={{width: 30}}/></Link></Nav.Link>
+            <Nav.Link className='navLink'><Link to='/profile'><img src={profile} alt='profile' style={{width: 30}} /></Link></Nav.Link>
             <NavDropdown className='navLink' title="Categories" id="navbarScrollingDropdown">
               <NavDropdown.Item><Link to="/allbooks" style={{ textDecoration: 'none' }}>Books</Link></NavDropdown.Item>
               <NavDropdown.Item><Link to="/allmovies" style={{ textDecoration: 'none' }}>Movies</Link></NavDropdown.Item>

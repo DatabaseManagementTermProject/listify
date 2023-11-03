@@ -1,50 +1,39 @@
 import React from "react";
 import { useState } from "react";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../database.js';
 
-function RegistrationForm() {
-    const [formData, setFormData] = useState({
-        // matches the SQL query data for users table
-        userName: '',
-        email: '',
-        password: '',
-    });
+function UserRegistration () {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [passwordMatchError, setPasswordMatchError] = useState('');
 
-const handleSubmit = (e) => {
-    // extracts name and value from user input
-    const { name, value } = e.target;
-    // updates formData with the new data
-    setFormData({ ...formData, [name]: value });
-}
+    const navigate = useNavigate();
 
-const handleRegistration = async (e) => {
-    // stop page from refreshing on submission
-    e.preventDefault();
+    const handleRegistration = async () => {
 
-    try {
-        const response = await fetch('http://localhost:3002/register', {
-        // specifies the data should be sent to the server
-        method: 'POST',
-        headers: {
-            // sets content of the request to json
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            },
-            // convert data in formData to json string
-            body: JSON.stringify(formData),
-            });
+        if (password !== confirmPassword) {
+            setPasswordMatchError('Passwords do not match');
+            return;
+          }
 
-        // tests if submission was successful
-        if (response.ok) {
-            console.log('Registration successful');
-        } else {
-            console.error('Registration failed. Status:', response.status, 'Status Text:', response.statusText);
+        try {
+            const { error } = await supabase.auth.signUp({
+                email, password });
+
+            if (error) {
+                console.error(error);
+            }
+            else {
+                navigate('/login');
+            }
+        } catch (error) {
+            console.error("Error signing up user:", error);
         }
-    } catch (error) {
-        console.error('Error:', error);
     }
-};
 
 return(
     <div className = "register">
@@ -53,10 +42,10 @@ return(
                 <Form.Label>Username</Form.Label>
                 <Form.Control
                     type="text"
-                    name="userName"
+                    name="username"
                     placeholder="Username"
-                    value={formData.userName}
-                    onChange={handleSubmit}
+                    value={username}
+                    onChange={ (e) => setUsername(e.target.value) }
                 />
             </Form.Group>
 
@@ -66,28 +55,43 @@ return(
                     type="text"
                     name="email"
                     placeholder="Email"
-                    value={formData.email}
-                    onChange={handleSubmit}
+                    value={email}
+                    onChange={ (e) => setEmail(e.target.value) }
+                    required
                 />
             </Form.Group>
 
             <Form.Group controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
-                    type="text"
+                    type="password"
                     name="password"
                     placeholder="Password"
-                    value={formData.password}
-                    onChange={handleSubmit}
+                    value={password}
+                    onChange={ (e) => setPassword(e.target.value) }
+                    required
                 />
             </Form.Group>
 
-            <Button variant="primary" type="submit">
-                Register Account
-            </Button>
+            <Form.Group controlId="confirmPassword">
+                <Form.Label>Confirm Password</Form.Label>
+                <Form.Control
+                    type="password"
+                    name="password"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={ (e) => setConfirmPassword(e.target.value) }
+                    required
+                />
+            </Form.Group>
+            {passwordMatchError && <p className="error-message">{passwordMatchError}</p>}
+
+            <button type="button" onClick={handleRegistration}>
+                Register Now!
+            </button>
         </Form>
     </div>
     );
 }
 
-export default RegistrationForm;
+export default UserRegistration;

@@ -18,7 +18,7 @@ const Home = (props) => {
    function HandleSearch(event) {
         var url = `http://localhost:3002/home/search/${event.target.value}`
 
-        if (event.target.value != ""){
+        if (event.target.value !== ""){
             Promise.all(
               [
                 fetch(url),
