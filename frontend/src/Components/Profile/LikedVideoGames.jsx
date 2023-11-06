@@ -1,17 +1,16 @@
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/esm/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./likedItems.css"
+import emptyBookmark from './bookmark.png'
+import filledBookmark from './bookmarkfill.png'
+import Tooltip from 'react-bootstrap/Tooltip';
 
 import { useState, useEffect } from 'react';
 
 function LikedVideoGames() {
 
     const [videogames, setVideoGames] = useState([]);
+    const [liked, setLiked] = useState([]);
     
     useEffect(() => {
 
@@ -29,12 +28,10 @@ function LikedVideoGames() {
             });
     }, []);
 
-    function likeVideoGame(videoGame){
+    function likeVideoGame(videoGame, index){
 
 
       var id = videoGame.videoGameID;
-
-      console.log(id)
   
       // replace 1 with userID of person logged on
       var url = `http://localhost:3002/get/1/videoGames/delete/${id}`;
@@ -49,29 +46,43 @@ function LikedVideoGames() {
           .catch((error) => {
               console.log(error);
           });
+
+          // set state variable for automatic re-render... probably a better way of doing this
+          setVideoGames(oldValues => {
+            return oldValues.filter((_, i) => i !== index)
+          })
      }
 
+     const renderTooltip = (props) => (
+      <Tooltip id="button-tooltip" {...props}>
+        Remove
+      </Tooltip>
+      );
+
     return (
-        <Row xs={1} md={7}>
-          {Array.from({ length: videogames.length }).map((_, idx) => (
-            <Col key={idx} style={{display: "inline-block", width: 100}} className="mx-4 my-2">
-              <Card>
-                {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
-                <Button className='likeButton' onClick={() => likeVideoGame(videogames[idx])}>♥︎</Button>
-                <OverlayTrigger trigger='hover' placement="auto" overlay={
-                        <Popover id="popover-basic">
-                        <Popover.Header as="h3">{videogames[idx].title} ({videogames[idx].yearMade})</Popover.Header>
-                        <Popover.Header as="p">{videogames[idx].genre}</Popover.Header>
-                        <Popover.Body>
-                        </Popover.Body>
-                        </Popover>
-                }>
-                <Card.Img variant="top" src={videogames[idx].coverImg} style={{width: 100, height: 150}} className='itemImage'/>
-                </OverlayTrigger>
-              </Card>
-            </Col>
+      <div style={{overflowX: 'scroll'}} className='scrollContainer'>
+        <ul style={{display: 'inline', whiteSpace: 'nowrap', overflow: 'auto'}}>
+          {videogames.map((d, i) => (
+            <div className='container'>
+            <img src={d.coverImg} className='images'/>
+            <div className='overlay'>
+            <div className='titleContainer'>{d.title}</div>
+            <div className='categoryContainer'>{d.category}</div>
+            <div className='description'>{d.description}</div>
+            <div className='buttonContainer'>
+              <OverlayTrigger
+                placement="bottom"
+                delay={{ show: 0, hide: 100 }}
+                overlay={renderTooltip}
+                >
+                <img src={liked ? filledBookmark : emptyBookmark} className='bookmark' onClick={() => likeVideoGame(d, i)} />
+              </OverlayTrigger>
+            </div>
+            </div>
+                </div>
           ))}
-        </Row>
+        </ul>
+      </div>
       );
 }
 
