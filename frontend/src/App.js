@@ -7,6 +7,8 @@ import Login from "./Pages/Login";
 import Register from "./Pages/Register"; 
 import Profile from './Pages/Profile';
 import Grid from './Components/AllGrid/Grid';
+import AllMovies from './Pages/Movies';
+import AllVideoGames from './Pages/VideoGames';
 
 function App() {
     return (
@@ -16,8 +18,8 @@ function App() {
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/allbooks" element={<Grid list='books'/>} />
-                <Route path="/allmovies" element={<Grid list='movies' />} />
-                <Route path="/allvideogames" element={<Grid list='videogames' />} />
+                <Route path="/allmovies" element={<AllMovies />} />
+                <Route path="/allvideogames" element={<AllVideoGames />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/profile" element={<Profile />} />
             </Routes>
