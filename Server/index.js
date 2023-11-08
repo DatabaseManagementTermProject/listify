@@ -16,11 +16,6 @@ import { createClient } from '@supabase/supabase-js'
 dotenv.config( { path : '.env' } );
 const connection = await mysql.createConnection(process.env.DATABASE_URL);
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-const supabaseApiKey = process.env.REACT_APP_SUPABASE_KEY;
-
-export const supabase = createClient(supabaseUrl, supabaseApiKey);
-
 connection.connect((err) => {
   if (err) {
     console.error('Error connecting to the database:', err);
