@@ -35,10 +35,10 @@ function NavBar(props) {
             <Nav.Link className='navLink' onClick={() => navigate('/home')}>Home</Nav.Link>
             <Nav.Link className='navLink' onClick={() => navigate('/profile')}>My Lists</Nav.Link>
             <NavDropdown className='navDropDown' title="Browse" id="navbarScrollingDropdown">
-              <NavDropdown.Item onClick={() => navigate('/allbooks')}>Books</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => navigate('/allmovies')}>Movies</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => navigate('/books')}>Books</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => navigate('/movies')}>Movies</NavDropdown.Item>
               {/* <NavDropdown.Divider /> */}
-              <NavDropdown.Item onClick={() => navigate('/allvideogames')}>Video Games</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => navigate('/videogames')}>Video Games</NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Form className="d-flex">

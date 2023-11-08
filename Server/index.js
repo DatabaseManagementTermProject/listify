@@ -44,8 +44,43 @@ app.get('/books', async (req, res) => {
       .select('*')
       .range(0, 31)
       .order('id', { ascending: true })
-
+      console.log(Books);
       res.send(Books);
+    } catch (err) {
+      console.log(err)
+    }
+})
+
+app.get('/movies', async (req, res) => {
+
+  // already switched to supabase
+    try {
+      let { data: Movies, error } = await supabase
+      .from('Movies')
+      .select('*')
+      .range(0, 31)
+      .order('id', { ascending: true })
+
+      console.log(Movies);
+      res.send(Movies);
+    } catch (err) {
+      console.log(err)
+    }
+})
+
+app.get('/videogames', async (req, res) => {
+
+
+  // already switched to supabase
+    try {
+      let { data: VideoGames, error } = await supabase
+      .from('VideoGames')
+      .select('*')
+      .range(0, 31)
+      .order('id', { ascending: true })
+      
+      console.log(VideoGames);
+      res.send(VideoGames);
     } catch (err) {
       console.log(err)
     }
@@ -66,27 +101,27 @@ app.get('/home/search/:letters', async (req, res) => {
   }
 })
 
-app.get('/movies', async (req, res) => {
-  const query = 'SELECT * FROM movies LIMIT 50;';
-  try {
-    const [rows] = await connection.query(query);
-    console.log(rows);
-    res.send(rows);
-  } catch (err) {
-    console.log(err)
-  }
-})
+// app.get('/movies', async (req, res) => {
+//   const query = 'SELECT * FROM movies LIMIT 50;';
+//   try {
+//     const [rows] = await connection.query(query);
+//     console.log(rows);
+//     res.send(rows);
+//   } catch (err) {
+//     console.log(err)
+//   }
+// })
 
-app.get('/videogames', async (req, res) => {
-  const query = 'SELECT * FROM videoGames LIMIT 50;';
-  try {
-    const [rows] = await connection.query(query);
-    console.log(rows);
-    res.send(rows);
-  } catch (err) {
-    console.log(err)
-  }
-})
+// app.get('/videogames', async (req, res) => {
+//   const query = 'SELECT * FROM videoGames LIMIT 50;';
+//   try {
+//     const [rows] = await connection.query(query);
+//     console.log(rows);
+//     res.send(rows);
+//   } catch (err) {
+//     console.log(err)
+//   }
+// })
 
 // Get the method from the library
 app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {

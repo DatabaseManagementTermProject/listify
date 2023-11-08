@@ -7,7 +7,6 @@ import emptyBookmark from '../Profile/bookmark.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 import NavBar from "../NavBar/NavBar";
 
-
 import { useState, useEffect } from 'react';
 
 // when I want to render a component, pass into the props which one you want to render ('books', 'movies', 'videogames')
@@ -16,7 +15,7 @@ function Grid(list) {
   console.log(list.list);
 	
 	//TODO: Change this entire Grid component to be dynamic based on the list passed in.
-    const [books, setBooks] = useState([]);
+    const [item, setItem] = useState([]);
     const [likes, setLikes] = useState([]);
 
     useEffect(() => {
@@ -26,10 +25,11 @@ function Grid(list) {
             fetch(`http://localhost:3002/${list.list}`),
             fetch(`http://localhost:3002/get/1/${list.list}/getArray/-1`)
           ]
-        ).then(([resBooks, resLikes]) => {
-           return Promise.all([resBooks.json(), resLikes.json()])
-        }).then(([dataBooks, dataLikes]) => {
-          setBooks(dataBooks);
+        ).then(([resItem, resLikes]) => {
+           return Promise.all([resItem.json(), resLikes.json()])
+        }).then(([dataItem, dataLikes]) => {
+          setItem(dataItem);
+          console.log(dataItem);
           setLikes(dataLikes);
         })
 
@@ -41,10 +41,10 @@ function Grid(list) {
 		likesArray.push(item.bookID)
 	})
 
-    function likedBook(id){
+    function likedItem(id){
     
         // replace 1 with userID of person logged on
-        var url = `http://localhost:3002/get/1/books/add/${id}`;
+        var url = `http://localhost:3002/get/1/${list.list}/add/${id}`;
     
         fetch(url)
             .then((res) => {
@@ -66,13 +66,10 @@ function Grid(list) {
 
     return (
       <>
-      <NavBar />
-      <div className="pageTitleContainer">
-          All Books
-      </div>
+      <h1 className='pageTitleContainer'>All {list.list}</h1>
         <div className='gridContainer'>
           <ul style={{display: 'inline-block'}}>
-            {books.map((d, i) => (
+            {item.map((d, i) => (
             <div key={i} className='container'>
                 <img src={require('./bookImages/' + i + '.jpg')} className='images'/>
                 <div className='overlay'>  
@@ -85,7 +82,7 @@ function Grid(list) {
 					delay={{ show: 0, hide: 100 }}
 					overlay={renderTooltip}
 					>
-					<img src={emptyBookmark} className='bookmark' onClick={() => likedBook(d, i)} />
+					<img src={emptyBookmark} className='bookmark' onClick={() => likedItem(d, i)} />
 					</OverlayTrigger>
                 </div>
               </div>

@@ -3,14 +3,14 @@ import React from "react";
 import NavBar from "../Components/NavBar/NavBar";
 import Grid from "../Components/AllGrid/Grid";
 
-const Movies = () => {
+const Books = () => {
     return (
         <div>
             <NavBar />
-            <Grid list='movies'/>
+            <Grid list='books'/>
         </div>
 
     );
 }
 
-export default Movies;
+export default Books;

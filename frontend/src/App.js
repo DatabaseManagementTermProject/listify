@@ -9,6 +9,9 @@ import Profile from './Pages/Profile';
 import Grid from './Components/AllGrid/Grid';
 import AllMovies from './Pages/Movies';
 import AllVideoGames from './Pages/VideoGames';
+import Movies from './Pages/Movies';
+import Books from './Pages/Books';
+import VideoGames from './Pages/VideoGames';
 
 function App() {
     return (
@@ -17,9 +20,9 @@ function App() {
                 <Route path="/" element={<Login />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/allbooks" element={<Grid list='books'/>} />
-                <Route path="/allmovies" element={<AllMovies />} />
-                <Route path="/allvideogames" element={<AllVideoGames />} />
+                <Route path="/books" element={<Books />} />
+                <Route path="/movies" element={<Movies />} />
+                <Route path="/VideoGames" element={<VideoGames />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/profile" element={<Profile />} />
             </Routes>
