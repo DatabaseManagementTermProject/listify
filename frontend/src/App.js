@@ -9,7 +9,6 @@ import Profile from './Pages/Profile';
 import Grid from './Components/AllGrid/Grid';
 
 function App() {
-
     return (
         <>
             <Routes>
@@ -23,37 +22,7 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
             </Routes>
         </>
-
-        // <div>
-        //     <div className = "App-header">
-        //         <div className = "App-logo">
-        //             <img src="https://i.ibb.co/dtbR9kL/i-m-bored-1.png"
-        //                 alt= "logo"
-        //                 style={{ width: '200px', height: 'auto' }}>
-        //             </img>
-        //         </div>
-        //         <div className = "registration-button">
-        //             <UserRegistrationButton />
-        //         </div>
-        //         <nav className="nav">
-        //             <a href="#movies">Movies</a>
-        //             <a href="#videogames">Video Games</a>
-        //             <a href="#books">Books</a>
-        //         </nav>
-        //     </div>
-        //     <div className="movies-container">
-        //         {posts.map(post => {
-        //             return (
-        //                 <div className="info" key={post.bookID}>
-        //                     <p>{post.title}</p>
-        //                 </div>
-        //             )
-        //         })}
-        //     </div>
-        // </div>
     )
 }
-
-
 
 export default App;
