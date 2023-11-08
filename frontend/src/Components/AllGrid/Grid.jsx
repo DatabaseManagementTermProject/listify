@@ -1,10 +1,4 @@
-
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/esm/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover';
 import './BookCards.css'
 import './AllBooks.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,7 +13,7 @@ import { useState, useEffect } from 'react';
 // when I want to render a component, pass into the props which one you want to render ('books', 'movies', 'videogames')
 function Grid(list) {
 
-	console.log(list);
+  console.log(list.list);
 	
 	//TODO: Change this entire Grid component to be dynamic based on the list passed in.
     const [books, setBooks] = useState([]);
@@ -29,8 +23,8 @@ function Grid(list) {
 
         Promise.all(
           [
-            fetch("http://localhost:3002/books"),
-            fetch('http://localhost:3002/get/1/books/getArray/-1')
+            fetch(`http://localhost:3002/${list.list}`),
+            fetch(`http://localhost:3002/get/1/${list.list}/getArray/-1`)
           ]
         ).then(([resBooks, resLikes]) => {
            return Promise.all([resBooks.json(), resLikes.json()])
