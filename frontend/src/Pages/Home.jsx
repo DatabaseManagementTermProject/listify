@@ -33,7 +33,6 @@ const Home = (props) => {
         }
     }
     
-
 	var likesArray = [];
 	likes.forEach(item => {
 		likesArray.push(item.bookID)

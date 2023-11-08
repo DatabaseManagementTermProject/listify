@@ -9,7 +9,7 @@ const Profile = () => {
     return(
         <div>
             <NavBar />
-            <h1 className="profileHeader">Profile</h1>
+            <div className="profileHeader">Lists</div>
             <h3 className="subheading">My Books</h3>
             <LikedBooks />
             <h3 className="subheading">My Movies</h3>

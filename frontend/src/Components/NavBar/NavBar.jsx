@@ -4,6 +4,9 @@ import './NavBar.css';
 import { Link } from "react-router-dom";
 import house from './house.png'
 import profile from './profile.png'
+import bookmark from '../Profile/bookmark.png'
+import { NavLink } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -13,8 +16,11 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function NavBar(props) {
+
+  const navigate = useNavigate();
+
   return (
-    <Navbar bg="dark" data-bs-theme="dark" className='navBarContainer'>
+    <Navbar bg="dark" data-bs-theme="dark" className='sticky-top'>
       <Container fluid>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
@@ -23,13 +29,13 @@ function NavBar(props) {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link className='navLink'><Link to="/home"><img src={house} alt='house' style={{width: 30}}/></Link></Nav.Link>
-            <Nav.Link className='navLink'><Link to='/profile'><img src={profile} alt='profile' style={{width: 30}} /></Link></Nav.Link>
-            <NavDropdown className='navLink' title="Categories" id="navbarScrollingDropdown">
-              <NavDropdown.Item><Link to="/allbooks" style={{ textDecoration: 'none' }}>Books</Link></NavDropdown.Item>
-              <NavDropdown.Item><Link to="/allmovies" style={{ textDecoration: 'none' }}>Movies</Link></NavDropdown.Item>
+            <Nav.Link className='navLink' onClick={() => navigate('/home')}>Home</Nav.Link>
+            <Nav.Link className='navLink' onClick={() => navigate('/profile')}>My Lists</Nav.Link>
+            <NavDropdown className='navDropDown' title="Browse" id="navbarScrollingDropdown">
+              <NavDropdown.Item onClick={() => navigate('/allbooks')}>Books</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => navigate('/allmovies')}>Movies</NavDropdown.Item>
               {/* <NavDropdown.Divider /> */}
-              <NavDropdown.Item><Link to="/allvideogames" style={{ textDecoration: 'none' }}>Video Games</Link></NavDropdown.Item>
+              <NavDropdown.Item onClick={() => navigate('/allvideogames')}>Video Games</NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Form className="d-flex">

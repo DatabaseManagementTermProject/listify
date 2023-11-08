@@ -1,11 +1,9 @@
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/esm/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./likedItems.css"
+import bookmark from './bookmark.png'
+import filledBookmark from './bookmarkfill.png'
+import Tooltip from 'react-bootstrap/Tooltip';
 
 import { useState, useEffect } from 'react';
 
@@ -30,12 +28,10 @@ function LikedMovies() {
     }, []);
 
 
-    function likeMovie(movie){
+    function likeMovie(movie, index){
 
 
       var id = movie.movieID;
-
-      console.log(id)
   
       // replace 1 with userID of person logged on
       var url = `http://localhost:3002/get/1/movies/delete/${id}`;
@@ -50,30 +46,42 @@ function LikedMovies() {
           .catch((error) => {
               console.log(error);
           });
+
+          setMovies(oldValues => {
+            return oldValues.filter((_, i) => i !== index)
+          })
     }
 
+    const renderTooltip = (props) => (
+      <Tooltip id="button-tooltip" {...props}>
+        Remove
+      </Tooltip>
+      );
+
     return (
-        <Row xs={1} md={7}>
-          {Array.from({ length: movies.length }).map((_, idx) => (
-            <Col key={idx} style={{display: "inline-block", width: 100}} className="mx-4 my-2">
-              <Card>
-                {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
-                <Button className='likeButton' onClick={() => likeMovie(movies[idx])}>♥︎</Button>
-                <OverlayTrigger trigger='hover' placement="auto" overlay={
-                        <Popover id="popover-basic">
-                        <Popover.Header as="h3">{movies[idx].title}</Popover.Header>
-                        <Popover.Header as="p">{movies[idx].director}</Popover.Header>
-                        <Popover.Body>
-                            {movies[idx].description}
-                        </Popover.Body>
-                        </Popover>
-                }>
-                  <Card.Img variant="top" src={movies[idx].coverImg} style={{width: 100, height: 150}} className='itemImage'/>
-                </OverlayTrigger>
-              </Card>
-            </Col>
+      <div style={{overflowX: 'scroll'}} className='scrollContainer'>
+        <ul style={{display: 'inline', whiteSpace: 'nowrap', overflow: 'auto'}}>
+          {movies.map((d, i) => (
+            <div className='container'>
+            <img src={d.coverImg} className='images'/>
+            <div className='overlay'>
+            <div className='titleContainer'>{d.title}</div>
+            <div className='categoryContainer'>{d.category}</div>
+            <div className='description'>{d.description}</div>
+            <div className='buttonContainer'>
+              <OverlayTrigger
+                placement="bottom"
+                delay={{ show: 0, hide: 100 }}
+                overlay={renderTooltip}
+                >
+                <img src={filledBookmark} className='bookmark' onClick={() => likeMovie(d, i)} />
+              </OverlayTrigger>
+            </div>
+            </div>
+                </div>
           ))}
-        </Row>
+        </ul>
+      </div>
       );
 }
 

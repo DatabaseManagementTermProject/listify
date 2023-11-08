@@ -2,3 +2,113 @@
     margin-top: 0%;
     padding-top: 0%;
 }
+
+/* .scrollContainer {
+} */
+
+.scrollContainer::-webkit-scrollbar{
+    display: none;
+}
+
+.images {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    transition: .5s ease;
+    backface-visibility: hidden;
+}
+
+.container {
+    padding: 0;
+    margin-right: 20px;
+    display: inline-block;
+    position: relative;
+    width: 200px;
+    height: 325px;
+}
+  
+.container .overlay{
+    width: 200px;
+    height: 325px;
+    text-wrap: wrap;
+    padding: 10px;
+
+    cursor: pointer;
+
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:black;
+    opacity:0;
+    transition:opacity 200ms ease-in-out;
+}
+
+.container:hover .overlay{
+    padding: 10px;
+    opacity:0.9;
+    cursor: pointer;
+}
+
+.overlay .description {
+    text-align: left;
+    position:absolute;
+    font-size: 12px;
+    color:#fff;
+    font-family:Arial, Helvetica, sans-serif;
+    display: -webkit-box; 
+    -webkit-box-orient: vertical; 
+    /* The amount of lines to show before ellipsis */
+    -webkit-line-clamp: 8; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+.bookmark {
+    width: 8%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+.titleContainer {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: bold;
+
+    display: -webkit-box; 
+    -webkit-box-orient: vertical; 
+    /* The amount of lines to show before ellipsis */
+    -webkit-line-clamp: 2; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+.categoryContainer {
+
+    text-align: center;
+    color: gray;
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.buttonContainer {
+    margin-left: 15px;
+    margin-bottom: 15px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+hr {
+    margin: 4%;
+    padding: 0;
+}
