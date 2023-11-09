@@ -63,10 +63,10 @@ function LikedMovies() {
         <ul style={{display: 'inline', whiteSpace: 'nowrap', overflow: 'auto'}}>
           {movies.map((d, i) => (
             <div className='container'>
-            <img src={d.coverImg} className='images'/>
+            <img src={require('../Grid/moviesImages/' + d.movieID + '.jpg')} className='images'/>
             <div className='overlay'>
             <div className='titleContainer'>{d.title}</div>
-            <div className='categoryContainer'>{d.category}</div>
+            <div className='categoryContainer'>{d.director}</div>
             <div className='description'>{d.description}</div>
             <div className='buttonContainer'>
               <OverlayTrigger

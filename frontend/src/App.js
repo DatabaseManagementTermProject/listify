@@ -6,7 +6,7 @@ import Home from "./Pages/Home";
 import Login from "./Pages/Login"; 
 import Register from "./Pages/Register"; 
 import Profile from './Pages/Profile';
-import Grid from './Components/AllGrid/Grid';
+import Grid from './Components/Grid/Grid';
 import AllMovies from './Pages/Movies';
 import AllVideoGames from './Pages/VideoGames';
 import Movies from './Pages/Movies';
