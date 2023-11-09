@@ -1,0 +1,13 @@
+.container {
+    margin-bottom: 20px;
+}
+
+.gridContainer {
+    text-align: center;
+}
+
+.pageTitleContainer {
+    margin: 3%;
+    font-size: 30px;
+    align-items: left;
+}

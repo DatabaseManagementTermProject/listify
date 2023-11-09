@@ -65,7 +65,7 @@ function LikedBooks() {
         <ul style={{display: 'inline', whiteSpace: 'nowrap', overflow: 'auto'}}>
           {books.map((d, i) => (
             <div key={i} className='container'>
-            <img src={require('../AllGrid/bookImages/' + d.bookID + '.jpg')} className='images'/>
+            <img src={require('../Grid/booksImages/' + d.bookID + '.jpg')} className='images'/>
             <div className='overlay'>
             <div className='titleContainer'>{d.title}</div>
             <div className='categoryContainer'>{d.category}</div>
