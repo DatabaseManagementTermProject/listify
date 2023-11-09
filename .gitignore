@@ -2,3 +2,4 @@
 /node_modules
 frontend/src/Components/Grid/booksImages
 frontend/src/Components/Grid/moviesImages
+/frontend/.env

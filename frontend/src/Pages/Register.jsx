@@ -1,10 +1,10 @@
 import React from "react";
-import RegistrationForm from '../Components/Registration/user_registration.js'
+import UserRegistration from '../Components/Registration/user_registration'
 
 const Register = () => {
     return(
         <div className = "registration-page">
-        <RegistrationForm />
+        <UserRegistration />
         </div>
         );
 }

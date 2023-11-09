@@ -1,6 +1,5 @@
 // import React from "react";
 import './NavBar.css';
-import logo from './logo.png';
 // import profileImg from './profile-img.png'
 import { Link } from "react-router-dom";
 import house from './house.png'
@@ -9,13 +8,11 @@ import bookmark from '../Profile/bookmark.png'
 import { NavLink } from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
 
-import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { Navigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function NavBar(props) {

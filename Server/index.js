@@ -35,6 +35,26 @@ app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
+app.post('/register', async (req, res) => {
+
+  const { userName, email, password } = req.body;
+
+// for user input, hashes user password before storing into database
+try {
+// Hash the password
+const hashedPassword = await bcrypt.hash(password, 10);
+
+// Insert the hashed password into the database
+const queryText = 'INSERT INTO users (userName, email, password) VALUES (?, ?, ?)';
+await connection.query(queryText, [userName, email, hashedPassword]);
+
+res.status(201).json({ message: 'Account created' });
+} catch (error) {
+console.error('Error during registration:', error);
+res.status(500).json({ error: 'Registration failed' });
+}
+});
+
 app.get('/books', async (req, res) => {
 
   // already switched to supabase
