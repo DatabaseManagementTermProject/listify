@@ -58,8 +58,6 @@ function LikedBooks() {
 	  );
 
 
-    // fetch liked lists and if likedID = idx, change state variable for the like button
-
     return (
       <div style={{overflowX: 'scroll'}} className='scrollContainer'>
         <ul style={{display: 'inline', whiteSpace: 'nowrap', overflow: 'auto'}}>

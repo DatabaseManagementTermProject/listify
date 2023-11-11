@@ -26,12 +26,12 @@
     display: inline-block;
     position: relative;
     width: 200px;
-    height: 325px;
+    height: 300px;
 }
   
 .container .overlay{
     width: 200px;
-    height: 325px;
+    height: 300px;
     text-wrap: wrap;
     padding: 10px;
 

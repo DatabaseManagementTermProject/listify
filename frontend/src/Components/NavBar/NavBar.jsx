@@ -1,13 +1,6 @@
 // import React from "react";
 import './NavBar.css';
-// import profileImg from './profile-img.png'
-import { Link } from "react-router-dom";
-import house from './house.png'
-import profile from './profile.png'
-import bookmark from '../Profile/bookmark.png'
-import { NavLink } from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
-
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
@@ -46,7 +39,6 @@ function NavBar(props) {
               aria-label="Search"
               onChange={props.searchDatabase}
             />
-            {/* <Button variant="outline-success" >Search</Button> */}
           </Form>
         </Navbar.Collapse>
       </Container>
