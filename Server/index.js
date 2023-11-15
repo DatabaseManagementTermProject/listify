@@ -121,6 +121,67 @@ app.get('/home/search/:letters', async (req, res) => {
   }
 })
 
+app.get('/getLikedBooks/:uid', async (req, res) => {
+
+  const uid = req.params.uid
+
+  console.log(uid)
+
+  try {
+    let { data: Books, error } = await supabase
+    .from('likedBooks')
+    .select('*, Books:Books( * )')
+    .eq('uid', uid)
+
+    console.log(Books)
+
+    res.send(Books);
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+app.get('/removeLikedBook/:uid/:itemId', async (req, res) => {
+
+	const uid = req.params.uid;
+	const itemId = req.params.itemId;
+
+	console.log(`Removing book ${itemId}`)
+
+	try {
+		let { data: Books, error } = await supabase
+		.from('likedBooks')
+		.delete()
+		.eq('uid', uid)
+		.eq('itemId', itemId)
+
+		res.send(Books);
+	} catch (err) {
+		console.log(err)
+	}
+})
+
+app.get('/addLikedBook/:uid/:itemId', async (req, res) => {
+
+	const uid = req.params.uid;
+	const itemId = req.params.itemId;
+
+	console.log(`Adding book ${itemId}`)
+
+	try {
+		let { data: Books, error } = await supabase
+		.from('likedBooks')
+		.insert([
+			{ 'uid': uid, 'itemId': itemId },
+		])
+		.select()
+		
+	} catch (err) {
+		console.log(err)
+	}
+})
+
+
 // Get the method from the library
 app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
   // get the element from end point

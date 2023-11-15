@@ -63,7 +63,7 @@ function LikedVideoGames() {
       <div style={{overflowX: 'scroll'}} className='scrollContainer'>
         <ul style={{display: 'inline', whiteSpace: 'nowrap', overflow: 'auto'}}>
           {videogames.map((d, i) => (
-            <div className='container'>
+            <div key={i} className='container'>
             <img src={require('../Grid/videoGamesImages/' + d.videoGameID + '.jpg')} className='images'/>
             <div className='overlay'>
             <div className='titleContainer'>{d.title}</div>

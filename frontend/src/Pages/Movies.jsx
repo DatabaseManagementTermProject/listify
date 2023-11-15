@@ -1,5 +1,4 @@
 import React from "react";
-
 import NavBar from "../Components/NavBar/NavBar";
 import Grid from "../Components/Grid/Grid";
 
@@ -10,7 +9,6 @@ const Movies = () => {
             <h1 className='pageTitleContainer'>All Movies</h1>
             <Grid list='movies'/>
         </div>
-
     );
 }
 

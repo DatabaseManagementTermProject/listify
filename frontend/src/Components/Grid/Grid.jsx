@@ -5,6 +5,7 @@ import filledBookmark from '../Profile/bookmarkfill.png'
 import emptyBookmark from '../Profile/bookmark.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useState, useEffect } from 'react';
+import { supabase } from '../../database';
 
 // Grid renders a grid of whatever parameter is passed in ('books', 'movies', 'videoGames')
 function Grid(list) {
@@ -40,21 +41,21 @@ function Grid(list) {
 	})
 
 	// adds an item to the users appropriate liked list when the bookmark is clicked
-    function likedItem(id, index){
-    
-        // TODO: update this url once switched to Supabase
-        var url = `http://localhost:3002/get/1/${list.list}/add/${id.id}`;
-    
-        fetch(url)
-            .then((res) => {
-                return res.json()
-            })
-            .then((data) => {
-                console.log(data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+    function addLikedItem(id, index){
+
+		supabase.auth.getUser().then((data) => {
+			
+		let url = `http://localhost:3002/addLikedBook/${data.data.user.id}/${index}`;
+		return url;
+
+		}).then((url) => {
+
+			fetch(url)
+			.then((error) => {
+				console.log(error)
+			})
+
+		})
     }
 
 	// This adds a "save" tooltip that gets called when you hover over the bookmark icon
@@ -82,7 +83,7 @@ function Grid(list) {
                   delay={{ show: 0, hide: 100 }}
                   overlay={renderTooltip}
                   >
-                    <img src={bookmarks[i]} className='bookmark' onClick={() => likedItem(d, i)} />
+                    <img src={emptyBookmark} className='bookmark' onClick={() => addLikedItem(d, i)} />
                   </OverlayTrigger>
                 </div>
               </div>
