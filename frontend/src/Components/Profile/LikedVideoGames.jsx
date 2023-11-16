@@ -6,37 +6,54 @@ import filledBookmark from './bookmarkfill.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 
 import { useState, useEffect } from 'react';
+import { supabase } from '../../database';
 
 function LikedVideoGames() {
 
     const [videogames, setVideoGames] = useState([]);
     const [liked, setLiked] = useState([]);
+	const [UID, setUID] = useState();
     
     useEffect(() => {
 
-        var url = "http://localhost:3002/get/1/videoGames/getArray/-1";
+        supabase.auth.getUser().then((data) => {
+			
+			let url = `http://localhost:3002/getLikedVideoGames/${data.data.user.id}`;
+			setUID(data.data.user.id)
+			return url;
 
-        fetch(url)
-            .then((res) => {
-                return res.json()
-            })
-            .then((data) => {
-                setVideoGames(data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        }).then((url) => {
+
+			fetch(url)
+			.then((res) => {
+				return res.json()
+			})
+			.then((data) => {
+				setVideoGames(data);
+				console.log(data)
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+
+        })
     }, []);
 
-    function likeVideoGame(videoGame, index){
+    function removeLikedVideoGame(videoGame, index){
 
 
-      var id = videoGame.videoGameID;
-  
-      // replace 1 with userID of person logged on
-      var url = `http://localhost:3002/get/1/videoGames/delete/${id}`;
-  
-      fetch(url)
+		var url = 'http://localhost:3002/removeLikedVideoGames';
+		
+		fetch(url, {
+			method: "POST",
+			body: JSON.stringify({
+				uid: UID,
+				itemId: videoGame
+			}),
+			headers: {
+			"Content-type": "application/json; charset=UTF-8"
+				}
+			})
           .then((res) => {
               return res.json()
           })
@@ -64,18 +81,18 @@ function LikedVideoGames() {
         <ul style={{display: 'inline', whiteSpace: 'nowrap', overflow: 'auto'}}>
           {videogames.map((d, i) => (
             <div key={i} className='container'>
-            <img src={require('../Grid/videoGamesImages/' + d.videoGameID + '.jpg')} className='images'/>
+            <img src={require('../Grid/VideoGamesImages/' + d.VideoGames.id + '.jpg')} className='images'/>
             <div className='overlay'>
-            <div className='titleContainer'>{d.title}</div>
-            <div className='categoryContainer'>{d.author}</div>
-            <div className='description'>{d.description}</div>
+            <div className='titleContainer'>{d.VideoGames.title}</div>
+            <div className='categoryContainer'>{d.VideoGames.author}</div>
+            <div className='description'>{d.VideoGames.description}</div>
             <div className='buttonContainer'>
               <OverlayTrigger
                 placement="bottom"
                 delay={{ show: 0, hide: 100 }}
                 overlay={renderTooltip}
                 >
-                <img src={liked ? filledBookmark : emptyBookmark} className='bookmark' onClick={() => likeVideoGame(d, i)} />
+                <img src={liked ? filledBookmark : emptyBookmark} className='bookmark' onClick={() => removeLikedVideoGame(d.VideoGames.id, i)} />
               </OverlayTrigger>
             </div>
             </div>

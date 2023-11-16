@@ -44,7 +44,7 @@ function LikedBooks() {
     function removeBook(bookID, index){
     
         // replace 1 with userID of person logged on
-        var url = 'http://localhost:3002/removeLikedBook';
+        var url = 'http://localhost:3002/removeLikedBooks';
     
         fetch(url, {
 			method: "POST",
@@ -84,7 +84,7 @@ function LikedBooks() {
         <ul style={{display: 'inline', whiteSpace: 'nowrap', overflow: 'auto'}}>
           {books.map((d, i) => (
             <div key={i} className='container'>
-				<img src={require('../Grid/booksImages/' + d.Books.id + '.jpg')} className='images'/>
+				<img src={require('../Grid/BooksImages/' + d.Books.id + '.jpg')} className='images'/>
 				<div className='overlay'>
 					<div className='titleContainer'>{d.Books.title}</div>
 					<div className='categoryContainer'>{d.Books.genre}</div>

@@ -55,7 +55,25 @@ res.status(500).json({ error: 'Registration failed' });
 }
 });
 
-app.get('/books', async (req, res) => {
+// ------- search
+app.get('/home/search/:letters', async (req, res) => {
+
+	const letters = req.params.letters
+  
+	console.log("Made it here")
+	const query = `SELECT * FROM movies WHERE title LIKE '%${letters}%' LIMIT 30;`;
+	try {
+	  const [rows] = await connection.query(query);
+	  console.log(rows);
+	  res.send(rows);
+	} catch (err) {
+	  console.log(err)
+	}
+  })
+
+// ------------- get all
+
+app.get('/Books', async (req, res) => {
 
   // already switched to supabase
     try {
@@ -70,8 +88,7 @@ app.get('/books', async (req, res) => {
       console.log(err)
     }
 })
-
-app.get('/movies', async (req, res) => {
+app.get('/Movies', async (req, res) => {
 
   // already switched to supabase
     try {
@@ -87,8 +104,7 @@ app.get('/movies', async (req, res) => {
       console.log(err)
     }
 })
-
-app.get('/videogames', async (req, res) => {
+app.get('/VideoGames', async (req, res) => {
 
 
   // already switched to supabase
@@ -106,21 +122,7 @@ app.get('/videogames', async (req, res) => {
     }
 })
 
-app.get('/home/search/:letters', async (req, res) => {
-
-  const letters = req.params.letters
-
-  console.log("Made it here")
-  const query = `SELECT * FROM movies WHERE title LIKE '%${letters}%' LIMIT 30;`;
-  try {
-    const [rows] = await connection.query(query);
-    console.log(rows);
-    res.send(rows);
-  } catch (err) {
-    console.log(err)
-  }
-})
-
+// ------------ liked books
 app.get('/getLikedBooks/:uid', async (req, res) => {
 
   const uid = req.params.uid
@@ -133,15 +135,12 @@ app.get('/getLikedBooks/:uid', async (req, res) => {
     .select('*, Books:Books( * )')
     .eq('uid', uid)
 
-    console.log(Books)
-
     res.send(Books);
   } catch (err) {
     console.log(err)
   }
 })
-
-app.post('/removeLikedBook', async (req, res) => {
+app.post('/removeLikedBooks', async (req, res) => {
 
 	const uid = req.body.uid;
 	const itemId = req.body.itemId;
@@ -160,8 +159,7 @@ app.post('/removeLikedBook', async (req, res) => {
 		console.log(err)
 	}
 })
-
-app.post('/addLikedBook', async (req, res) => {
+app.post('/addLikedBooks', async (req, res) => {
 
 	const uid = req.body.uid;
 	const itemId = req.body.itemId;
@@ -171,6 +169,122 @@ app.post('/addLikedBook', async (req, res) => {
 	try {
 		let { data: Books, error } = await supabase
 		.from('likedBooks')
+		.insert([
+			{ 'uid': uid, 'itemId': itemId },
+		])
+		.select()
+
+	} catch (err) {
+		console.log(err)
+	}
+})
+
+// ------------ liked movies
+app.get('/getLikedMovies/:uid', async (req, res) => {
+
+	const uid = req.params.uid
+
+	console.log(uid)
+  
+	try {
+	  let { data: Movies, error } = await supabase
+	  .from('likedMovies')
+	  .select('*, Movies( * )')
+	  .eq('uid', uid)
+
+	  console.log(Movies)
+  
+	  res.send(Movies);
+	} catch (err) {
+	  console.log(err)
+	}
+})
+app.post('/removeLikedMovies', async (req, res) => {
+
+  const uid = req.body.uid;
+  const itemId = req.body.itemId;
+
+  console.log(`Removing movie ${itemId}`)
+
+  try {
+    let { data: Movie, error } = await supabase
+    .from('likedMovies')
+    .delete()
+    .eq('uid', uid)
+    .eq('itemId', itemId)
+
+  } catch (err) {
+    console.log(err)
+  }
+})
+app.post('/addLikedMovies', async (req, res) => {
+
+	const uid = req.body.uid;
+	const itemId = req.body.itemId;
+
+	console.log(`Adding Movie ${itemId}`)
+
+	try {
+		let { data: Movies, error } = await supabase
+		.from('likedMovies')
+		.insert([
+			{ 'uid': uid, 'itemId': itemId },
+		])
+		.select()
+
+	} catch (err) {
+		console.log(err)
+	}
+})
+
+// ------------ liked videogames
+app.get('/getLikedVideoGames/:uid', async (req, res) => {
+
+	const uid = req.params.uid
+
+	console.log(uid)
+  
+	try {
+	  let { data: VideoGames, error } = await supabase
+	  .from('likedVideoGames')
+	  .select('*, VideoGames( * )')
+	  .eq('uid', uid)
+
+	  console.log(VideoGames)
+  
+	  res.send(VideoGames);
+	} catch (err) {
+	  console.log(err)
+	}
+})
+app.post('/removeLikedVideoGames', async (req, res) => {
+
+	const uid = req.body.uid;
+	const itemId = req.body.itemId;
+  
+	console.log(`Removing Videogame ${itemId}`)
+  
+	try {
+	  let { data: VideoGames, error } = await supabase
+	  .from('likedVideoGames')
+	  .delete()
+	  .eq('uid', uid)
+	  .eq('itemId', itemId)
+  
+	} catch (err) {
+	  console.log(err)
+	}
+  })
+app.post('/addLikedVideoGames', async (req, res) => {
+
+	const uid = req.body.uid;
+	const itemId = req.body.itemId;
+
+	console.log(`Adding Video Game ${itemId}`)
+
+	try {
+		let { data: VideoGames, error } = await supabase
+		.from('likedVideoGames')
 		.insert([
 			{ 'uid': uid, 'itemId': itemId },
 		])

@@ -14,16 +14,22 @@ function Grid(list) {
     const [item, setItem] = useState([]);
     const [likes, setLikes] = useState([emptyBookmark]);
 	
+    console.log(list.list)
 
     useEffect(() => {
 
 		// calls our backend to retrieve a full list of items and list of liked items within the current user's relevant liked list (to fill bookmark icons)
-		// TODO: replace the second url once updated with Supabase
-		// TODO: retrieve the id of current user to pass to second url
+		supabase.auth.getUser().then((data) => {
+					
+			let userId = data.data.user.id;
+			return userId;
+
+		}).then((userId) => {
+
         Promise.all(
           [
             fetch(`http://localhost:3002/${list.list}`),
-            fetch(`http://localhost:3002/get/1/${list.list}/getArray/-1`)
+            fetch(`http://localhost:3002/getLiked${list.list}/${userId}`)
           ]
         ).then(([resItem, resLikes]) => {
            return Promise.all([resItem.json(), resLikes.json()])
@@ -31,6 +37,8 @@ function Grid(list) {
           setItem(dataItem);
           setLikes(dataLikes);
         })
+
+      })
     }, []);
 
 
@@ -50,7 +58,7 @@ function Grid(list) {
 
 		}).then((userId) => {
 
-			var url = 'http://localhost:3002/addLikedBook'
+			var url = `http://localhost:3002/addLiked${list.list}`
 
 			fetch(url, {
 				method: "POST",
