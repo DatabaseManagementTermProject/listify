@@ -8,7 +8,7 @@ const Books = () => {
         <div>
             <NavBar />
             <h1 className='pageTitleContainer'>All Books</h1>
-            <Grid list='books'/>
+            <Grid list='Books'/>
         </div>
 
     );
