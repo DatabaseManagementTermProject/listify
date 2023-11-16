@@ -8,9 +8,8 @@ const VideoGames = () => {
         <div>
             <NavBar />
             <h1 className='pageTitleContainer'>All Video Games</h1>
-             <Grid list="videoGames"/>
+             <Grid list="VideoGames"/>
         </div>
-
     );
 }
 
