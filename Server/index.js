@@ -35,24 +35,58 @@ app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
-app.post('/register', async (req, res) => {
+app.post('/like-movie', async (req, res) => {
+  const { userId, movieId } = req.body;
 
-  const { userName, email, password } = req.body;
+  if (!userId || !movieId) {
+    return res.status(400).json({ error: 'Invalid request data' });
+  }
 
-// for user input, hashes user password before storing into database
-try {
-// Hash the password
-const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    // add the liked movie to the database
+    const { data, error } = await supabase
+      .from('likedMovies')
+      .insert([{ userId, movieId }]);
 
-// Insert the hashed password into the database
-const queryText = 'INSERT INTO users (userName, email, password) VALUES (?, ?, ?)';
-await connection.query(queryText, [userName, email, hashedPassword]);
+    if (error) {
+      console.error('Error adding liked movie:', error.message);
+      return res.status(500).json({ error: 'Failed to like the movie' });
+    }
 
-res.status(201).json({ message: 'Account created' });
-} catch (error) {
-console.error('Error during registration:', error);
-res.status(500).json({ error: 'Registration failed' });
-}
+    console.log('Liked movie added successfully:', data);
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error adding liked movie:', error.message);
+    return res.status(500).json({ error: 'Failed to like the movie' });
+  }
+
+});
+
+app.delete('/like-movie', async (req, res) => {
+  const { userId, movieId } = req.body;
+
+  if (!userId || !movieId) {
+    return res.status(400).json({ error: 'Invalid request data' });
+  }
+
+  try {
+    // remove the liked movie from the database
+    const { data, error } = await supabase
+      .from('likedMovies')
+      .delete()
+      .match({ userId, movieId });
+
+    if (error) {
+      console.error(error.message);
+      return res.status(500).json({ error: 'Could not unlike the movie' });
+    }
+
+    console.log('Liked movie removed successfully:', data);
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error removing liked movie:', error.message);
+    return res.status(500).json({ error: 'Could not unlike the movie' });
+  }
 });
 
 app.get('/books', async (req, res) => {
