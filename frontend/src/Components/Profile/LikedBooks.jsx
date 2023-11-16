@@ -44,9 +44,18 @@ function LikedBooks() {
     function removeBook(bookID, index){
     
         // replace 1 with userID of person logged on
-        var url = `http://localhost:3002/removeLikedBook/${UID}/${bookID}`;
+        var url = 'http://localhost:3002/removeLikedBook';
     
-        fetch(url)
+        fetch(url, {
+			method: "POST",
+			body: JSON.stringify({
+				uid: UID,
+				itemId: bookID
+			}),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8"
+			}
+		})
             .then((res) => {
                 return res.json()
             })

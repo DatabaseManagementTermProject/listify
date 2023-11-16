@@ -45,12 +45,23 @@ function Grid(list) {
 
 		supabase.auth.getUser().then((data) => {
 			
-		let url = `http://localhost:3002/addLikedBook/${data.data.user.id}/${index}`;
-		return url;
+		var userId = data.data.user.id;
+		return userId;
 
-		}).then((url) => {
+		}).then((userId) => {
 
-			fetch(url)
+			var url = 'http://localhost:3002/addLikedBook'
+
+			fetch(url, {
+				method: "POST",
+				body: JSON.stringify({
+					uid: userId,
+					itemId: index
+				}),
+				headers: {
+					"Content-type": "application/json; charset=UTF-8"
+				}
+			})
 			.then((error) => {
 				console.log(error)
 			})

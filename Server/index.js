@@ -141,10 +141,10 @@ app.get('/getLikedBooks/:uid', async (req, res) => {
   }
 })
 
-app.get('/removeLikedBook/:uid/:itemId', async (req, res) => {
+app.post('/removeLikedBook', async (req, res) => {
 
-	const uid = req.params.uid;
-	const itemId = req.params.itemId;
+	const uid = req.body.uid;
+	const itemId = req.body.itemId;
 
 	console.log(`Removing book ${itemId}`)
 
@@ -161,10 +161,10 @@ app.get('/removeLikedBook/:uid/:itemId', async (req, res) => {
 	}
 })
 
-app.get('/addLikedBook/:uid/:itemId', async (req, res) => {
+app.post('/addLikedBook', async (req, res) => {
 
-	const uid = req.params.uid;
-	const itemId = req.params.itemId;
+	const uid = req.body.uid;
+	const itemId = req.body.itemId;
 
 	console.log(`Adding book ${itemId}`)
 
@@ -175,7 +175,7 @@ app.get('/addLikedBook/:uid/:itemId', async (req, res) => {
 			{ 'uid': uid, 'itemId': itemId },
 		])
 		.select()
-		
+
 	} catch (err) {
 		console.log(err)
 	}
