@@ -308,6 +308,18 @@ app.get("/getAccessedLists/:userID", async (req, res) => {
     }
 });
 
+// get the liked in that lists
+app.get("/gettable/:tableName", async (req, res) => {
+    const tableName = req.params.tableName;
+    try {
+      const query = "SELECT * FROM " + tableName + ";";
+      const [rows] = await connection.query(query, [tableName]);
+      res.status(200).json(rows);
+    } catch (err) {
+      console.error(err);
+    }
+});
+
 // test to see if the connection is working
 app.listen(3002, () => {
   console.log('App is running')

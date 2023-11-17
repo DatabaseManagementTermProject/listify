@@ -7,12 +7,34 @@ import NavBar from "../Components/NavBar/NavBar";
 import './profile.css'
 
 const SharedList = () => {
-    function fetchLikes() {
-      
+    // the lists can access by this user
+    const [lists, setLists] = useState([]);
+
+    // the likes from the Lists, will change when the list changes
+    const [movieLists, setMovieLists] = useState([]);
+    const [booksLists, setBooksLists] = useState([]);
+    const [videoGameLists, setVideoGameLists] = useState([]);
+
+
+
+    function fetchLikes(tableName) {
+      fetch(`http://localhost:3002/gettable/${tableName}`)
+          .then((res) => { return res.json() })
+          .then((data) => {
+              let temp = {"movies": [], "books": [], "videoGames": []};
+              data.forEach(element => {
+                  temp[element.category].push(element.itemID);
+              });
+              setMovieLists(temp.movies);
+              setBooksLists(temp.books);
+              setVideoGameLists(temp.videoGames);
+          })
+          .catch((error) => {
+             console.log(error);
+          });
     }
 
     // fetch the initial list from database
-    const [lists, setLists] = useState([]);
     useEffect(() => {
       fetch(`http://localhost:3002/getAccessedLists/1`)
           .then((res) => { return res.json() })
@@ -21,7 +43,6 @@ const SharedList = () => {
             data.forEach(element => {
               temp.push(element.tableID);
             });
-            console.log(temp);
             setLists(temp);
           })
           .catch((error) => {
@@ -30,7 +51,9 @@ const SharedList = () => {
     }, []);
 
     // fetch the initial likes from the initial list
-    
+    useEffect(() => {
+        fetchLikes(lists[0]);
+    }, [lists]);
 
     // output the pages
     return (
@@ -40,8 +63,11 @@ const SharedList = () => {
                 lists.map((item) => <option key={item}>{item}</option>)
             }</select>
             <h3 className="subheading">My Books</h3>
+            <p>{booksLists}</p>
             <h3 className="subheading">My Movies</h3>
+            <p>{movieLists}</p>
             <h3 className="subheading">My Video Games</h3>
+            <p>{videoGameLists}</p>
         </div>
 
     );
