@@ -10,7 +10,7 @@ import { supabase } from '../../database';
 
 function LikedMovies() {
 
-    const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState([]);
 	const [UID, setUID] = useState();
     
     useEffect(() => {
