@@ -17,7 +17,7 @@ connection.connect((err) => {
     console.error('Error connecting to the database:', err);
     return;
   }
-  console.log('Connected to PlanetScale!');
+  // console.log('Connected to PlanetScale!');
 });
 
 // ------------------- Set up express server
@@ -64,10 +64,10 @@ app.get('/books', async (req, res) => {
       .select('*')
       .range(0, 31)
       .order('id', { ascending: true })
-      console.log(Books);
+      // console.log(Books);
       res.send(Books);
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     }
 })
 
@@ -81,10 +81,10 @@ app.get('/movies', async (req, res) => {
       .range(0, 31)
       .order('id', { ascending: true })
 
-      console.log(Movies);
+      // console.log(Movies);
       res.send(Movies);
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     }
 })
 
@@ -99,10 +99,10 @@ app.get('/videogames', async (req, res) => {
       .range(0, 31)
       .order('id', { ascending: true })
       
-      console.log(VideoGames);
+      // console.log(VideoGames);
       res.send(VideoGames);
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     }
 })
 
@@ -110,14 +110,14 @@ app.get('/home/search/:letters', async (req, res) => {
 
   const letters = req.params.letters
 
-  console.log("Made it here")
+  // console.log("Made it here")
   const query = `SELECT * FROM movies WHERE title LIKE '%${letters}%' LIMIT 30;`;
   try {
     const [rows] = await connection.query(query);
-    console.log(rows);
+    // console.log(rows);
     res.send(rows);
   } catch (err) {
-    console.log(err)
+    // console.log(err)
   }
 })
 
@@ -135,7 +135,7 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
       try {
         const query = 'SELECT * FROM ' + library + ';';
         const [rows] = await connection.query(query);
-        console.log("inserver ", rows);
+        // console.log("inserver ", rows);
         res.status(200).send(rows);
       } catch (err) {
         console.error(err);
@@ -181,7 +181,7 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
                       'FROM ' + library + ' JOIN ' + likedLibrary + ' ' +
                       'ON ' + library + '.' + libraryAttr + ' = ' + likedLibrary + '.' + libraryAttr + ' ' +
                       'WHERE userID = ' + userID + ';';
-        console.log(query);
+        // console.log(query);
         const [rows] = await connection.query(query);
 
         // probably change this error message into something more UI friendly later
@@ -294,6 +294,19 @@ bcrypt.hash(password, 10, (err, hashedPassword) => {
   });
   }
 }); });
+
+
+// get the accessed lists
+app.get("/getAccessedLists/:userID", async (req, res) => {
+    const userID = req.params.userID;
+    try {
+      const query = "SELECT tableID FROM AccessLists WHERE userID = " + userID + ";";
+      const [rows] = await connection.query(query, [userID]);
+      res.status(200).json(rows);
+    } catch (err) {
+      console.error(err);
+    }
+});
 
 // test to see if the connection is working
 app.listen(3002, () => {

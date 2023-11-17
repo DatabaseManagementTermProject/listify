@@ -20,6 +20,7 @@ function LikedMovies() {
                 return res.json()
             })
             .then((data) => {
+                console.log(data);
                 setMovies(data);
             })
             .catch((error) => {
