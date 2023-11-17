@@ -15,25 +15,6 @@ const SharedList = () => {
     const [booksLists, setBooksLists] = useState([]);
     const [videoGameLists, setVideoGameLists] = useState([]);
 
-
-
-    function fetchLikes(tableName) {
-      fetch(`http://localhost:3002/gettable/${tableName}`)
-          .then((res) => { return res.json() })
-          .then((data) => {
-              let temp = {"movies": [], "books": [], "videoGames": []};
-              data.forEach(element => {
-                  temp[element.category].push(element.itemID);
-              });
-              setMovieLists(temp.movies);
-              setBooksLists(temp.books);
-              setVideoGameLists(temp.videoGames);
-          })
-          .catch((error) => {
-             console.log(error);
-          });
-    }
-
     // fetch the initial list from database
     useEffect(() => {
       fetch(`http://localhost:3002/getAccessedLists/1`)
@@ -55,12 +36,36 @@ const SharedList = () => {
         fetchLikes(lists[0]);
     }, [lists]);
 
+    function change() {
+      let select = document.getElementById("access").value;
+      fetchLikes(select);
+    }
+
+    // function for changing the likes when the list changes
+    function fetchLikes(tableName) {
+      fetch(`http://localhost:3002/gettable/${tableName}`)
+          .then((res) => { return res.json() })
+          .then((data) => {
+              let temp = {"movies": [], "books": [], "videoGames": []};
+              data.forEach(element => {
+                  temp[element.category].push(element.itemID);
+              });
+              setMovieLists(temp.movies);
+              setBooksLists(temp.books);
+              setVideoGameLists(temp.videoGames);
+          })
+          .catch((error) => {
+             console.log(error);
+          });
+    }
+
+
     // output the pages
     return (
         <div>
             <NavBar />
-            <select className="option" id="access" >{
-                lists.map((item) => <option key={item}>{item}</option>)
+            <select className="option" id="access" onChange={change}>{
+                lists.map((item) => <option key={item} id={item}>{item}</option>)
             }</select>
             <h3 className="subheading">My Books</h3>
             <p>{booksLists}</p>
