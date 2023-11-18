@@ -8,7 +8,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function NavBar(props) {
+function NavBar({ HandleSearch, selectedCategory, setSelectedCategory }) {
 
   const navigate = useNavigate();
 
@@ -32,12 +32,18 @@ function NavBar(props) {
             </NavDropdown>
           </Nav>
           <Form className="d-flex">
+            <select className="me-2" onChange={setSelectedCategory} value={selectedCategory}>
+                <option value="books">Books</option>
+                <option value="movies">Movies</option>
+                <option value="videogames">Video Games</option>
+                <option value="users">Other Users</option>
+            </select>
             <Form.Control
-              type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-              onChange={props.searchDatabase}
+                type="search"
+                placeholder="Search"
+                className="me-2"
+                aria-label="Search"
+                onChange={HandleSearch}
             />
           </Form>
         </Navbar.Collapse>

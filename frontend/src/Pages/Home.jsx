@@ -1,72 +1,88 @@
 import React, { useState } from "react";
 import NavBar from "../Components/NavBar/NavBar";
-
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/esm/Button';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import GridComponent from '../Components/Grid/Grid';
 
 
-const Home = (props) => {
+const Home = () => {
 
-    const [books, setBooks] = useState([])
-    const [likes, setLikes] = useState([]);
+  const [books, setBooks] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [videoGames, setVideoGames] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('books');
 
-   function HandleSearch(event) {
-        var url = `http://localhost:3002/home/search/${event.target.value}`
+   function HandleSearch(searchTerm, selectedCategory) {
+    if (searchTerm !== "") {
+        let url = "";
 
-        if (event.target.value !== ""){
-            Promise.all(
-              [
-                fetch(url),
-                fetch('http://localhost:3002/get/1/books/getArray/-1')
-              ]
-            ).then(([resBooks, resLikes]) => {
-              return Promise.all([resBooks.json(), resLikes.json()])
-            }).then(([dataBooks, dataLikes]) => {
-              setBooks(dataBooks);
-              setLikes(dataLikes);
-            })
+        switch(selectedCategory) {
+            case 'books':
+                url = `http://localhost:3002/search/books/${searchTerm}`;
+                break;
+            case 'movies':
+                url = `http://localhost:3002/search/movies/${searchTerm}`;
+                break;
+            case 'videogames':
+                url = `http://localhost:3002/search/videogames/${searchTerm}`;
+                break;
+            case 'users':
+                url = `http://localhost:3002/search/users/${searchTerm}`;
+                break;
+            default: console.log("Error: Invalid category");
         }
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+              switch(selectedCategory) {
+                case 'books':
+                    setBooks(data);
+                    break;
+                case 'movies':
+                    setMovies(data);
+                    break;
+                case 'videogames':
+                    setVideoGames(data);
+                    break;
+                case 'users':
+                    setUsers(data);
+                    break;
+                default: console.log("Error: Couldn't set data");
+            }})
+            .catch(error => {
+              console.error('Error fetching data:', error);
+            });
     }
-    
-	var likesArray = [];
-	likes.forEach(item => {
-		likesArray.push(item.bookID)
-	})
+  }
+
+  const getListForCategory = () => {
+    switch (selectedCategory) {
+      case 'books':
+        return books;
+      case 'movies':
+        return movies;
+      case 'videogames':
+        return videoGames;
+      case 'users':
+        return users;
+      default:
+        return [];
+    }
+  };
 
 
     return (
       <div>
-          <NavBar searchDatabase={HandleSearch} />
-          <h1>Home Page</h1>
-
-          <Row xs={1} md={7}>
-          {Array.from({ length: books.length }).map((_, idx) => (
-            <Col key={idx} style={{display: "inline-block", width: 100}} className="mx-4 my-2">
-              <Card>
-                {/* after a user likes an item, change it to a solid heart and make a post request to the server to add to liked list */}
-                <Button className='likeButton'>{ likesArray.includes(idx) ? "♥" : "♡" }</Button>
-                <OverlayTrigger trigger='hover' placement="auto" overlay={
-                        <Popover id="popover-basic">
-                        <Popover.Header as="h3">{books[idx].title}</Popover.Header>
-                        <Popover.Header as="p">{books[idx].author}</Popover.Header>
-                        <Popover.Body>
-                            {books[idx].description}
-                        </Popover.Body>
-                        </Popover>
-                }>
-                  <Card.Img variant="top" src={books[idx].coverImg} style={{width: 100, height: 150}} className='itemImage'/>
-                </OverlayTrigger>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </div>
-    );
-}
+          <NavBar
+              HandleSearch={HandleSearch} 
+              selectedCategory={selectedCategory} 
+              setSelectedCategory={setSelectedCategory}
+          />
+    <h1>Home Page</h1>
+    <GridComponent list={getListForCategory()} />
+    </div>
+        );
+    }
 
 export default Home;

@@ -1,6 +1,6 @@
 .env
 /node_modules
-frontend/src/Components/Grid/booksImages
-frontend/src/Components/Grid/moviesImages
-frontend/src/Components/Grid/videoGamesImages
+frontend/src/Components/Grid/BooksImages
+frontend/src/Components/Grid/MoviesImages
+frontend/src/Components/Grid/VideoGamesImages
 /frontend/.env

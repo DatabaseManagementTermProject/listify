@@ -22,5 +22,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-frontend/src/Components/AllGrid/booksImages
-frontend/src/Components/AllGrid/moviesImages
+frontend/src/Components/Grid/BooksImages
+frontend/src/Components/Grid/MoviesImages
+frontend/src/Components/Grid/VideoGamesImages

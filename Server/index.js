@@ -35,24 +35,26 @@ app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
-app.post('/register', async (req, res) => {
+// generalized search endpoint
+app.get('/search/:category/:letters', async (req, res) => {
+  // category is books, video games, movies, or users
+  // letters is the search value
+  const { category, letters } = req.params;
 
-  const { userName, email, password } = req.body;
+  category = category.charAt(0).toUpperCase() + category.slice(1);
 
-// for user input, hashes user password before storing into database
-try {
-// Hash the password
-const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+      const { data, error } = await supabase
+          .from(category)
+          .select('*')
+          .ilike('title', `%${letters}%`);
 
-// Insert the hashed password into the database
-const queryText = 'INSERT INTO users (userName, email, password) VALUES (?, ?, ?)';
-await connection.query(queryText, [userName, email, hashedPassword]);
+      if (error) throw error;
 
-res.status(201).json({ message: 'Account created' });
-} catch (error) {
-console.error('Error during registration:', error);
-res.status(500).json({ error: 'Registration failed' });
-}
+      res.json(data);
+  } catch (err) {
+      res.status(500).send('Server error');
+  }
 });
 
 // ------- search
