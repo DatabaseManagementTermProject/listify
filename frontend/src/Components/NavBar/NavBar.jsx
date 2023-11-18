@@ -27,7 +27,7 @@ function NavBar({ HandleSearch, selectedCategory, setSelectedCategory }) {
             <NavDropdown className='navDropDown' title="Browse" id="navbarScrollingDropdown">
               <NavDropdown.Item onClick={() => navigate('/books')}>Books</NavDropdown.Item>
               <NavDropdown.Item onClick={() => navigate('/movies')}>Movies</NavDropdown.Item>
-              {/* <NavDropdown.Divider /> */}
+              {}
               <NavDropdown.Item onClick={() => navigate('/videogames')}>Video Games</NavDropdown.Item>
             </NavDropdown>
           </Nav>
