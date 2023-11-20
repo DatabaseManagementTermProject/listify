@@ -11,8 +11,8 @@ const SharedList = () => {
     const [lists, setLists] = useState([]);
 
     // the likes from the Lists, will change when the list changes
-    const [movieLists, setMovieLists] = useState([]);
     const [booksLists, setBooksLists] = useState([]);
+    const [movieLists, setMovieLists] = useState([]);
     const [videoGameLists, setVideoGameLists] = useState([]);
 
     // fetch the initial list from database
@@ -36,9 +36,28 @@ const SharedList = () => {
         fetchLikes(lists[0]);
     }, [lists]);
 
+    // function for changing the likes when the list changes
     function change() {
       let select = document.getElementById("access").value;
       fetchLikes(select);
+    }
+
+    // function for adding a like to the list
+    function add() {
+      let access = document.getElementById("access").value;
+      let addCategories = document.getElementById("addCategories").value;
+      let addID = document.getElementById("addID").value;
+      console.log(access, addCategories, addID)
+      fetch(`http://localhost:3002/addToList/${access}/${addCategories}/${addID}`)
+
+      if (addCategories === "books") {
+        setBooksLists(booksLists.push(addID));
+      } else if (addCategories === "movies") {
+        setMovieLists(movieLists.push(addID));
+      } else {
+        setVideoGameLists(videoGameLists.push(addID));
+      }
+      fetchLikes(access);
     }
 
     // function for changing the likes when the list changes
@@ -50,15 +69,14 @@ const SharedList = () => {
               data.forEach(element => {
                   temp[element.category].push(element.itemID);
               });
-              setMovieLists(temp.movies);
               setBooksLists(temp.books);
+              setMovieLists(temp.movies);
               setVideoGameLists(temp.videoGames);
           })
           .catch((error) => {
              console.log(error);
           });
     }
-
 
     // output the pages
     return (
@@ -67,6 +85,15 @@ const SharedList = () => {
             <select className="option" id="access" onChange={change}>{
                 lists.map((item) => <option key={item} id={item}>{item}</option>)
             }</select>
+            &emsp;&emsp;&emsp;&emsp;
+            <select id="addCategories">
+                <option value="books">Books</option>
+                <option value="movies">Movies</option>
+                <option value="videoGames">Video Games</option> 
+            </select>
+            <input id="addID"></input>
+            <button id="addButton" onClick={add}>Add</button>
+
             <h3 className="subheading">My Books</h3>
             <p>{booksLists}</p>
             <h3 className="subheading">My Movies</h3>

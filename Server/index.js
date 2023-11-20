@@ -320,6 +320,20 @@ app.get("/gettable/:tableName", async (req, res) => {
     }
 });
 
+// add into shared list
+app.get("/addToList/:access/:addCategories/:addID", async (req, res) => {
+    const access = req.params.access;
+    const addCategories = req.params.addCategories;
+    const addID = req.params.addID;
+    try {
+      const query = "INSERT INTO " + access + " (category, itemID) VALUES ( \"" + addCategories + "\", " + addID + ");";
+      console.log(query);
+      await connection.query(query, [addCategories, addID]);
+    } catch (err) {
+      console.error(err);
+    }
+});
+
 // test to see if the connection is working
 app.listen(3002, () => {
   console.log('App is running')
