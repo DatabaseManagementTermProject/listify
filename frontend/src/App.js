@@ -9,6 +9,7 @@ import Profile from './Pages/Profile';
 import Movies from './Pages/Movies';
 import Books from './Pages/Books';
 import VideoGames from './Pages/VideoGames';
+import SearchResults from './Pages/SearchResults';
 
 function App() {
     return (
@@ -22,6 +23,8 @@ function App() {
                 <Route path="/VideoGames" element={<VideoGames />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/searchresults" element={<SearchResults />} />
+
             </Routes>
         </>
     )

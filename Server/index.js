@@ -44,11 +44,19 @@ app.get('/search/:category/:letters', async (req, res) => {
   category = category.charAt(0).toUpperCase() + category.slice(1);
 
   try {
-      const { data, error } = await supabase
+    let data, error;
+    if (category === 'Users') {
+      ({ data, error } = await supabase
+          .from('auth.users')
+          .select('email')
+          .ilike('email', `%${letters}%`));
+    }
+    else {
+      ({ data, error } = await supabase
           .from(category)
           .select('*')
-          .ilike('title', `%${letters}%`);
-
+          .ilike('title', `%${letters}%`));
+    }
       console.log(data);
       if (error) throw error;
 

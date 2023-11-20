@@ -13,6 +13,25 @@ function NavBar(props) {
 
   const navigate = useNavigate();
 
+  const [localSearchTerm, setLocalSearchTerm] = useState('');
+  const [localMediaType, setLocalMediaType] = useState('books'); 
+
+  // Update the local state on search input change
+  const handleSearchInputChange = (event) => {
+    setLocalSearchTerm(event.target.value);
+  };
+
+  const handleMediaTypeChange = (event) => {
+    setLocalMediaType(event.target.value);
+  };
+
+  // Handle search form submission
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    // Navigate to the SearchResults page with search parameters
+    navigate(`/searchresults?mediaType=${localMediaType}&query=${encodeURIComponent(localSearchTerm)}`);
+  };
+
   return (
     <div>
     <Navbar bg="dark" data-bs-theme="dark" className='sticky-top'>
@@ -32,11 +51,11 @@ function NavBar(props) {
                         <NavDropdown.Item onClick={() => navigate('/videogames')}>Video Games</NavDropdown.Item>
                     </NavDropdown>
                 </Nav>
-                <Form className="d-flex" onSubmit={props.searchDatabase}>
-                    <select className="me-2" onChange={props.handleMediaTypeChange}>
+                <Form className="d-flex" onSubmit={handleSearchSubmit}>
+                    <select className="me-2" onChange={handleMediaTypeChange}>
                         <option value="books">Books</option>
                         <option value="movies">Movies</option>
-                        <option value="videogames">Video Games</option>
+                        <option value="videoGames">Video Games</option>
                         <option value="users">Users</option>
                     </select>
                     <Form.Control
@@ -44,7 +63,7 @@ function NavBar(props) {
                         placeholder="Search"
                         className="me-2"
                         aria-label="Search"
-                        onChange={props.handleSearchInputChange}
+                        onChange={handleSearchInputChange}
                     />
                 </Form>
             </Navbar.Collapse>
