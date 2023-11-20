@@ -8,6 +8,7 @@ import emptyBookmark from '../Components/Profile/bookmark.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from 'react-router-dom';
+import '../Components/Profile/likedItems.css'
 
 
 const SearchResults = () => {
@@ -46,7 +47,7 @@ const SearchResults = () => {
         case 'movies':
           return (
             <div className='container'>
-              <img src={d.coverImg} className='images'/>
+              <img src={d[' coverImg']} className='images'/>
               <div className='overlay'>
                 <div className='titleContainer'>{d.title}</div>
                 <div className='categoryContainer'>{d.author}</div>
