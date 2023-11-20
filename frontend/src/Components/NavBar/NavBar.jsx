@@ -6,11 +6,21 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import InputGroup from 'react-bootstrap/InputGroup';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState } from 'react';
 
 function NavBar(props) {
 
-  const navigate = useNavigate();
+	const navigate = useNavigate();
+
+	const [selectedSearchItem, setSelectedSearchItem] = useState("Item To Search")
+
+    const setItem = (listTitle) => {
+        setSelectedSearchItem(listTitle);
+    }
 
   return (
     <Navbar bg="dark" data-bs-theme="dark" className='sticky-top'>
@@ -27,18 +37,30 @@ function NavBar(props) {
             <NavDropdown className='navDropDown' title="Browse" id="navbarScrollingDropdown">
               <NavDropdown.Item onClick={() => navigate('/books')}>Books</NavDropdown.Item>
               <NavDropdown.Item onClick={() => navigate('/movies')}>Movies</NavDropdown.Item>
-              {/* <NavDropdown.Divider /> */}
               <NavDropdown.Item onClick={() => navigate('/videogames')}>Video Games</NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Form className="d-flex">
-            <Form.Control
-              type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-              onChange={props.searchDatabase}
-            />
+          <InputGroup className="mb-3">
+				<DropdownButton
+				variant="outline-secondary"
+				title={selectedSearchItem}
+				id="input-group-dropdown-1"
+				>
+				<Dropdown.Item onClick={() => setSelectedSearchItem("Books")}>Books</Dropdown.Item>
+				<Dropdown.Item onClick={() => setSelectedSearchItem("Movies")}>Movies</Dropdown.Item>
+				<Dropdown.Item onClick={() => setSelectedSearchItem("Video Games")}>Video Games</Dropdown.Item>
+				<Dropdown.Item onClick={() => setSelectedSearchItem("Users")}>Users</Dropdown.Item>
+				</DropdownButton>
+				<Form.Control
+				type="search"
+				placeholder="Search"
+				className="me-2"
+				aria-label="Search"
+				onChange={props.searchDatabase}
+				/>
+			</InputGroup>
+ 
           </Form>
         </Navbar.Collapse>
       </Container>
