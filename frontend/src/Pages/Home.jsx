@@ -1,88 +1,58 @@
 import React, { useState } from "react";
 import NavBar from "../Components/NavBar/NavBar";
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import GridComponent from '../Components/Grid/Grid';
-
+import Grid from "../Components/Grid/Grid";
+import emptyBookmark from '../Components/Profile/bookmark.png'
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const Home = () => {
 
-  const [books, setBooks] = useState([]);
-  const [movies, setMovies] = useState([]);
-  const [videoGames, setVideoGames] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('books');
+    const [info, setInfo] = useState([])
+    const [mediaType, setMediaType] = useState('books');
+    const [searchTerm, setSearchTerm] = useState('');
 
-   function HandleSearch(searchTerm, selectedCategory) {
-    if (searchTerm !== "") {
-        let url = "";
-
-        switch(selectedCategory) {
-            case 'books':
-                url = `http://localhost:3002/search/books/${searchTerm}`;
-                break;
-            case 'movies':
-                url = `http://localhost:3002/search/movies/${searchTerm}`;
-                break;
-            case 'videogames':
-                url = `http://localhost:3002/search/videogames/${searchTerm}`;
-                break;
-            case 'users':
-                url = `http://localhost:3002/search/users/${searchTerm}`;
-                break;
-            default: console.log("Error: Invalid category");
-        }
-
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-              switch(selectedCategory) {
-                case 'books':
-                    setBooks(data);
-                    break;
-                case 'movies':
-                    setMovies(data);
-                    break;
-                case 'videogames':
-                    setVideoGames(data);
-                    break;
-                case 'users':
-                    setUsers(data);
-                    break;
-                default: console.log("Error: Couldn't set data");
-            }})
-            .catch(error => {
-              console.error('Error fetching data:', error);
-            });
-    }
-  }
-
-  const getListForCategory = () => {
-    switch (selectedCategory) {
-      case 'books':
-        return books;
-      case 'movies':
-        return movies;
-      case 'videogames':
-        return videoGames;
-      case 'users':
-        return users;
-      default:
-        return [];
-    }
+    const handleSearchInputChange = (event) => {
+      setSearchTerm(event.target.value);
   };
 
+    const handleMediaTypeChange = (event) => { 
+        setMediaType(event.target.value);
+    }
+
+    const handleSearch = (event) => {
+      event.preventDefault();
+      const url = `http://localhost:3002/search/${mediaType}/${searchTerm}`;
+
+      fetch(url)
+          .then(response => response.json())
+          .then(data => {
+              setInfo(data);
+            })
+          .catch(error => console.error('Error fetching data:', error));
+    };
+
+    function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    const renderTooltip = (props) => (
+      <Tooltip id="button-tooltip" {...props}>
+        Save
+      </Tooltip>
+      );
 
     return (
       <div>
-          <NavBar
-              HandleSearch={HandleSearch} 
-              selectedCategory={selectedCategory} 
-              setSelectedCategory={setSelectedCategory}
+          <NavBar searchDatabase={handleSearch} 
+                  handleMediaTypeChange={handleMediaTypeChange}
+                  handleSearchInputChange={handleSearchInputChange}
           />
-    <h1>Home Page</h1>
-    <GridComponent list={getListForCategory()} />
-    </div>
-        );
-    }
+          <h1>Home Page</h1>
+      </div>
+    );
+}
+
 
 export default Home;

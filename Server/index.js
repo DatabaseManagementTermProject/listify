@@ -39,7 +39,7 @@ app.use(express.urlencoded({ extended: false}));
 app.get('/search/:category/:letters', async (req, res) => {
   // category is books, video games, movies, or users
   // letters is the search value
-  const { category, letters } = req.params;
+  let { category, letters } = req.params;
 
   category = category.charAt(0).toUpperCase() + category.slice(1);
 
@@ -49,6 +49,7 @@ app.get('/search/:category/:letters', async (req, res) => {
           .select('*')
           .ilike('title', `%${letters}%`);
 
+      console.log(data);
       if (error) throw error;
 
       res.json(data);
