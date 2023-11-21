@@ -33,9 +33,27 @@ const Profile = () => {
         ).then(([resBooks, resMovies, resVideoGames]) => {
            return Promise.all([resBooks.json(), resMovies.json(), resVideoGames.json()])
         }).then(([data_books, data_movies, data_videogames]) => {
-          setBooks(data_books);
-          setMovies(data_movies);
-          setVideoGames(data_videogames)
+        
+            // parse books
+            var newBooks = [];
+            data_books.map((item, index) => {
+                newBooks.push(item["Books"])
+             })
+            setBooks(newBooks);
+
+            // parse movies
+            var newMovies = [];
+            data_movies.map((item, index) => {
+                newMovies.push(item["Movies"])
+             })
+            setMovies(newMovies);
+
+            // parse videogames
+            var newVideoGames = [];
+            data_videogames.map((item, index) => {
+                newVideoGames.push(item["VideoGames"])
+             })
+            setVideoGames(newVideoGames)
         })
       })
     }, []);
