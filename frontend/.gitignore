@@ -20,8 +20,12 @@
 
 npm-debug.log*
 yarn-debug.log*
+<<<<<<< HEAD
 yarn-error.log*
 
 frontend/src/Components/Grid/BooksImages
 frontend/src/Components/Grid/MoviesImages
 frontend/src/Components/Grid/VideoGamesImages
+=======
+yarn-error.log*
+>>>>>>> main

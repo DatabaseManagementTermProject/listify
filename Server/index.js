@@ -143,7 +143,7 @@ app.get('/getLikedBooks/:uid', async (req, res) => {
   try {
     let { data: Books, error } = await supabase
     .from('likedBooks')
-    .select('*, Books:Books( * )')
+    .select('*, Books( * )')
     .eq('uid', uid)
 
     res.send(Books);

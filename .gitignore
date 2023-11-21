@@ -1,6 +1,10 @@
 .env
 /node_modules
+<<<<<<< HEAD
 frontend/src/Components/Grid/BooksImages
 frontend/src/Components/Grid/MoviesImages
 frontend/src/Components/Grid/VideoGamesImages
+=======
+frontend/src/Components/Grid/Images
+>>>>>>> main
 /frontend/.env
