@@ -32,10 +32,6 @@ const SearchResults = () => {
         .catch(error => console.error('Error fetching data:', error));
     }, [searchParams]);
 
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       Save
