@@ -48,9 +48,9 @@ app.get('/search/:category/:letters', async (req, res) => {
     // search for users by email
     if (category === 'Users') {
       ({ data, error } = await supabase
-          .from('auth.users')
-          .select('email')
-          .ilike('email', `%${letters}%`));
+          .from('Users')
+          .select('username')
+          .ilike('username', `%${letters}%`));
     }
     // limit book searches for the images we have
     if (category === 'Books') {

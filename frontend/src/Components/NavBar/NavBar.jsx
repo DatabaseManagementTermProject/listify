@@ -12,22 +12,22 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 
-function NavBar(props) {
+function NavBar() {
 
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
-	const [selectedSearchItem, setSelectedSearchItem] = useState("Item To Search")
+  const [selectedSearchItem, setSelectedSearchItem] = useState("Item To Search")
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Update the local state on search input change
+  // updates the searchterm state variable as the user types in the search bar
   const handleSearchInputChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  // Handle search form submission
+  // handles search form submission
   const handleSearchSubmit = (event) => {
     event.preventDefault();
-    // Navigate to the SearchResults page with search parameters
+    // navigate to the SearchResults page with search parameters
     navigate(`/searchresults?mediaType=${selectedSearchItem}&query=${encodeURIComponent(searchTerm)}`);
   };
 
