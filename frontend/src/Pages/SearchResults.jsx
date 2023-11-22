@@ -4,11 +4,11 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Grid from "../Components/Grid/Grid";
-import emptyBookmark from '../Components/Profile/bookmark.png'
+import emptyBookmark from '../Components/Grid/Images/bookmark.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from 'react-router-dom';
-import '../Components/Profile/likedItems.css'
+
 
 
 const SearchResults = () => {
@@ -56,19 +56,12 @@ const SearchResults = () => {
         case 'books':
               return (
                 <div className='container'>
-                  <img src={require('../Components/Grid/BooksImages/' + d.Books.id + '.jpg')} className='images'/>
+                  { /* <img src={require('../Components/Grid/BooksImages/' + d.Books.id + '.jpg')} className='images'/> */}
                   <div className='overlay'>
                     <div className='titleContainer'>{d.Books.title}</div>
                     <div className='categoryContainer'>{d.Books.author}</div>
                     <div className='description'>{d.Books.description}</div>
                     <div className='buttonContainer'>
-                      <OverlayTrigger
-                        placement="bottom"
-                        delay={{ show: 250, hide: 400 }}
-                        overlay={renderTooltip}
-                      >
-                      {/*  <img src={filledBookmark} className='bookmark' onClick={() => removeLikedBook(d.Movies.id)} /> */}
-                      </OverlayTrigger>
                     </div>
                   </div>
                 </div>
@@ -86,6 +79,19 @@ const SearchResults = () => {
                   </div>
               </div>
           );
+          case 'users' :
+            return (
+              <div className='container' key={i}>
+              <div className='userContainer'>
+                <div className='userName' onClick={() => navigate(`/Profile/${d.id}`)}>
+                  {d.name}
+                </div>
+                <div className='userDetails'>
+                  {/* Additional user details here */}
+                </div>
+              </div>
+            </div>
+            ); 
           default:
           return <div>Unsupported media type</div>;
       }

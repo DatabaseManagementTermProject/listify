@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
-// generalized search endpoint
+// generalized search endpoint for all categories
 app.get('/search/:category/:letters', async (req, res) => {
   // category is books, video games, movies, or users
   // letters is the search value
@@ -45,12 +45,22 @@ app.get('/search/:category/:letters', async (req, res) => {
 
   try {
     let data, error;
+    // search for users by email
     if (category === 'Users') {
       ({ data, error } = await supabase
           .from('auth.users')
           .select('email')
           .ilike('email', `%${letters}%`));
     }
+    // limit book searches for the images we have
+    if (category === 'Books') {
+      ({ data, error } = await supabase)
+          .from('Books')
+          .select('*')
+          .ilike('title', `%${letters}%`)
+          .lte('id', 31);
+    }
+    // for movies and video games
     else {
       ({ data, error } = await supabase
           .from(category)

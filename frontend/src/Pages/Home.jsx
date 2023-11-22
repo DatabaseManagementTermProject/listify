@@ -4,7 +4,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Grid from "../Components/Grid/Grid";
-import emptyBookmark from '../Components/Profile/bookmark.png'
+import emptyBookmark from '../Components/Grid/Images/bookmark.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 
 const Home = () => {
@@ -33,16 +33,13 @@ const Home = () => {
         .catch(error => console.error('Error fetching data:', error));
   };
 
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       Save
     </Tooltip>
     );
 
+    
     const renderContent = (d, i) => {
       switch (mediaType) {
         case 'movies':
@@ -61,7 +58,7 @@ const Home = () => {
         case 'books':
               return (
                 <div className='container'>
-                  <img src={require('../Components/Grid/BooksImages/' + d.Books.id + '.jpg')} className='images'/>
+                 {/* <img src={require('../Components/Grid/BooksImages/' + d.Books.id + '.jpg')} className='images'/> */}
                   <div className='overlay'>
                     <div className='titleContainer'>{d.Books.title}</div>
                     <div className='categoryContainer'>{d.Books.author}</div>
