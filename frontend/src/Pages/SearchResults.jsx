@@ -8,6 +8,7 @@ import emptyBookmark from '../Components/Grid/Images/bookmark.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from 'react-router-dom';
+import { supabase } from '../database';
 
 
 
@@ -24,7 +25,7 @@ const SearchResults = () => {
 
   useEffect(() => {
     const url = `http://localhost:3002/search/${mediaType}/${searchTerm}`;
-
+    console.log(url);
     fetch(url)
       .then(response => response.json())
       .then(data => {
@@ -39,8 +40,41 @@ const SearchResults = () => {
     </Tooltip>
     );
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  }
+
+  function addLikedItem(id){
+    const capitalizedMediaType = capitalizeFirstLetter(mediaType);
+
+    supabase.auth.getUser().then((data) => {
+      
+    var userId = data.data.user.id;
+    return userId;
+
+    }).then((userId) => {
+
+      var url = `http://localhost:3002/addLiked${capitalizedMediaType}`
+
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          uid: userId,
+          itemId: id
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        }
+      })
+      .then((error) => {
+        console.log(error)
+      })
+
+    })
+    }
+
   // function to render the content on the search page
-  // did this before I realized I could implement it more dynamically, it is what it is
+  // can't really implement this dynamically since I am getting the images differently for each media type
   const renderContent = (d, i) => {
     switch (mediaType) {
       case 'movies':
@@ -51,33 +85,58 @@ const SearchResults = () => {
               <div className='titleContainer'>{d.title}</div>
               <div className='categoryContainer'>{d.author}</div>
               <div className='description'>{d.description}</div>
-              <div className='buttonContainer'></div>
+              <div className='buttonContainer'>
+                <OverlayTrigger
+                  placement="bottom"
+                  delay={{ show: 250, hide: 400 }}
+                  overlay={renderTooltip}
+                >
+                  <img src={emptyBookmark} className='bookmark' onClick={() => addLikedItem(d.id)}/>
+                </OverlayTrigger>
+              </div>
             </div>
           </div>
         );
       case 'books':
-            return (
-              <div className='container'>
-                <img src={require('../Components/Grid/Images/Books/' + d.Books.id + '.jpg')} className='images'/>
-                <div className='overlay'>
-                  <div className='titleContainer'>{d.Books.title}</div>
-                  <div className='categoryContainer'>{d.Books.author}</div>
-                  <div className='description'>{d.Books.description}</div>
-                  <div className='buttonContainer'></div>
-                </div>
-              </div>
+        console.log(d);
+        return (
+          <div key={i} className='container'>
+          <img src={require('../Components/Grid/Images/Books/' + d.id + '.jpg')} className='images'/>
+          <div className='overlay'>
+            <div className='titleContainer'>{d.title}</div>
+            <div className='categoryContainer'>{d.genre}</div>
+            <div className='description'>{d.description}</div>
+            <div className='buttonContainer'>
+              <OverlayTrigger
+                placement="bottom"
+                delay={{ show: 250, hide: 400 }}
+                overlay={renderTooltip}
+              >
+                <img src={emptyBookmark} className='bookmark' onClick={() => addLikedItem(d.id)}/>
+              </OverlayTrigger>
+            </div>
+          </div>
+          </div> 
             );
         case 'videoGames' :
-            return (
-            <div className='container'>
-              <img src={d.coverImg} className='images'/>
-              <div className='overlay'>
-                <div className='titleContainer'>{d.title}</div>
-                <div className='categoryContainer'>{d.author}</div>
-                <div className='description'>{d.description}</div>
-                <div className='buttonContainer'></div>
+          return (
+          <div className='container'>
+            <img src={d.coverImg} className='images'/>
+            <div className='overlay'>
+              <div className='titleContainer'>{d.title}</div>
+              <div className='categoryContainer'>{d.author}</div>
+              <div className='description'>{d.description}</div>
+              <div className='buttonContainer'>
+                <OverlayTrigger
+                  placement="bottom"
+                  delay={{ show: 250, hide: 400 }}
+                  overlay={renderTooltip}
+                >
+                  <img src={emptyBookmark} className='bookmark' onClick={() => addLikedItem(d.id)}/>
+                </OverlayTrigger>
               </div>
-            </div>
+          </div>
+          </div>
         );
         case 'users' :
           return (

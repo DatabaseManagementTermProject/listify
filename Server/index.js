@@ -45,32 +45,39 @@ app.get('/search/:category/:letters', async (req, res) => {
 
   try {
     let data, error;
-    // search for users by email
-    if (category === 'Users') {
-      ({ data, error } = await supabase
-          .from('Users')
-          .select('username')
-          .ilike('username', `%${letters}%`));
-    }
-    // limit book searches for the images we have
-    if (category === 'Books') {
-      ({ data, error } = await supabase)
-          .from('Books')
-          .select('*')
-          .ilike('title', `%${letters}%`)
-          .lte('id', 31);
-    }
-    // for movies and video games
-    else {
-      ({ data, error } = await supabase
-          .from(category)
-          .select('*')
-          .ilike('title', `%${letters}%`));
-    }
-      console.log(data);
-      if (error) throw error;
 
-      res.json(data);
+    if (category === 'Users') {
+        // Search for users by username
+        const response = await supabase
+            .from('Users')
+            .select('username')
+            .ilike('username', `%${letters}%`);
+        data = response.data;
+        error = response.error;
+    }
+    else if (category === 'Books') {
+        // Limit book searches for the images we have
+        const response = await supabase
+            .from('Books')
+            .select('*')
+            .ilike('title', `%${letters}%`)
+            .lte('id', 31);
+        data = response.data;
+        error = response.error;
+    }
+    else {
+        // For movies and video games
+        const response = await supabase
+            .from(category)
+            .select('*')
+            .ilike('title', `%${letters}%`);
+        data = response.data;
+        error = response.error;
+    }
+
+    res.send(data);
+    console.log(data);
+    if (error) throw error;
   } catch (err) {
       res.status(500).send('Server error');
   }
