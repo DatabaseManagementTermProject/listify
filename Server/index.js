@@ -61,7 +61,6 @@ app.get('/search/:category/:letters', async (req, res) => {
             .from('Books')
             .select('*')
             .ilike('title', `%${letters}%`)
-            .lte('id', 31);
         data = response.data;
         error = response.error;
     }

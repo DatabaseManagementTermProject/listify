@@ -74,13 +74,12 @@ const SearchResults = () => {
     }
 
   // function to render the content on the search page
-  // can't really implement this dynamically since I am getting the images differently for each media type
   const renderContent = (d, i) => {
     switch (mediaType) {
       case 'movies':
         return (
           <div className='container'>
-            <img src={d[' coverImg']} className='images'/>
+            <img src={d.coverImg} className='images'/>
             <div className='overlay'>
               <div className='titleContainer'>{d.title}</div>
               <div className='categoryContainer'>{d.author}</div>
@@ -101,7 +100,7 @@ const SearchResults = () => {
         console.log(d);
         return (
           <div key={i} className='container'>
-          <img src={require('../Components/Grid/Images/Books/' + d.id + '.jpg')} className='images'/>
+          <img src={d.coverImg} className='images'/>
           <div className='overlay'>
             <div className='titleContainer'>{d.title}</div>
             <div className='categoryContainer'>{d.genre}</div>
@@ -157,8 +156,8 @@ const SearchResults = () => {
     <div>
       <NavBar />
       <h1>Search Results</h1>
-      <div style={{overflowX: 'scroll'}} className='scrollContainer'>
-        <ul style={{display: 'inline', whiteSpace: 'nowrap', overflow: 'auto'}}>
+      <div className="gridContainer">
+        <ul style={{display: 'inline-block'}}>
           {info.map((d, i) => renderContent(d, i))}
         </ul>
       </div>
