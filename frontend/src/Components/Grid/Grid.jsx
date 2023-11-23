@@ -91,7 +91,7 @@ function Grid(list) {
           <ul style={{display: 'inline-block'}}>
             {item.map((d, i) => (
             <div key={i} className='container'>
-                <img src={ require('./Images/' + list.list + '/' + i + '.jpg') } className='images'/>
+                <img src={ d.coverImg } className='images'/>
                 <div className='overlay'>  
                 <div className='titleContainer'>{d.title}</div>
                 <div className='categoryContainer'>{d.author}</div>
