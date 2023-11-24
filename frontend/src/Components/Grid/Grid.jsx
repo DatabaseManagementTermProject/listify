@@ -1,8 +1,8 @@
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import './Grid.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import filledBookmark from '../Profile/bookmarkfill.png'
-import emptyBookmark from '../Profile/bookmark.png'
+import filledBookmark from './Images/bookmarkfill.png'
+import emptyBookmark from './Images/bookmark.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useState, useEffect } from 'react';
 import { supabase } from '../../database';
@@ -91,7 +91,7 @@ function Grid(list) {
           <ul style={{display: 'inline-block'}}>
             {item.map((d, i) => (
             <div key={i} className='container'>
-                <img src={ require('./' + list.list + 'Images/' + i + '.jpg') } className='images'/>
+                <img src={ d.coverImg } className='images'/>
                 <div className='overlay'>  
                 <div className='titleContainer'>{d.title}</div>
                 <div className='categoryContainer'>{d.author}</div>
@@ -102,7 +102,7 @@ function Grid(list) {
                   delay={{ show: 0, hide: 100 }}
                   overlay={renderTooltip}
                   >
-                    <img src={emptyBookmark} className='bookmark' onClick={() => addLikedItem(d, i)} />
+                    <img src={emptyBookmark} alt='itemImage' className='bookmark' onClick={() => addLikedItem(d, i)} />
                   </OverlayTrigger>
                 </div>
               </div>

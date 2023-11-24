@@ -35,6 +35,7 @@ app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
+<<<<<<< HEAD
 app.post('/like-movie', async (req, res) => {
   const { userId, movieId } = req.body;
 
@@ -86,6 +87,52 @@ app.delete('/like-movie', async (req, res) => {
   } catch (error) {
     console.error('Error removing liked movie:', error.message);
     return res.status(500).json({ error: 'Could not unlike the movie' });
+=======
+// generalized search endpoint for all categories
+app.get('/search/:category/:letters', async (req, res) => {
+  // category is books, video games, movies, or users
+  // letters is the search value
+  let { category, letters } = req.params;
+
+  category = category.charAt(0).toUpperCase() + category.slice(1);
+
+  try {
+    let data, error;
+
+    if (category === 'Users') {
+        // Search for users by username
+        const response = await supabase
+            .from('Users')
+            .select('*')
+            .ilike('username', `%${letters}%`);
+        data = response.data;
+        error = response.error;
+    }
+    else if (category === 'Books') {
+        // Limit book searches for the images we have
+        const response = await supabase
+            .from('Books')
+            .select('*')
+            .ilike('title', `%${letters}%`)
+        data = response.data;
+        error = response.error;
+    }
+    else {
+        // For movies and video games
+        const response = await supabase
+            .from(category)
+            .select('*')
+            .ilike('title', `%${letters}%`);
+        data = response.data;
+        error = response.error;
+    }
+
+    res.send(data);
+    console.log(data);
+    if (error) throw error;
+  } catch (err) {
+      res.status(500).send('Server error');
+>>>>>>> main
   }
 });
 
@@ -166,7 +213,7 @@ app.get('/getLikedBooks/:uid', async (req, res) => {
   try {
     let { data: Books, error } = await supabase
     .from('likedBooks')
-    .select('*, Books:Books( * )')
+    .select('*, Books( * )')
     .eq('uid', uid)
 
     res.send(Books);
