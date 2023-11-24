@@ -1,0 +1,37 @@
+.container {
+    margin-bottom: 20px;
+}
+
+.gridContainer {
+    text-align: center;
+}
+
+
+.userContainer .userName {
+color: white;
+border: 1px solid white;
+padding: 5px;
+display: inline-block;
+margin: 5px;
+}
+
+.profileImage {
+    height: 30px;
+    width: auto;
+    margin-right: 20px;
+}
+
+.userBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid white;
+    padding: 10px;
+    margin: 10px auto;
+    cursor: pointer;
+    width: 500px;
+  }
+
+.userName {
+    color: white;
+}
