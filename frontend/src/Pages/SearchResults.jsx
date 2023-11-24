@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../Components/NavBar/NavBar";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Grid from "../Components/Grid/Grid";
 import emptyBookmark from '../Components/Grid/Images/bookmark.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../database';
+import './SearchResults.css';
+import ProfileImage from '../Components/NavBar/profile.png';
 
-
-
+// I did all this before the grid would have worked with the search page, due to the difference
+// in getting the images, I am leaving it as is for now, but it could be refactored
 const SearchResults = () => {
 
   const navigate = useNavigate();
@@ -24,14 +24,16 @@ const SearchResults = () => {
 
 
   useEffect(() => {
+
     const url = `http://localhost:3002/search/${mediaType}/${searchTerm}`;
-    console.log(url);
+
     fetch(url)
       .then(response => response.json())
       .then(data => {
         setInfo(data);
       })
       .catch(error => console.error('Error fetching data:', error));
+
   }, [searchParams]);
 
   const renderTooltip = (props) => (
@@ -40,21 +42,21 @@ const SearchResults = () => {
     </Tooltip>
     );
 
+  // to get the appropraite capitalization for the media type when using it for the endpoint
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
 
   function addLikedItem(id){
+    // capitalize first letter of media type
     const capitalizedMediaType = capitalizeFirstLetter(mediaType);
 
     supabase.auth.getUser().then((data) => {
-      
-    var userId = data.data.user.id;
-    return userId;
-
+      var userId = data.data.user.id;
+      return userId;
     }).then((userId) => {
 
-      var url = `http://localhost:3002/addLiked${capitalizedMediaType}`
+    var url = `http://localhost:3002/addLiked${capitalizedMediaType}`
 
       fetch(url, {
         method: "POST",
@@ -71,18 +73,20 @@ const SearchResults = () => {
       })
 
     })
-    }
+  }
 
   // function to render the content on the search page
+  // did this when all the images were retrieved in different ways, could be refactored
   const renderContent = (d, i) => {
     switch (mediaType) {
       case 'movies':
+      case 'videoGames':
         return (
-          <div className='container'>
+          <div key={i} className='container'>
             <img src={d.coverImg} className='images'/>
             <div className='overlay'>
               <div className='titleContainer'>{d.title}</div>
-              <div className='categoryContainer'>{d.author}</div>
+              <div className='categoryContainer'>{mediaType === 'movies' ? d.author : d.genre}</div>
               <div className='description'>{d.description}</div>
               <div className='buttonContainer'>
                 <OverlayTrigger
@@ -97,33 +101,12 @@ const SearchResults = () => {
           </div>
         );
       case 'books':
-        console.log(d);
         return (
           <div key={i} className='container'>
-          <img src={d.coverImg} className='images'/>
-          <div className='overlay'>
-            <div className='titleContainer'>{d.title}</div>
-            <div className='categoryContainer'>{d.genre}</div>
-            <div className='description'>{d.description}</div>
-            <div className='buttonContainer'>
-              <OverlayTrigger
-                placement="bottom"
-                delay={{ show: 250, hide: 400 }}
-                overlay={renderTooltip}
-              >
-                <img src={emptyBookmark} className='bookmark' onClick={() => addLikedItem(d.id)}/>
-              </OverlayTrigger>
-            </div>
-          </div>
-          </div> 
-            );
-        case 'videoGames' :
-          return (
-          <div className='container'>
             <img src={d.coverImg} className='images'/>
             <div className='overlay'>
               <div className='titleContainer'>{d.title}</div>
-              <div className='categoryContainer'>{d.author}</div>
+              <div className='categoryContainer'>{d.genre}</div>
               <div className='description'>{d.description}</div>
               <div className='buttonContainer'>
                 <OverlayTrigger
@@ -134,34 +117,37 @@ const SearchResults = () => {
                   <img src={emptyBookmark} className='bookmark' onClick={() => addLikedItem(d.id)}/>
                 </OverlayTrigger>
               </div>
-          </div>
-          </div>
-        );
-        case 'users' :
-          return (
-            <div className='container' key={i}>
-            <div className='userContainer'>
-              <div className='userName' onClick={() => navigate(`/Profile/${d.id}`)}>
-                {d.name}
-              </div>
             </div>
           </div>
-          ); 
-        default:
+        );
+      case 'users':
+        return (
+          <div key={i} className="userBox" onClick={() => navigate(`/Profile/${d.id}`)}>
+          <img src={ProfileImage} alt={`${d.username}'s profile`} className="profileImage" />
+          <span className="userName">{d.username}</span>
+          </div>
+        );
+      default:
         return <div>Unsupported media type</div>;
     }
   };
 
   return (
     <div>
-      <NavBar />
-      <h1>Search Results</h1>
+    <NavBar />
+    <h1>Search Results</h1>
+    {mediaType === 'users' ? (
+      <div>
+        {info.map((d, i) => renderContent(d, i))}
+      </div>
+    ) : (
       <div className="gridContainer">
         <ul style={{display: 'inline-block'}}>
           {info.map((d, i) => renderContent(d, i))}
         </ul>
       </div>
-    </div>
+    )}
+  </div>
   );
 }
 

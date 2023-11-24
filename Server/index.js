@@ -50,7 +50,7 @@ app.get('/search/:category/:letters', async (req, res) => {
         // Search for users by username
         const response = await supabase
             .from('Users')
-            .select('username')
+            .select('*')
             .ilike('username', `%${letters}%`);
         data = response.data;
         error = response.error;
