@@ -35,7 +35,7 @@ const Login = () => {
           console.error('Login error:', error);
         } else {
           console.log('Logged in as:', user);
-          navigate('/allbooks');
+          navigate('/home');
         }
       } catch (error) {
         console.error('Login error:', error.message);

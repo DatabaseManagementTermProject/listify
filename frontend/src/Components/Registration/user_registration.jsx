@@ -22,19 +22,43 @@ function UserRegistration () {
           }
 
         try {
-            const { error } = await supabase.auth.signUp({
+            const { user, error } = await supabase.auth.signUp({
                 email, password });
 
             if (error) {
                 console.error(error);
             }
             else {
+                setTimeout(() => {
+                    supabase.auth.getUser().then((data) => {
+			
+                        var userId = data.data.user.id;
+                    assignUsername(userId, username);
+                }, 60000);
                 navigate('/login');
-            }
+            })}
         } catch (error) {
             console.error("Error signing up user:", error);
         }
     }
+
+    const assignUsername = async (userId, username) => {
+        try {
+            const { data, error } = await supabase
+                .from('Users')
+                .insert([
+                    { id: userId, username: username }
+                ]);
+    
+            if (error) {
+                throw error;
+            }
+    
+            console.log("Username assigned successfully", data);
+        } catch (error) {
+            console.error("Error assigning username:", error);
+        }
+    };
 
 return(
     <div className = "register-container">

@@ -6,27 +6,28 @@ import Home from "./Pages/Home";
 import Login from "./Pages/Login"; 
 import Register from "./Pages/Register"; 
 import Profile from './Pages/Profile';
-import Grid from './Components/Grid/Grid';
-import AllMovies from './Pages/Movies';
-import AllVideoGames from './Pages/VideoGames';
 import Movies from './Pages/Movies';
 import Books from './Pages/Books';
 import VideoGames from './Pages/VideoGames';
-import SharedList from './Pages/SharedList';
+import SearchResults from './Pages/SearchResults';
 
 function App() {
     return (
-        <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/books" element={<Books />} />
-            <Route path="/movies" element={<Movies />} />
-            <Route path="/VideoGames" element={<VideoGames />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/SharedList" element={<SharedList />} />
-        </Routes>
+        <>
+            <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/Books" element={<Books />} />
+                <Route path="/Movies" element={<Movies />} />
+                <Route path="/VideoGames" element={<VideoGames />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/SharedList" element={<SharedList />} />
+                <Route path="/searchresults" element={<SearchResults />} />
+
+            </Routes>
+        </>
     )
 }
 

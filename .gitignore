@@ -1,5 +1,4 @@
 .env
 /node_modules
-frontend/src/Components/Grid/booksImages
-frontend/src/Components/Grid/moviesImages
+frontend/src/Components/Grid/Images
 /frontend/.env

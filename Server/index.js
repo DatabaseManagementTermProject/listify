@@ -35,27 +35,72 @@ app.use(express.urlencoded({ extended: false}));
 
 // ------------------- Endpoints
 
-app.post('/register', async (req, res) => {
+// generalized search endpoint for all categories
+app.get('/search/:category/:letters', async (req, res) => {
+  // category is books, video games, movies, or users
+  // letters is the search value
+  let { category, letters } = req.params;
 
-  const { userName, email, password } = req.body;
+  category = category.charAt(0).toUpperCase() + category.slice(1);
 
-// for user input, hashes user password before storing into database
-try {
-// Hash the password
-const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    let data, error;
 
-// Insert the hashed password into the database
-const queryText = 'INSERT INTO users (userName, email, password) VALUES (?, ?, ?)';
-await connection.query(queryText, [userName, email, hashedPassword]);
+    if (category === 'Users') {
+        // Search for users by username
+        const response = await supabase
+            .from('Users')
+            .select('*')
+            .ilike('username', `%${letters}%`);
+        data = response.data;
+        error = response.error;
+    }
+    else if (category === 'Books') {
+        // Limit book searches for the images we have
+        const response = await supabase
+            .from('Books')
+            .select('*')
+            .ilike('title', `%${letters}%`)
+        data = response.data;
+        error = response.error;
+    }
+    else {
+        // For movies and video games
+        const response = await supabase
+            .from(category)
+            .select('*')
+            .ilike('title', `%${letters}%`);
+        data = response.data;
+        error = response.error;
+    }
 
-res.status(201).json({ message: 'Account created' });
-} catch (error) {
-console.error('Error during registration:', error);
-res.status(500).json({ error: 'Registration failed' });
-}
+    res.send(data);
+    console.log(data);
+    if (error) throw error;
+  } catch (err) {
+      res.status(500).send('Server error');
+  }
 });
 
-app.get('/books', async (req, res) => {
+// ------- search
+app.get('/home/search/:letters', async (req, res) => {
+
+	const letters = req.params.letters
+  
+	console.log("Made it here")
+	const query = `SELECT * FROM movies WHERE title LIKE '%${letters}%' LIMIT 30;`;
+	try {
+	  const [rows] = await connection.query(query);
+	  console.log(rows);
+	  res.send(rows);
+	} catch (err) {
+	  console.log(err)
+	}
+  })
+
+// ------------- get all
+
+app.get('/Books', async (req, res) => {
 
   // already switched to supabase
     try {
@@ -70,8 +115,7 @@ app.get('/books', async (req, res) => {
       // console.log(err)
     }
 })
-
-app.get('/movies', async (req, res) => {
+app.get('/Movies', async (req, res) => {
 
   // already switched to supabase
     try {
@@ -87,8 +131,7 @@ app.get('/movies', async (req, res) => {
       // console.log(err)
     }
 })
-
-app.get('/videogames', async (req, res) => {
+app.get('/VideoGames', async (req, res) => {
 
 
   // already switched to supabase
@@ -106,20 +149,179 @@ app.get('/videogames', async (req, res) => {
     }
 })
 
-app.get('/home/search/:letters', async (req, res) => {
+// ------------ liked books
+app.get('/getLikedBooks/:uid', async (req, res) => {
 
-  const letters = req.params.letters
+  const uid = req.params.uid
 
-  // console.log("Made it here")
-  const query = `SELECT * FROM movies WHERE title LIKE '%${letters}%' LIMIT 30;`;
+  console.log(uid)
+
   try {
-    const [rows] = await connection.query(query);
-    // console.log(rows);
-    res.send(rows);
+    let { data: Books, error } = await supabase
+    .from('likedBooks')
+    .select('*, Books( * )')
+    .eq('uid', uid)
+
+    res.send(Books);
   } catch (err) {
     // console.log(err)
   }
 })
+app.post('/removeLikedBooks', async (req, res) => {
+
+	const uid = req.body.uid;
+	const itemId = req.body.itemId;
+
+	console.log(`Removing book ${itemId}`)
+
+	try {
+		let { data: Books, error } = await supabase
+		.from('likedBooks')
+		.delete()
+		.eq('uid', uid)
+		.eq('itemId', itemId)
+
+		res.send(Books);
+	} catch (err) {
+		console.log(err)
+	}
+})
+app.post('/addLikedBooks', async (req, res) => {
+
+	const uid = req.body.uid;
+	const itemId = req.body.itemId;
+
+	console.log(`Adding book ${itemId}`)
+
+	try {
+		let { data: Books, error } = await supabase
+		.from('likedBooks')
+		.insert([
+			{ 'uid': uid, 'itemId': itemId },
+		])
+		.select()
+
+	} catch (err) {
+		console.log(err)
+	}
+})
+
+// ------------ liked movies
+app.get('/getLikedMovies/:uid', async (req, res) => {
+
+	const uid = req.params.uid
+
+	console.log(uid)
+  
+	try {
+	  let { data: Movies, error } = await supabase
+	  .from('likedMovies')
+	  .select('*, Movies( * )')
+	  .eq('uid', uid)
+
+	  console.log(Movies)
+  
+	  res.send(Movies);
+	} catch (err) {
+	  console.log(err)
+	}
+})
+app.post('/removeLikedMovies', async (req, res) => {
+
+  const uid = req.body.uid;
+  const itemId = req.body.itemId;
+
+  console.log(`Removing movie ${itemId}`)
+
+  try {
+    let { data: Movie, error } = await supabase
+    .from('likedMovies')
+    .delete()
+    .eq('uid', uid)
+    .eq('itemId', itemId)
+
+  } catch (err) {
+    console.log(err)
+  }
+})
+app.post('/addLikedMovies', async (req, res) => {
+
+	const uid = req.body.uid;
+	const itemId = req.body.itemId;
+
+	console.log(`Adding Movie ${itemId}`)
+
+	try {
+		let { data: Movies, error } = await supabase
+		.from('likedMovies')
+		.insert([
+			{ 'uid': uid, 'itemId': itemId },
+		])
+		.select()
+
+	} catch (err) {
+		console.log(err)
+	}
+})
+
+// ------------ liked videogames
+app.get('/getLikedVideoGames/:uid', async (req, res) => {
+
+	const uid = req.params.uid
+
+	console.log(uid)
+  
+	try {
+	  let { data: VideoGames, error } = await supabase
+	  .from('likedVideoGames')
+	  .select('*, VideoGames( * )')
+	  .eq('uid', uid)
+
+	  console.log(VideoGames)
+  
+	  res.send(VideoGames);
+	} catch (err) {
+	  console.log(err)
+	}
+})
+app.post('/removeLikedVideoGames', async (req, res) => {
+
+	const uid = req.body.uid;
+	const itemId = req.body.itemId;
+  
+	console.log(`Removing Videogame ${itemId}`)
+  
+	try {
+	  let { data: VideoGames, error } = await supabase
+	  .from('likedVideoGames')
+	  .delete()
+	  .eq('uid', uid)
+	  .eq('itemId', itemId)
+  
+	} catch (err) {
+	  console.log(err)
+	}
+  })
+app.post('/addLikedVideoGames', async (req, res) => {
+
+	const uid = req.body.uid;
+	const itemId = req.body.itemId;
+
+	console.log(`Adding Video Game ${itemId}`)
+
+	try {
+		let { data: VideoGames, error } = await supabase
+		.from('likedVideoGames')
+		.insert([
+			{ 'uid': uid, 'itemId': itemId },
+		])
+		.select()
+
+	} catch (err) {
+		console.log(err)
+	}
+})
+
 
 // Get the method from the library
 app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
