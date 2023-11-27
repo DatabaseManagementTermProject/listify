@@ -17,7 +17,7 @@ connection.connect((err) => {
     console.error('Error connecting to the database:', err);
     return;
   }
-  console.log('Connected to PlanetScale!');
+  // console.log('Connected to PlanetScale!');
 });
 
 // ------------------- Set up express server
@@ -109,10 +109,10 @@ app.get('/Books', async (req, res) => {
       .select('*')
       .range(0, 31)
       .order('id', { ascending: true })
-      console.log(Books);
+      // console.log(Books);
       res.send(Books);
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     }
 })
 app.get('/Movies', async (req, res) => {
@@ -125,10 +125,10 @@ app.get('/Movies', async (req, res) => {
       .range(0, 31)
       .order('id', { ascending: true })
 
-      console.log(Movies);
+      // console.log(Movies);
       res.send(Movies);
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     }
 })
 app.get('/VideoGames', async (req, res) => {
@@ -142,10 +142,10 @@ app.get('/VideoGames', async (req, res) => {
       .range(0, 31)
       .order('id', { ascending: true })
       
-      console.log(VideoGames);
+      // console.log(VideoGames);
       res.send(VideoGames);
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     }
 })
 
@@ -164,7 +164,7 @@ app.get('/getLikedBooks/:uid', async (req, res) => {
 
     res.send(Books);
   } catch (err) {
-    console.log(err)
+    // console.log(err)
   }
 })
 app.post('/removeLikedBooks', async (req, res) => {
@@ -337,7 +337,7 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
       try {
         const query = 'SELECT * FROM ' + library + ';';
         const [rows] = await connection.query(query);
-        console.log("inserver ", rows);
+        // console.log("inserver ", rows);
         res.status(200).send(rows);
       } catch (err) {
         console.error(err);
@@ -383,7 +383,7 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
                       'FROM ' + library + ' JOIN ' + likedLibrary + ' ' +
                       'ON ' + library + '.' + libraryAttr + ' = ' + likedLibrary + '.' + libraryAttr + ' ' +
                       'WHERE userID = ' + userID + ';';
-        console.log(query);
+        // console.log(query);
         const [rows] = await connection.query(query);
 
         // probably change this error message into something more UI friendly later
@@ -496,6 +496,45 @@ bcrypt.hash(password, 10, (err, hashedPassword) => {
   });
   }
 }); });
+
+
+// get the accessed lists
+app.get("/getAccessedLists/:userID", async (req, res) => {
+    const userID = req.params.userID;
+    try {
+      const query = "SELECT tableID FROM AccessLists WHERE userID = " + userID + ";";
+      const [rows] = await connection.query(query, [userID]);
+      res.status(200).json(rows);
+    } catch (err) {
+      console.error(err);
+    }
+});
+
+// get the liked in that lists
+app.get("/gettable/:tableName", async (req, res) => {
+    const tableName = req.params.tableName;
+    try {
+      const query = "SELECT * FROM " + tableName + ";";
+      const [rows] = await connection.query(query, [tableName]);
+      res.status(200).json(rows);
+    } catch (err) {
+      console.error(err);
+    }
+});
+
+// add into shared list
+app.get("/addToList/:access/:addCategories/:addID", async (req, res) => {
+    const access = req.params.access;
+    const addCategories = req.params.addCategories;
+    const addID = req.params.addID;
+    try {
+      const query = "INSERT INTO " + access + " (category, itemID) VALUES ( \"" + addCategories + "\", " + addID + ");";
+      console.log(query);
+      await connection.query(query, [addCategories, addID]);
+    } catch (err) {
+      console.error(err);
+    }
+});
 
 // test to see if the connection is working
 app.listen(3002, () => {

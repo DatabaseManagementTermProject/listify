@@ -23,6 +23,7 @@ function App() {
                 <Route path="/VideoGames" element={<VideoGames />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/SharedList" element={<SharedList />} />
                 <Route path="/searchresults" element={<SearchResults />} />
 
             </Routes>
