@@ -9,6 +9,7 @@ import Profile from './Pages/Profile';
 import Movies from './Pages/Movies';
 import Books from './Pages/Books';
 import VideoGames from './Pages/VideoGames';
+import SharedList from './Pages/SharedList';
 import SearchResults from './Pages/SearchResults';
 
 function App() {
