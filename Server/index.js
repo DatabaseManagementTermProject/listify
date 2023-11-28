@@ -498,7 +498,7 @@ bcrypt.hash(password, 10, (err, hashedPassword) => {
 }); });
 
 
-// SharedList.jsx: get the username
+// SharedList.jsx: get and set the username
 app.get('/username/:userID', async (req, res) => {
   console.log("fetching username");
   const userID = req.params.userID;
@@ -515,41 +515,49 @@ app.get('/username/:userID', async (req, res) => {
 })
 
 // SharedList.jsx: get the accessed lists for that user
-app.get("/getAccessedLists/:userID", async (req, res) => {
-    const userID = req.params.userID;
-    try {
-      const query = "SELECT tableID FROM AccessLists WHERE userID = " + userID + ";";
-      const [rows] = await connection.query(query, [userID]);
-      res.status(200).json(rows);
-    } catch (err) {
-      console.error(err);
-    }
+app.get("/getAccessedLists/:userName", async (req, res) => {
+  console.log("fetching accessed lists");
+  const userName = req.params.userName;
+  try {
+    let { data: Lists, error } = await supabase
+    .from('AccessLists').select('tableID')
+    .eq('userID', userName)
+    console.log(Lists);
+    res.send(Lists);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 // SharedList.jsx: get the list from the table
 app.get("/gettable/:tableName", async (req, res) => {
-    const tableName = req.params.tableName;
-    try {
-      const query = "SELECT * FROM " + tableName + ";";
-      const [rows] = await connection.query(query, [tableName]);
-      res.status(200).json(rows);
-    } catch (err) {
-      console.error(err);
-    }
+  console.log("fetching table");
+  const tableName = req.params.tableName;
+  try {
+    let { data: Lists, error } = await supabase
+    .from(tableName).select("*")
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 // SharedList.jsx: add into shared list
-app.get("/addToList/:access/:addCategories/:addID", async (req, res) => {
-    const access = req.params.access;
-    const addCategories = req.params.addCategories;
-    const addID = req.params.addID;
-    try {
-      const query = "INSERT INTO " + access + " (category, itemID) VALUES ( \"" + addCategories + "\", " + addID + ");";
-      console.log(query);
-      await connection.query(query, [addCategories, addID]);
-    } catch (err) {
-      console.error(err);
-    }
+app.post("/addToList/:access", async (req, res) => {
+  console.log("adding to list");
+  const access = req.params.access;
+  const addCategories = req.body.addCategories;
+  const addID = req.body.addID;
+  try {
+    let { data: Lists, error } = await supabase
+    .from(access).insert([
+      { 'category': addCategories, 'itemID': addID },
+    ])
+    .select("*")
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 // test to see if the connection is working

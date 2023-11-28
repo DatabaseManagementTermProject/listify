@@ -39,19 +39,22 @@ const SharedList = () => {
 
   // fetch the initial list from database
   useEffect(() => {
-    fetch(`http://localhost:3002/getAccessedLists/1`)
-        .then((res) => { return res.json() })
-        .then((data) => {
-          let temp = [];
-          data.forEach(element => {
-            temp.push(element.tableID);
-          });
-          setLists(temp);
-        })
-        .catch((error) => {
-          console.log(error);
+    console.log(username)
+    fetch(`http://localhost:3002/getAccessedLists/${username}`)
+      .then((res) => { 
+        return res.json() })
+      .then((data) => {
+        console.log(data);
+        let temp = [];
+        data.forEach(element => {
+          temp.push(element.tableID);
         });
-  }, []);
+        setLists(temp);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [username]);
 
   // fetch the initial likes from the initial list
   useEffect(() => {
@@ -66,11 +69,20 @@ const SharedList = () => {
 
   // function for adding a like to the list
   function add() {
-    let access = document.getElementById("access").value;
+    let curList = document.getElementById("access").value;
     let addCategories = document.getElementById("addCategories").value;
     let addID = document.getElementById("addID").value;
-    console.log(access, addCategories, addID)
-    fetch(`http://localhost:3002/addToList/${access}/${addCategories}/${addID}`)
+    console.log(curList, addCategories, addID)
+    fetch(`http://localhost:3002/addToList/${curList}`,
+      {method: "POST",
+      body: JSON.stringify({
+        addCategories: addCategories,
+        addID: addID
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
 
     if (addCategories === "books") {
       setBooksLists(booksLists.push(addID));
@@ -79,27 +91,28 @@ const SharedList = () => {
     } else {
       setVideoGameLists(videoGameLists.push(addID));
     }
-    fetchLikes(access);
+    fetchLikes(curList);
   }
 
   // function for changing the likes when the list changes
   function fetchLikes(tableName) {
     fetch(`http://localhost:3002/gettable/${tableName}`)
-        .then((res) => { return res.json() })
-        .then((data) => {
-            let temp = {"movies": [], "books": [], "videoGames": []};
-            data.forEach(element => {
-                temp[element.category].push(element.itemID);
-            });
-            setBooksLists(temp.books);
-            setMovieLists(temp.movies);
-            setVideoGameLists(temp.videoGames);
-        })
-        .catch((error) => {
-            console.log(error);
+      .then((res) => { return res.json() })
+      .then((data) => {
+        let temp = {"movies": [], "books": [], "videoGames": []};
+        data.forEach(element => {
+            temp[element.category].push(element.itemID);
         });
+        setBooksLists(temp.books);
+        setMovieLists(temp.movies);
+        setVideoGameLists(temp.videoGames);
+      })
+      .catch((error) => {
+          console.log(error);
+      });
   }
-  
+
+  console.log(username)
   // output the pages
   return (
     <div>
