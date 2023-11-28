@@ -498,7 +498,23 @@ bcrypt.hash(password, 10, (err, hashedPassword) => {
 }); });
 
 
-// get the accessed lists
+// SharedList.jsx: get the username
+app.get('/username/:userID', async (req, res) => {
+  console.log("fetching username");
+  const userID = req.params.userID;
+  console.log(userID);
+  try {
+    let { data: userName, error } = await supabase
+    .from('Users').select('username')
+    .eq('id', userID)
+    console.log(userName);
+    res.send(userName);
+  } catch (err) {
+    // console.log(err)
+  }
+})
+
+// SharedList.jsx: get the accessed lists for that user
 app.get("/getAccessedLists/:userID", async (req, res) => {
     const userID = req.params.userID;
     try {
@@ -510,7 +526,7 @@ app.get("/getAccessedLists/:userID", async (req, res) => {
     }
 });
 
-// get the liked in that lists
+// SharedList.jsx: get the list from the table
 app.get("/gettable/:tableName", async (req, res) => {
     const tableName = req.params.tableName;
     try {
@@ -522,7 +538,7 @@ app.get("/gettable/:tableName", async (req, res) => {
     }
 });
 
-// add into shared list
+// SharedList.jsx: add into shared list
 app.get("/addToList/:access/:addCategories/:addID", async (req, res) => {
     const access = req.params.access;
     const addCategories = req.params.addCategories;
