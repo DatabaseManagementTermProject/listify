@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../database';
 
 import NavBar from "../Components/NavBar/NavBar";
-// import Grid from "../Components/Grid/Grid";
+// import HorizontalGrid from "../Components/HorizontalGrid/HorizontalGrid";
 
 import './profile.css'
 
@@ -91,6 +91,12 @@ const SharedList = () => {
     let curList = document.getElementById("access").value;
     let categories = document.getElementById("categories").value;
     let itemID = parseInt(document.getElementById("itemID").value);
+
+    // check the item is alredy in the list or not, if yes, return an alert
+    if (categories === "books" && booksLists.includes(itemID)) { alert("Item already in bookslist"); return; }
+    else if (categories === "movies" && movieLists.includes(itemID)) { alert("Item already in movieslist"); return; }
+    else if (categories === "videoGames" && videoGameLists.includes(itemID)) { alert("Item already in videogameslist"); return; }
+
     fetch(`http://localhost:3002/addToList/${curList}`,
       { method: "POST",
         body: JSON.stringify({
@@ -157,10 +163,13 @@ const SharedList = () => {
 
         <h3 className="subheading">My Books</h3>
         <p>{booksLists}</p>
+        {/* <HorizontalGrid gridItems={booksLists} listName="Books" gridTitle="Books" removalHandler={removeLikedItem}/> */}
         <h3 className="subheading">My Movies</h3>
         <p>{movieLists}</p>
+        {/* <HorizontalGrid gridItems={movieLists} listName="Movies" gridTitle="Movies" removalHandler={removeLikedItem}/> */}
         <h3 className="subheading">My Video Games</h3>
         <p>{videoGameLists}</p>
+        {/* <HorizontalGrid gridItems={videoGameLists} listName="Video Games" gridTitle="Video Games" removalHandler={removeLikedItem}/> */}
     </div>
   );
 }
