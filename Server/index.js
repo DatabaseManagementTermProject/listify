@@ -554,11 +554,28 @@ app.post("/addToList/:access", async (req, res) => {
       { 'category': addCategories, 'itemID': addID },
     ])
     .select("*")
+    console.log(Lists);
     res.send(Lists);
   } catch (err) {
     console.error(err);
   }
 });
+
+// // SharedList.jsx: delete from shared list
+// app.post("/deleteFromList/:access", async (req, res) => {
+//   console.log("deleting from list");
+//   const access = req.params.access;
+//   const deleteCategories = req.body.deleteCategories;
+//   const deleteID = req.body.deleteID;
+//   try {
+//     let { data: Lists, error } = await supabase
+//     .from(access).delete([
+//       { 'category': deleteCategories, 'itemID': deleteID },
+//     ])
+//   } catch (err) {
+//     console.error(err);
+//   }
+// });
 
 // test to see if the connection is working
 app.listen(3002, () => {
