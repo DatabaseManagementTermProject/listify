@@ -546,36 +546,37 @@ app.get("/gettable/:tableName", async (req, res) => {
 app.post("/addToList/:access", async (req, res) => {
   console.log("adding to list");
   const access = req.params.access;
-  const addCategories = req.body.addCategories;
-  const addID = req.body.addID;
+  const categories = req.body.categories;
+  const itemID = req.body.itemID;
   try {
     let { data: Lists, error } = await supabase
     .from(access).insert([
-      { 'category': addCategories, 'itemID': addID },
+      { 'category': categories, 'itemID': itemID },
     ])
     .select("*")
-    console.log(Lists);
     res.send(Lists);
   } catch (err) {
     console.error(err);
   }
 });
 
-// // SharedList.jsx: delete from shared list
-// app.post("/deleteFromList/:access", async (req, res) => {
-//   console.log("deleting from list");
-//   const access = req.params.access;
-//   const deleteCategories = req.body.deleteCategories;
-//   const deleteID = req.body.deleteID;
-//   try {
-//     let { data: Lists, error } = await supabase
-//     .from(access).delete([
-//       { 'category': deleteCategories, 'itemID': deleteID },
-//     ])
-//   } catch (err) {
-//     console.error(err);
-//   }
-// });
+// SharedList.jsx: delete from shared list
+app.post("/deleteFromList/:access", async (req, res) => {
+  console.log("deleting from list");
+  const access = req.params.access;
+  const deleteCategories = req.body.categories;
+  const itemID = req.body.itemID;
+  console.log(access, deleteCategories, itemID)
+  try {
+    const { error } = await supabase
+    .from(access).delete()
+    .eq('category', deleteCategories)
+    .eq('itemID', itemID)
+    res.send({category: deleteCategories, itemID: itemID});
+  } catch (err) {
+    console.error(err);
+  }
+});
 
 // test to see if the connection is working
 app.listen(3002, () => {
