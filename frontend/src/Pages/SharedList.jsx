@@ -67,6 +67,25 @@ const SharedList = () => {
     fetchLikes(select);
   }
 
+  // function for fetching likes from the list
+  // using in initial fetch and when the list changes
+  function fetchLikes(tableName) {
+    fetch(`http://localhost:3002/gettable/${tableName}`)
+      .then((res) => { return res.json() })
+      .then((data) => {
+        let temp = {"movies": [], "books": [], "videoGames": []};
+        data.forEach(element => {
+            temp[element.category].push(element.itemID);
+        });
+        setBooksLists(temp.books);
+        setMovieLists(temp.movies);
+        setVideoGameLists(temp.videoGames);
+      })
+      .catch((error) => {
+          console.log(error);
+      });
+  }
+
   // function for adding a like to the list, and then update the states
   function add() {
     let curList = document.getElementById("access").value;
@@ -101,7 +120,7 @@ const SharedList = () => {
     else if (categories === "videoGames" && !videoGameLists.includes(itemID)) { alert("Item not in videogameslist"); return; }
   
     fetch(`http://localhost:3002/deleteFromList/${curList}`,
-      { method: "POST",
+      { method: "DELETE",
         body: JSON.stringify({
         categories: categories,
         itemID: itemID
@@ -118,24 +137,6 @@ const SharedList = () => {
       else { setVideoGameLists(videoGameLists.filter((item) => item !== itemID)); }
     });
   };
-
-  // function for changing the likes when the list changes
-  function fetchLikes(tableName) {
-    fetch(`http://localhost:3002/gettable/${tableName}`)
-      .then((res) => { return res.json() })
-      .then((data) => {
-        let temp = {"movies": [], "books": [], "videoGames": []};
-        data.forEach(element => {
-            temp[element.category].push(element.itemID);
-        });
-        setBooksLists(temp.books);
-        setMovieLists(temp.movies);
-        setVideoGameLists(temp.videoGames);
-      })
-      .catch((error) => {
-          console.log(error);
-      });
-  }
 
   // output the pages
   return (

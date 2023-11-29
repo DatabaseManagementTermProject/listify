@@ -561,7 +561,7 @@ app.post("/addToList/:access", async (req, res) => {
 });
 
 // SharedList.jsx: delete from shared list
-app.post("/deleteFromList/:access", async (req, res) => {
+app.delete("/deleteFromList/:access", async (req, res) => {
   console.log("deleting from list");
   const access = req.params.access;
   const deleteCategories = req.body.categories;
