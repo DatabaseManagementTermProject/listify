@@ -12,8 +12,9 @@ const SharedList = () => {
   // the user's name
   const [username, setUsername] = useState("");
 
-  // the lists can access by this user
+  // the lists can access by this user and shared by who
   const [lists, setLists] = useState([]);
+  const [sharedppl, setSharedppl] = useState([]);
 
   // the likes from the Lists, will change when the list changes
   const [booksLists, setBooksLists] = useState([]);
@@ -58,32 +59,41 @@ const SharedList = () => {
 
   // fetch the initial likes from the initial list
   useEffect(() => {
-      fetchLikes(lists[0]);
+    fetchCurListInformation(lists[0]);
   }, [lists]);
 
   // function for changing the likes when the list changes
   function change() {
     let select = document.getElementById("access").value;
-    fetchLikes(select);
+    fetchCurListInformation(select);
   }
 
   // function for fetching likes from the list
   // using in initial fetch and when the list changes
-  function fetchLikes(tableName) {
+  function fetchCurListInformation(tableName) {
     fetch(`http://localhost:3002/gettable/${tableName}`)
-      .then((res) => { return res.json() })
-      .then((data) => {
-        let temp = {"movies": [], "books": [], "videoGames": []};
-        data.forEach(element => {
-            temp[element.category].push(element.itemID);
-        });
-        setBooksLists(temp.books);
-        setMovieLists(temp.movies);
-        setVideoGameLists(temp.videoGames);
-      })
-      .catch((error) => {
-          console.log(error);
+    .then((res) => { return res.json() })
+    .then((data) => {
+      let temp = {"movies": [], "books": [], "videoGames": []};
+      data.forEach(element => {
+          temp[element.category].push(element.itemID);
       });
+      setBooksLists(temp.books);
+      setMovieLists(temp.movies);
+      setVideoGameLists(temp.videoGames);
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+
+    fetch(`http://localhost:3002/getSharedppl/${tableName}`)
+    .then((res) => { return res.json() })
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((error) => {
+      console.log(error);
+  });
   }
 
   // function for adding a like to the list, and then update the states
@@ -148,9 +158,9 @@ const SharedList = () => {
   return (
     <div>
         <NavBar />
-        <select className="option" id="access" onChange={change}>{
-            lists.map((item) => <option key={item} id={item}>{item}</option>)
-        }</select>
+        <select className="option" id="access" onChange={change}>
+          { lists.map((item) => <option key={item} id={item}>{item}</option>) }
+        </select>
         &emsp;&emsp;&emsp;&emsp;
         <select id="categories">
             <option value="books">Books</option>
@@ -160,6 +170,14 @@ const SharedList = () => {
         <input id="itemID"></input>
         <button id="addButton" onClick={add}>Add</button>
         <button id="delButton" onClick={del}>Delete</button>
+
+        <br></br>
+
+        <div>This List is Share with: 
+          {}
+        </div>
+
+        <br></br>
 
         <h3 className="subheading">My Books</h3>
         <p>{booksLists}</p>
