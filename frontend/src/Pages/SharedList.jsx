@@ -97,7 +97,7 @@ const SharedList = () => {
   }
 
   // function for adding a like to the list, and then update the states
-  function add() {
+  function addFavItem() {
     let curList = document.getElementById("access").value;
     let categories = document.getElementById("categories").value;
     let itemID = parseInt(document.getElementById("itemID").value);
@@ -124,7 +124,7 @@ const SharedList = () => {
   }
 
   // function for deleting a like from the list
-  function del() {
+  function delFavItem() {
     let curList = document.getElementById("access").value;
     let categories = document.getElementById("categories").value;
     let itemID = parseInt(document.getElementById("itemID").value);
@@ -160,20 +160,18 @@ const SharedList = () => {
         { lists.map((item) => <option key={item} id={item}>{item}</option>) }
       </select>
       &emsp;&emsp;&emsp;&emsp;
+      This List is Share with: { sharedppl.map((item) => <span key={item}> "{item}" </span>) }
+
+      <br></br>
+
       <select id="categories">
           <option value="books">Books</option>
           <option value="movies">Movies</option>
           <option value="videoGames">Video Games</option> 
       </select>
       <input id="itemID"></input>
-      <button id="addButton" onClick={add}>Add</button>
-      <button id="delButton" onClick={del}>Delete</button>
-
-      <br></br>
-
-      <div>This List is Share with: 
-        { sharedppl.map((item) => <span key={item}> "{item}" </span>) }
-      </div>
+      <button id="addButton" onClick={addFavItem}>Add</button>
+      <button id="delButton" onClick={delFavItem}>Delete</button>
 
       <br></br>
 
