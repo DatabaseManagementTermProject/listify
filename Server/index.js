@@ -506,7 +506,6 @@ app.get('/username/:userID', async (req, res) => {
     let { data: userName, error } = await supabase
     .from('Users').select('username')
     .eq('id', userID)
-    console.log(userName);
     res.send(userName);
   } catch (err) {
     // console.log(err)
@@ -580,7 +579,6 @@ app.delete("/deleteFromList/:access", async (req, res) => {
 app.get("/getSharedppl/:tableID", async (req, res) => {
   console.log("fetching Shared People");
   const tableID = req.params.tableID;
-  console.log(tableID)
   try {
     const { data: Lists, error } = await supabase
     .from("AccessLists").select("userID")
