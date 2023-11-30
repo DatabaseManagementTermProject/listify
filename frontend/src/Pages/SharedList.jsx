@@ -155,37 +155,37 @@ const SharedList = () => {
   // output the pages
   return (
     <div>
-        <NavBar />
-        <select className="option" id="access" onChange={change}>
-          { lists.map((item) => <option key={item} id={item}>{item}</option>) }
-        </select>
-        &emsp;&emsp;&emsp;&emsp;
-        <select id="categories">
-            <option value="books">Books</option>
-            <option value="movies">Movies</option>
-            <option value="videoGames">Video Games</option> 
-        </select>
-        <input id="itemID"></input>
-        <button id="addButton" onClick={add}>Add</button>
-        <button id="delButton" onClick={del}>Delete</button>
+      <NavBar />
+      <select className="option" id="access" onChange={change}>
+        { lists.map((item) => <option key={item} id={item}>{item}</option>) }
+      </select>
+      &emsp;&emsp;&emsp;&emsp;
+      <select id="categories">
+          <option value="books">Books</option>
+          <option value="movies">Movies</option>
+          <option value="videoGames">Video Games</option> 
+      </select>
+      <input id="itemID"></input>
+      <button id="addButton" onClick={add}>Add</button>
+      <button id="delButton" onClick={del}>Delete</button>
 
-        <br></br>
+      <br></br>
 
-        <div>This List is Share with: 
-          { sharedppl.map((item) => <span key={item}> "{item}" </span>) }
-        </div>
+      <div>This List is Share with: 
+        { sharedppl.map((item) => <span key={item}> "{item}" </span>) }
+      </div>
 
-        <br></br>
+      <br></br>
 
-        <h3 className="subheading">My Books</h3>
-        <p>{booksLists}</p>
-        {/* <HorizontalGrid gridItems={booksLists} listName="Books" gridTitle="Books" removalHandler={removeLikedItem}/> */}
-        <h3 className="subheading">My Movies</h3>
-        <p>{movieLists}</p>
-        {/* <HorizontalGrid gridItems={movieLists} listName="Movies" gridTitle="Movies" removalHandler={removeLikedItem}/> */}
-        <h3 className="subheading">My Video Games</h3>
-        <p>{videoGameLists}</p>
-        {/* <HorizontalGrid gridItems={videoGameLists} listName="Video Games" gridTitle="Video Games" removalHandler={removeLikedItem}/> */}
+      <h3 className="subheading">My Books</h3>
+      <p>{booksLists}</p>
+      {/* <HorizontalGrid gridItems={booksLists} listName="Books" gridTitle="Books" removalHandler={removeLikedItem}/> */}
+      <h3 className="subheading">My Movies</h3>
+      <p>{movieLists}</p>
+      {/* <HorizontalGrid gridItems={movieLists} listName="Movies" gridTitle="Movies" removalHandler={removeLikedItem}/> */}
+      <h3 className="subheading">My Video Games</h3>
+      <p>{videoGameLists}</p>
+      {/* <HorizontalGrid gridItems={videoGameLists} listName="Video Games" gridTitle="Video Games" removalHandler={removeLikedItem}/> */}
     </div>
   );
 }
