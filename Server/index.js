@@ -589,6 +589,39 @@ app.get("/getSharedppl/:tableID", async (req, res) => {
   }
 });
 
+// SharedList.jsx: adding user to the list
+app.post("/addUser/:curList", async (req, res) => {
+  console.log("adding user");
+  const curList = req.params.curList;
+  const userID = req.body.userID;
+  try {
+    const { data: Lists, error } = await supabase
+    .from("AccessLists").insert([
+      { 'userID': userID, 'tableID': curList },
+    ])
+    .select("*")
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: delete user from the list
+app.delete("/deleteUser/:curList", async (req, res) => {
+  console.log("deleting user");
+  const curList = req.params.curList;
+  const userID = req.body.userID;
+  try {
+    const { error } = await supabase
+    .from("AccessLists").delete()
+    .eq('userID', userID)
+    .eq('tableID', curList)
+    res.send({userID: userID});
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 // test to see if the connection is working
 app.listen(3002, () => {
   console.log('App is running')

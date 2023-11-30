@@ -152,6 +152,49 @@ const SharedList = () => {
     });
   };
 
+  // function for adding a user to the list
+  function addUser() {
+    let curList = document.getElementById("access").value;
+    let userID = document.getElementById("userName").value;
+
+    // check if user is in the list, if yes, return an alert
+    if (sharedppl.includes(userID)) { alert("User already in list"); return; }
+
+    fetch(`http://localhost:3002/addUser/${curList}`,
+      { method: "POST",
+        body: JSON.stringify({
+        userID: userID
+      }),
+      headers: { "Content-type": "application/json; charset=UTF-8" }
+    })
+    .then((res) => { return res.json() })
+    .then((data) => {
+      console.log(data);
+      setSharedppl([...sharedppl, data[0].userID]);
+    });
+  }
+
+  // function for deleting a user from the list
+  function delUser() {
+    let curList = document.getElementById("access").value;
+    let userID = document.getElementById("userName").value;
+
+    // check if user is in the list, if not, return an alert
+    if (!sharedppl.includes(userID)) { alert("User not in list"); return; }
+
+    fetch(`http://localhost:3002/deleteUser/${curList}`,
+      { method: "DELETE",
+        body: JSON.stringify({
+        userID: userID
+      }),
+      headers: { "Content-type": "application/json; charset=UTF-8" }
+    })
+    .then((res) => { return res.json() })
+    .then((data) => {
+      setSharedppl(sharedppl.filter((item) => item !== userID));
+    });
+  }
+
   // output the pages
   return (
     <div>
@@ -159,8 +202,11 @@ const SharedList = () => {
       <select className="option" id="access" onChange={change}>
         { lists.map((item) => <option key={item} id={item}>{item}</option>) }
       </select>
-      &emsp;&emsp;&emsp;&emsp;
+      &emsp;
       This List is Share with: { sharedppl.map((item) => <span key={item}> "{item}" </span>) }
+      <input id="userName"></input>
+      <button id="addUserB" onClick={addUser}>Add</button>
+      <button id="delUserB" onClick={delUser}>Delete</button>
 
       <br></br>
 
@@ -170,8 +216,8 @@ const SharedList = () => {
           <option value="videoGames">Video Games</option> 
       </select>
       <input id="itemID"></input>
-      <button id="addButton" onClick={addFavItem}>Add</button>
-      <button id="delButton" onClick={delFavItem}>Delete</button>
+      <button id="addFavItemB" onClick={addFavItem}>Add</button>
+      <button id="delFavItemB" onClick={delFavItem}>Delete</button>
 
       <br></br>
 
