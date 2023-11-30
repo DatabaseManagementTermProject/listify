@@ -40,12 +40,10 @@ const SharedList = () => {
 
   // fetch the initial list from database
   useEffect(() => {
-    console.log(username)
     fetch(`http://localhost:3002/getAccessedLists/${username}`)
       .then((res) => { 
         return res.json() })
       .then((data) => {
-        console.log(data);
         let temp = [];
         data.forEach(element => {
           temp.push(element.tableID);
@@ -57,7 +55,7 @@ const SharedList = () => {
       });
   }, [username]);
 
-  // fetch the initial likes from the initial list
+  // fetch the initial information from the initial list
   useEffect(() => {
     fetchCurListInformation(lists[0]);
   }, [lists]);
@@ -88,12 +86,14 @@ const SharedList = () => {
 
     fetch(`http://localhost:3002/getSharedppl/${tableName}`)
     .then((res) => { return res.json() })
-    .then((data) => {
-      console.log(data);
+    .then((data) => { 
+      let temp = [];
+      data.forEach( element => { temp.push(element.userID) });
+      setSharedppl(temp);
     })
     .catch((error) => {
       console.log(error);
-  });
+    });
   }
 
   // function for adding a like to the list, and then update the states
@@ -128,7 +128,6 @@ const SharedList = () => {
     let curList = document.getElementById("access").value;
     let categories = document.getElementById("categories").value;
     let itemID = parseInt(document.getElementById("itemID").value);
-    console.log(curList, categories, itemID);
 
     // check if item is in the list, if not, return an alert
     if (categories === "books" && !booksLists.includes(itemID)) { alert("Item not in bookslist"); return; }
@@ -147,7 +146,6 @@ const SharedList = () => {
     })
     .then((res) => { return res.json() })
     .then((data) => {
-      console.log(data);
       if (data.category === "books") { setBooksLists(booksLists.filter((item) => item !== itemID)); }
       else if (data.category === "movies") { setMovieLists(movieLists.filter((item) => item !== itemID)); }
       else { setVideoGameLists(videoGameLists.filter((item) => item !== itemID)); }
@@ -174,7 +172,7 @@ const SharedList = () => {
         <br></br>
 
         <div>This List is Share with: 
-          {}
+          { sharedppl.map((item) => <span> "{item}" </span>) }
         </div>
 
         <br></br>

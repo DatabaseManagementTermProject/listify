@@ -498,11 +498,10 @@ bcrypt.hash(password, 10, (err, hashedPassword) => {
 }); });
 
 
-// SharedList.jsx: get and set the username
+// SharedList.jsx: get the username base on UserID
 app.get('/username/:userID', async (req, res) => {
   console.log("fetching username");
   const userID = req.params.userID;
-  console.log(userID);
   try {
     let { data: userName, error } = await supabase
     .from('Users').select('username')
@@ -522,7 +521,6 @@ app.get("/getAccessedLists/:userName", async (req, res) => {
     let { data: Lists, error } = await supabase
     .from('AccessLists').select('tableID')
     .eq('userID', userName)
-    console.log(Lists);
     res.send(Lists);
   } catch (error) {
     console.error(error);
@@ -573,6 +571,21 @@ app.delete("/deleteFromList/:access", async (req, res) => {
     .eq('category', deleteCategories)
     .eq('itemID', itemID)
     res.send({category: deleteCategories, itemID: itemID});
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: get people who have access to the same list
+app.get("/getSharedppl/:tableID", async (req, res) => {
+  console.log("fetching Shared People");
+  const tableID = req.params.tableID;
+  console.log(tableID)
+  try {
+    const { data: Lists, error } = await supabase
+    .from("AccessLists").select("userID")
+    .eq('tableID', tableID)
+    res.send(Lists);
   } catch (err) {
     console.error(err);
   }
