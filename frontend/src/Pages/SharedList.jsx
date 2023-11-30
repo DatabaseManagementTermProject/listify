@@ -172,7 +172,7 @@ const SharedList = () => {
         <br></br>
 
         <div>This List is Share with: 
-          { sharedppl.map((item) => <span> "{item}" </span>) }
+          { sharedppl.map((item) => <span key={item}> "{item}" </span>) }
         </div>
 
         <br></br>
