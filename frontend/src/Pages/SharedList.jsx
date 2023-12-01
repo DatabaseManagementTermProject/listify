@@ -78,10 +78,15 @@ const SharedList = () => {
     fetchCurListInformation(lists[0]);
   }, [lists]);
 
+  useEffect(() => {
+    fetchObject();
+  }, [booksLists, movieLists, videoGameLists]);
+
   // function for changing the likes when the list changes
   function change() {
-    let select = document.getElementById("access").value;
-    fetchCurListInformation(select);
+    let listName = document.getElementById("access").value;
+    fetchCurListInformation(listName);
+    fetchObject();
   }
 
   // function for fetching likes from the list
@@ -109,49 +114,62 @@ const SharedList = () => {
     })
     .catch((error) => { console.log(error); });
 
-    // // fetch the likes book object from the list
-    // fetch(`http://localhost:3002/getObject/Books`)
-    // .then((res) => { return res.json() })
-    // .then((data) => { 
-    //   let temp = [];
-    //   booksLists.forEach((item) => { temp.push(data[item-1]); });
-    //   setBooksObj(temp); })
-    // .catch((error) => { console.log(error); });
+  }
 
+  // function for fetching the object from the list
+  function fetchObject() {
+    // fetch the likes book object from the list
+    fetch(`http://localhost:3002/getObject/Books`)
+    .then((res) => { return res.json() })
+    .then((data) => { 
+      let temp = [];
+      booksLists.forEach((item) => { temp.push(data[item-1]); });
+      setBooksObj(temp); })
+    .catch((error) => { console.log(error); });
+
+    // fetch the likes movie object from the list
+    fetch(`http://localhost:3002/getObject/Movies`)
+    .then((res) => { return res.json() })
+    .then((data) => { 
+      let temp = [];
+      movieLists.forEach((item) => { temp.push(data[item-1]); });
+      setMovieObj(temp); })
+    .catch((error) => { console.log(error); });
+
+    // fetch the likes movie object from the list
+    fetch(`http://localhost:3002/getObject/VideoGames`)
+    .then((res) => { return res.json() })
+    .then((data) => { 
+      let temp = [];
+      videoGameLists.forEach((item) => { temp.push(data[item-1]); });
+      setVideoGameObj(temp); })
+    .catch((error) => { console.log(error); });
   }
 
   // function for adding a like to the list, and then update the states
   function addFavItem() {
     let curList = document.getElementById("access").value;
     let categories = document.getElementById("categories").value;
-    let itemID = parseInt(document.getElementById("itemID").value);
+    let id = parseInt(document.getElementById("id").value);
 
     // check the item is alredy in the list or not, if yes, return an alert
-    if (categories === "Books" && booksLists.includes(itemID)) { alert("Item already in Bookslist"); return; }
-    else if (categories === "Movies" && movieLists.includes(itemID)) { alert("Item already in Movieslist"); return; }
-    else if (categories === "VideoGames" && videoGameLists.includes(itemID)) { alert("Item already in VideoGameslist"); return; }
+    if (categories === "Books" && booksLists.includes(id)) { alert("Item already in Bookslist"); return; }
+    else if (categories === "Movies" && movieLists.includes(id)) { alert("Item already in Movieslist"); return; }
+    else if (categories === "VideoGames" && videoGameLists.includes(id)) { alert("Item already in VideoGameslist"); return; }
 
     fetch(`http://localhost:3002/addToList/${curList}`,
       { method: "POST",
         body: JSON.stringify({
         categories: categories,
-        itemID: itemID
+        id: id
       }),
       headers: { "Content-type": "application/json; charset=UTF-8" }
     })
     .then((res) => { return res.json() })
     .then((data) => {
-      // fetch(`http://localhost:3002/getObject/${data[0].category}/${data[0].itemID}`)
-      // .then((res) => { return res.json() })
-      // .then((data) => {
-      //   console.log(data)
-      //   if (categories === "Books") { setBooksObj([...booksObj, data[0]]); }
-      //   else if (categories === "Movies") { setMovieObj([...movieObj, data[0]]); }
-      //   else { setVideoGameObj([...videoGameObj, data[0]]); }
-      // });
-      if (data[0].category === "Books") { setBooksLists([...booksLists, data[0].itemID]); }
-      else if (data[0].category === "movies") { setMovieLists([...movieLists, data[0].itemID]); }
-      else { setVideoGameLists([...videoGameLists, data[0].itemID]); }
+      if (data[0].category === "Books") { setBooksLists([...booksLists, data[0].id]); }
+      else if (data[0].category === "movies") { setMovieLists([...movieLists, data[0].id]); }
+      else { setVideoGameLists([...videoGameLists, data[0].id]); }
     });
   }
 
@@ -159,18 +177,18 @@ const SharedList = () => {
   function delFavItem() {
     let curList = document.getElementById("access").value;
     let categories = document.getElementById("categories").value;
-    let itemID = parseInt(document.getElementById("itemID").value);
+    let id = parseInt(document.getElementById("id").value);
 
     // check if item is in the list, if not, return an alert
-    if (categories === "Books" && !booksLists.includes(itemID)) { alert("Item not in bookslist"); return; }
-    else if (categories === "Movies" && !movieLists.includes(itemID)) { alert("Item not in Movieslist"); return; }
-    else if (categories === "VideoGames" && !videoGameLists.includes(itemID)) { alert("Item not in VideoGameslist"); return; }
+    if (categories === "Books" && !booksLists.includes(id)) { alert("Item not in bookslist"); return; }
+    else if (categories === "Movies" && !movieLists.includes(id)) { alert("Item not in Movieslist"); return; }
+    else if (categories === "VideoGames" && !videoGameLists.includes(id)) { alert("Item not in VideoGameslist"); return; }
   
     fetch(`http://localhost:3002/deleteFromList/${curList}`,
       { method: "DELETE",
         body: JSON.stringify({
         categories: categories,
-        itemID: itemID
+        id: id
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8"
@@ -179,16 +197,16 @@ const SharedList = () => {
     .then((res) => { return res.json() })
     .then((data) => {
       if (data.category === "Books") { 
-        setBooksLists(booksLists.filter((item) => item !== itemID));
-        setBooksObj(booksObj.filter((item) => item.itemID !== itemID));
+        setBooksLists(booksLists.filter((item) => item !== id));
+        setBooksObj(booksObj.filter((item) => item.id !== id));
       }
       else if (data.category === "Movies") {
-        setMovieLists(movieLists.filter((item) => item !== itemID));
-        setMovieObj(movieObj.filter((item) => item.itemID !== itemID));
+        setMovieLists(movieLists.filter((item) => item !== id));
+        setMovieObj(movieObj.filter((item) => item.id !== id));
       }
       else { 
-        setVideoGameLists(videoGameLists.filter((item) => item !== itemID));
-        setVideoGameObj(videoGameObj.filter((item) => item.itemID !== itemID));
+        setVideoGameLists(videoGameLists.filter((item) => item !== id));
+        setVideoGameObj(videoGameObj.filter((item) => item.id !== id));
       }
     });
   };
@@ -307,7 +325,7 @@ const SharedList = () => {
           <option value="Movies">Movies</option>
           <option value="VideoGames">Video Games</option> 
       </select>
-      <input id="itemID"></input>
+      <input id="id"></input>
       <button id="addFavItemB" onClick={addFavItem}>Add</button>
       <button id="delFavItemB" onClick={delFavItem}>Delete</button>
 
@@ -316,12 +334,12 @@ const SharedList = () => {
       <HorizontalGrid gridItems={movieObj} listName="Movies" gridTitle="Movies" />
       <HorizontalGrid gridItems={videoGameObj} listName="Video Games" gridTitle="Video Games" />
 
-      <h3 className="subheading">My Books</h3>
-      {booksObj.map((item) => <p key={item.itemID}>{item.title}</p>)}
+      {/* <h3 className="subheading">My Books</h3>
+      {booksObj.map((item) => <p key={item.id}>{item.title}</p>)}
       <h3 className="subheading">My Movies</h3>
-      {movieObj.map((item) => <p key={item.itemID}>{item.title}</p>)}
+      {movieObj.map((item) => <p key={item.id}>{item.title}</p>)}
       <h3 className="subheading">My Video Games</h3>
-      {videoGameObj.map((item) => <p key={item.itemID}>{item.title}</p>)}
+      {videoGameObj.map((item) => <p key={item.id}>{item.title}</p>)} */}
 
 
       <p>{booksLists}</p>
