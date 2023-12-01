@@ -512,17 +512,17 @@ app.get('/username/:userID', async (req, res) => {
   }
 })
 
-// // SharedList.jsx: get all lists
-// app.get("/getAllLists", async (req, res) => {
-//   console.log("fetching all lists");
-//   try {
-//     let { data: Lists, error } = await supabase
-//     .from('AccessLists').select('tableID')
-//     res.send(Lists);
-//   } catch (err) {
-//     console.error(err);
-//   }
-// });
+// SharedList.jsx: get all lists
+app.get("/getAllLists", async (req, res) => {
+  console.log("fetching all lists");
+  try {
+    let { data: Lists, error } = await supabase
+    .from('AccessLists').select('tableID')
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
 
 // SharedList.jsx: get the accessed lists for that user
 app.get("/getAccessedLists/:userName", async (req, res) => {
@@ -633,19 +633,6 @@ app.delete("/deleteUser/:curList", async (req, res) => {
     console.error(err);
   }
 });
-
-// // SharedList.jsx: create new list
-// app.post("/createList", async (req, res) => {
-//   console.log("creating list");
-//   const newList = req.body.newList;
-//   console.log(newList)
-//   try {
-//     const { data: Lists, error } = await supabase
-//       .rpc('createSharedList', { tableName: newList })
-//   } catch (err) {
-//     console.error(err);
-//   }
-// });
 
 // test to see if the connection is working
 app.listen(3002, () => {

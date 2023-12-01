@@ -13,7 +13,7 @@ const SharedList = () => {
   const [username, setUsername] = useState("");
 
   // the lists can access by this user and shared by who
-  // const [totalList, setTotalList] = useState([]);
+  const [totalList, setTotalList] = useState([]);
   const [lists, setLists] = useState([]);
   const [sharedppl, setSharedppl] = useState([]);
 
@@ -39,19 +39,19 @@ const SharedList = () => {
     })
   }, []);
 
-  // // fetch the total list from database
-  // useEffect(() => {
-  //   fetch(`http://localhost:3002/getAllLists`)
-  //     .then((res) => { return res.json() })
-  //     .then((data) => {
-  //       let temp = [];
-  //       data.forEach(element => { 
-  //         if (!temp.includes(element.tableID)) { temp.push(element.tableID); } 
-  //       });
-  //       setTotalList(temp);
-  //     })
-  //     .catch((error) => { console.log(error); });
-  // }, []);
+  // fetch the total list from database
+  useEffect(() => {
+    fetch(`http://localhost:3002/getAllLists`)
+      .then((res) => { return res.json() })
+      .then((data) => {
+        let temp = [];
+        data.forEach(element => { 
+          if (!temp.includes(element.tableID)) { temp.push(element.tableID); } 
+        });
+        setTotalList(temp);
+      })
+      .catch((error) => { console.log(error); });
+  }, []);
 
   // fetch the initial list from database
   useEffect(() => {
@@ -203,25 +203,27 @@ const SharedList = () => {
     });
   }
 
-  // // function for creating a new list
-  // function createList() {
-  //   let newList = document.getElementById("newList").value;
+  // function for creating a new list
+  function createList() {
+    let newList = document.getElementById("newList").value;
 
-  //   // check if list is already exist, if yes, return an alert
-  //   if (totalList.includes(newList)) { alert("List already exist, please use another name"); return; }
+    // check if list is already exist, if yes, return an alert
+    if (totalList.includes(newList)) { alert("List already exist, please use another name"); return; }
 
-  //   fetch(`http://localhost:3002/createList`,
-  //     { method: "POST",
-  //       body: JSON.stringify({
-  //       newList: newList
-  //     }),
-  //     headers: { "Content-type": "application/json; charset=UTF-8" }
-  //   })
-  //   .then((res) => { return res.json() })
-  //   .then((data) => {
-  //     setLists([...lists, newList]);
-  //   });
-  // }
+    fetch(`http://localhost:3002/addUser/${newList}`,
+      { method: "POST",
+        body: JSON.stringify({
+        userID: username
+      }),
+      headers: { "Content-type": "application/json; charset=UTF-8" }
+    })
+    .then((res) => { return res.json() })
+    .then((data) => {
+      console.log("check", data);
+      setLists([...lists, data[0].tableID]);
+      setTotalList([...totalList, data[0].tableID]);
+    });
+  }
 
   // output the pages
   return (
@@ -238,11 +240,11 @@ const SharedList = () => {
 
       <br></br>
 
-      {/* Create a new list: &emsp;
+      Create a list: &emsp;
       <input id="newList"></input>
       <button id="createListB" onClick={createList}>Create</button>
 
-      <br></br> */}
+      <br></br>
 
       <select id="categories">
           <option value="books">Books</option>
