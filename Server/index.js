@@ -546,7 +546,6 @@ app.get("/gettable/:listName", async (req, res) => {
     let { data: Lists, error } = await supabase
     .from("ListContains").select("category, id")
     .eq("Lists", listName)
-    console.log(Lists)
     res.send(Lists);
   } catch (err) {
     console.error(err);
@@ -558,11 +557,11 @@ app.post("/addToList/:curList", async (req, res) => {
   console.log("adding to list");
   const curList = req.params.curList;
   const categories = req.body.categories;
-  const itemID = req.body.itemID;
+  const id = req.body.id;
   try {
     let { data: Lists, error } = await supabase
     .from("ListContains").insert([
-      { 'Lists': curList, 'category': categories, 'itemID': itemID },
+      { 'Lists': curList, 'category': categories, 'id': id },
     ])
     .select("*")
     res.send(Lists);
@@ -576,13 +575,13 @@ app.delete("/deleteFromList/:curList", async (req, res) => {
   console.log("deleting from list");
   const curList = req.params.curList;
   const deleteCategories = req.body.categories;
-  const itemID = req.body.itemID;
+  const id = req.body.id;
   try {
     const { error } = await supabase
     .from("ListContains").delete()
     .eq('category', deleteCategories)
-    .eq('itemID', itemID)
-    res.send({category: deleteCategories, itemID: itemID});
+    .eq('id', id)
+    res.send({category: deleteCategories, id: id});
   } catch (err) {
     console.error(err);
   }
