@@ -13,6 +13,7 @@ const SharedList = () => {
   const [username, setUsername] = useState("");
 
   // the lists can access by this user and shared by who
+  // const [totalList, setTotalList] = useState([]);
   const [lists, setLists] = useState([]);
   const [sharedppl, setSharedppl] = useState([]);
 
@@ -38,11 +39,24 @@ const SharedList = () => {
     })
   }, []);
 
+  // // fetch the total list from database
+  // useEffect(() => {
+  //   fetch(`http://localhost:3002/getAllLists`)
+  //     .then((res) => { return res.json() })
+  //     .then((data) => {
+  //       let temp = [];
+  //       data.forEach(element => { 
+  //         if (!temp.includes(element.tableID)) { temp.push(element.tableID); } 
+  //       });
+  //       setTotalList(temp);
+  //     })
+  //     .catch((error) => { console.log(error); });
+  // }, []);
+
   // fetch the initial list from database
   useEffect(() => {
     fetch(`http://localhost:3002/getAccessedLists/${username}`)
-      .then((res) => { 
-        return res.json() })
+      .then((res) => { return res.json() })
       .then((data) => {
         let temp = [];
         data.forEach(element => {
@@ -50,9 +64,7 @@ const SharedList = () => {
         });
         setLists(temp);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => { console.log(error); });
   }, [username]);
 
   // fetch the initial information from the initial list
@@ -80,9 +92,7 @@ const SharedList = () => {
       setMovieLists(temp.movies);
       setVideoGameLists(temp.videoGames);
     })
-    .catch((error) => {
-        console.log(error);
-    });
+    .catch((error) => { console.log(error); });
 
     fetch(`http://localhost:3002/getSharedppl/${tableName}`)
     .then((res) => { return res.json() })
@@ -91,9 +101,7 @@ const SharedList = () => {
       data.forEach( element => { temp.push(element.userID) });
       setSharedppl(temp);
     })
-    .catch((error) => {
-      console.log(error);
-    });
+    .catch((error) => { console.log(error); });
   }
 
   // function for adding a like to the list, and then update the states
@@ -195,6 +203,26 @@ const SharedList = () => {
     });
   }
 
+  // // function for creating a new list
+  // function createList() {
+  //   let newList = document.getElementById("newList").value;
+
+  //   // check if list is already exist, if yes, return an alert
+  //   if (totalList.includes(newList)) { alert("List already exist, please use another name"); return; }
+
+  //   fetch(`http://localhost:3002/createList`,
+  //     { method: "POST",
+  //       body: JSON.stringify({
+  //       newList: newList
+  //     }),
+  //     headers: { "Content-type": "application/json; charset=UTF-8" }
+  //   })
+  //   .then((res) => { return res.json() })
+  //   .then((data) => {
+  //     setLists([...lists, newList]);
+  //   });
+  // }
+
   // output the pages
   return (
     <div>
@@ -209,6 +237,12 @@ const SharedList = () => {
       <button id="delUserB" onClick={delUser}>Delete</button>
 
       <br></br>
+
+      {/* Create a new list: &emsp;
+      <input id="newList"></input>
+      <button id="createListB" onClick={createList}>Create</button>
+
+      <br></br> */}
 
       <select id="categories">
           <option value="books">Books</option>
