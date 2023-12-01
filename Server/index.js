@@ -539,12 +539,13 @@ app.get("/getAccessedLists/:userName", async (req, res) => {
 });
 
 // SharedList.jsx: get the list from the table
-app.get("/gettable/:tableName", async (req, res) => {
+app.get("/gettable/:listName", async (req, res) => {
   console.log("fetching table");
-  const tableName = req.params.tableName;
+  const listName = req.params.listName;
   try {
     let { data: Lists, error } = await supabase
-    .from(tableName).select("*")
+    .from("ListContains").select("category, itemID")
+    .eq("Lists", listName)
     res.send(Lists);
   } catch (err) {
     console.error(err);
