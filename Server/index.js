@@ -544,8 +544,9 @@ app.get("/gettable/:listName", async (req, res) => {
   const listName = req.params.listName;
   try {
     let { data: Lists, error } = await supabase
-    .from("ListContains").select("category, itemID")
+    .from("ListContains").select("category, id")
     .eq("Lists", listName)
+    console.log(Lists)
     res.send(Lists);
   } catch (err) {
     console.error(err);
@@ -652,15 +653,12 @@ app.delete("/deleteList/:curList", async (req, res) => {
 });
 
 // SharedList.jsx: fetchObject
-app.get("/getObject/:category/:itemID", async (req, res) => {
+app.get("/getObject/:category", async (req, res) => {
   console.log("fetching object");
   const category = req.params.category;
-  const itemID = req.params.itemID;
   try {
     let { data: Lists, error } = await supabase
-    .from(category).select("*")
-    .eq('id', itemID)
-    console.log(Lists);
+    .from(category).select('*')
     res.send(Lists);
   } catch (err) {
     console.error(err);

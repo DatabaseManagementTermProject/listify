@@ -60,16 +60,17 @@ const SharedList = () => {
 
   // fetch the initial list from database
   useEffect(() => {
+    if (username === "") { return; }
     fetch(`http://localhost:3002/getAccessedLists/${username}`)
-      .then((res) => { return res.json() })
-      .then((data) => {
-        let temp = [];
-        data.forEach(element => {
-          temp.push(element.tableID);
-        });
-        setLists(temp);
-      })
-      .catch((error) => { console.log(error); });
+    .then((res) => { return res.json() })
+    .then((data) => {
+      let temp = [];
+      data.forEach(element => {
+        temp.push(element.tableID);
+      });
+      setLists(temp);
+    })
+    .catch((error) => { console.log(error); });
   }, [username]);
 
   // fetch the initial information from the initial list
@@ -86,28 +87,19 @@ const SharedList = () => {
   // function for fetching likes from the list
   // using in initial fetch and when the list changes
   function fetchCurListInformation(listName) {
+    // fetch the likes index from the list
     fetch(`http://localhost:3002/gettable/${listName}`)
     .then((res) => { return res.json() })
     .then((data) => {
       let temp = {"Movies": [], "Books": [], "VideoGames": []};
-      var tempObj = {"Movies": [], "Books": [], "VideoGames": []};
-      data.forEach(element => {
-        fetch(`http://localhost:3002/getObject/${element.category}/${element.itemID}`)
-        .then((res) => { return res.json() })
-        .then((data) => {
-          tempObj[element.category].push(data[0]);
-        })
-        setBooksObj(tempObj.Books);
-        setMovieObj(tempObj.Movies);
-        setVideoGameObj(tempObj.VideoGames);
-        temp[element.category].push(element.itemID);
-      });
+      data.forEach(element => { temp[element.category].push(element.id); });
       setBooksLists(temp.Books);
       setMovieLists(temp.Movies);
       setVideoGameLists(temp.VideoGames);
     })
     .catch((error) => { console.log(error); });
-
+    
+    // fetch the people share the list
     fetch(`http://localhost:3002/getSharedppl/${listName}`)
     .then((res) => { return res.json() })
     .then((data) => { 
@@ -116,6 +108,16 @@ const SharedList = () => {
       setSharedppl(temp);
     })
     .catch((error) => { console.log(error); });
+
+    // // fetch the likes book object from the list
+    // fetch(`http://localhost:3002/getObject/Books`)
+    // .then((res) => { return res.json() })
+    // .then((data) => { 
+    //   let temp = [];
+    //   booksLists.forEach((item) => { temp.push(data[item-1]); });
+    //   setBooksObj(temp); })
+    // .catch((error) => { console.log(error); });
+
   }
 
   // function for adding a like to the list, and then update the states
@@ -139,6 +141,14 @@ const SharedList = () => {
     })
     .then((res) => { return res.json() })
     .then((data) => {
+      // fetch(`http://localhost:3002/getObject/${data[0].category}/${data[0].itemID}`)
+      // .then((res) => { return res.json() })
+      // .then((data) => {
+      //   console.log(data)
+      //   if (categories === "Books") { setBooksObj([...booksObj, data[0]]); }
+      //   else if (categories === "Movies") { setMovieObj([...movieObj, data[0]]); }
+      //   else { setVideoGameObj([...videoGameObj, data[0]]); }
+      // });
       if (data[0].category === "Books") { setBooksLists([...booksLists, data[0].itemID]); }
       else if (data[0].category === "movies") { setMovieLists([...movieLists, data[0].itemID]); }
       else { setVideoGameLists([...videoGameLists, data[0].itemID]); }
@@ -168,9 +178,18 @@ const SharedList = () => {
     })
     .then((res) => { return res.json() })
     .then((data) => {
-      if (data.category === "Books") { setBooksLists(booksLists.filter((item) => item !== itemID)); }
-      else if (data.category === "Movies") { setMovieLists(movieLists.filter((item) => item !== itemID)); }
-      else { setVideoGameLists(videoGameLists.filter((item) => item !== itemID)); }
+      if (data.category === "Books") { 
+        setBooksLists(booksLists.filter((item) => item !== itemID));
+        setBooksObj(booksObj.filter((item) => item.itemID !== itemID));
+      }
+      else if (data.category === "Movies") {
+        setMovieLists(movieLists.filter((item) => item !== itemID));
+        setMovieObj(movieObj.filter((item) => item.itemID !== itemID));
+      }
+      else { 
+        setVideoGameLists(videoGameLists.filter((item) => item !== itemID));
+        setVideoGameObj(videoGameObj.filter((item) => item.itemID !== itemID));
+      }
     });
   };
 
@@ -261,12 +280,6 @@ const SharedList = () => {
     });
   }
 
-  function removeLikedItem() {
-
-  }
-
-  console.log("books", booksObj);
-
   // output the pages
   return (
     <div>
@@ -299,16 +312,20 @@ const SharedList = () => {
       <button id="delFavItemB" onClick={delFavItem}>Delete</button>
 
       <br></br>
+      <HorizontalGrid gridItems={booksObj} listName="Books" gridTitle="Books" />
+      <HorizontalGrid gridItems={movieObj} listName="Movies" gridTitle="Movies" />
+      <HorizontalGrid gridItems={videoGameObj} listName="Video Games" gridTitle="Video Games" />
 
-      <HorizontalGrid gridItems={booksObj} listName="Books" gridTitle="Books" removalHandler={removeLikedItem}/>
-      <HorizontalGrid gridItems={movieObj} listName="Movies" gridTitle="Movies" removalHandler={removeLikedItem}/>
-      <HorizontalGrid gridItems={videoGameObj} listName="Video Games" gridTitle="Video Games" removalHandler={removeLikedItem}/>
-      
       <h3 className="subheading">My Books</h3>
-      <p>{booksLists}</p>
+      {booksObj.map((item) => <p key={item.itemID}>{item.title}</p>)}
       <h3 className="subheading">My Movies</h3>
-      <p>{movieLists}</p>
+      {movieObj.map((item) => <p key={item.itemID}>{item.title}</p>)}
       <h3 className="subheading">My Video Games</h3>
+      {videoGameObj.map((item) => <p key={item.itemID}>{item.title}</p>)}
+
+
+      <p>{booksLists}</p>
+      <p>{movieLists}</p>
       <p>{videoGameLists}</p>
     </div>
   );
