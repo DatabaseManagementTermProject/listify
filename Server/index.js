@@ -651,6 +651,22 @@ app.delete("/deleteList/:curList", async (req, res) => {
   }
 });
 
+// SharedList.jsx: fetchObject
+app.get("/getObject/:category/:itemID", async (req, res) => {
+  console.log("fetching object");
+  const category = req.params.category;
+  const itemID = req.params.itemID;
+  try {
+    let { data: Lists, error } = await supabase
+    .from(category).select("*")
+    .eq('id', itemID)
+    console.log(Lists);
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 // test to see if the connection is working
 app.listen(3002, () => {
   console.log('App is running')

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../database';
 
 import NavBar from "../Components/NavBar/NavBar";
-// import HorizontalGrid from "../Components/HorizontalGrid/HorizontalGrid";
+import HorizontalGrid from "../Components/HorizontalGrid/HorizontalGrid";
 
 import './profile.css'
 
@@ -21,6 +21,11 @@ const SharedList = () => {
   const [booksLists, setBooksLists] = useState([]);
   const [movieLists, setMovieLists] = useState([]);
   const [videoGameLists, setVideoGameLists] = useState([]);
+
+  // the object from the lists, will change when the list changes
+  const [booksObj, setBooksObj] = useState([]);
+  const [movieObj, setMovieObj] = useState([]);
+  const [videoGameObj, setVideoGameObj] = useState([]);
 
   // fetch the user's name from the database
   useEffect(() => {
@@ -84,13 +89,22 @@ const SharedList = () => {
     fetch(`http://localhost:3002/gettable/${listName}`)
     .then((res) => { return res.json() })
     .then((data) => {
-      let temp = {"movies": [], "books": [], "videoGames": []};
+      let temp = {"Movies": [], "Books": [], "VideoGames": []};
+      var tempObj = {"Movies": [], "Books": [], "VideoGames": []};
       data.forEach(element => {
-          temp[element.category].push(element.itemID);
+        fetch(`http://localhost:3002/getObject/${element.category}/${element.itemID}`)
+        .then((res) => { return res.json() })
+        .then((data) => {
+          tempObj[element.category].push(data[0]);
+        })
+        setBooksObj(tempObj.Books);
+        setMovieObj(tempObj.Movies);
+        setVideoGameObj(tempObj.VideoGames);
+        temp[element.category].push(element.itemID);
       });
-      setBooksLists(temp.books);
-      setMovieLists(temp.movies);
-      setVideoGameLists(temp.videoGames);
+      setBooksLists(temp.Books);
+      setMovieLists(temp.Movies);
+      setVideoGameLists(temp.VideoGames);
     })
     .catch((error) => { console.log(error); });
 
@@ -111,9 +125,9 @@ const SharedList = () => {
     let itemID = parseInt(document.getElementById("itemID").value);
 
     // check the item is alredy in the list or not, if yes, return an alert
-    if (categories === "books" && booksLists.includes(itemID)) { alert("Item already in bookslist"); return; }
-    else if (categories === "movies" && movieLists.includes(itemID)) { alert("Item already in movieslist"); return; }
-    else if (categories === "videoGames" && videoGameLists.includes(itemID)) { alert("Item already in videogameslist"); return; }
+    if (categories === "Books" && booksLists.includes(itemID)) { alert("Item already in Bookslist"); return; }
+    else if (categories === "Movies" && movieLists.includes(itemID)) { alert("Item already in Movieslist"); return; }
+    else if (categories === "VideoGames" && videoGameLists.includes(itemID)) { alert("Item already in VideoGameslist"); return; }
 
     fetch(`http://localhost:3002/addToList/${curList}`,
       { method: "POST",
@@ -125,7 +139,7 @@ const SharedList = () => {
     })
     .then((res) => { return res.json() })
     .then((data) => {
-      if (data[0].category === "books") { setBooksLists([...booksLists, data[0].itemID]); }
+      if (data[0].category === "Books") { setBooksLists([...booksLists, data[0].itemID]); }
       else if (data[0].category === "movies") { setMovieLists([...movieLists, data[0].itemID]); }
       else { setVideoGameLists([...videoGameLists, data[0].itemID]); }
     });
@@ -138,9 +152,9 @@ const SharedList = () => {
     let itemID = parseInt(document.getElementById("itemID").value);
 
     // check if item is in the list, if not, return an alert
-    if (categories === "books" && !booksLists.includes(itemID)) { alert("Item not in bookslist"); return; }
-    else if (categories === "movies" && !movieLists.includes(itemID)) { alert("Item not in movieslist"); return; }
-    else if (categories === "videoGames" && !videoGameLists.includes(itemID)) { alert("Item not in videogameslist"); return; }
+    if (categories === "Books" && !booksLists.includes(itemID)) { alert("Item not in bookslist"); return; }
+    else if (categories === "Movies" && !movieLists.includes(itemID)) { alert("Item not in Movieslist"); return; }
+    else if (categories === "VideoGames" && !videoGameLists.includes(itemID)) { alert("Item not in VideoGameslist"); return; }
   
     fetch(`http://localhost:3002/deleteFromList/${curList}`,
       { method: "DELETE",
@@ -154,8 +168,8 @@ const SharedList = () => {
     })
     .then((res) => { return res.json() })
     .then((data) => {
-      if (data.category === "books") { setBooksLists(booksLists.filter((item) => item !== itemID)); }
-      else if (data.category === "movies") { setMovieLists(movieLists.filter((item) => item !== itemID)); }
+      if (data.category === "Books") { setBooksLists(booksLists.filter((item) => item !== itemID)); }
+      else if (data.category === "Movies") { setMovieLists(movieLists.filter((item) => item !== itemID)); }
       else { setVideoGameLists(videoGameLists.filter((item) => item !== itemID)); }
     });
   };
@@ -247,6 +261,12 @@ const SharedList = () => {
     });
   }
 
+  function removeLikedItem() {
+
+  }
+
+  console.log("books", booksObj);
+
   // output the pages
   return (
     <div>
@@ -270,9 +290,9 @@ const SharedList = () => {
       <br></br>
 
       <select id="categories">
-          <option value="books">Books</option>
-          <option value="movies">Movies</option>
-          <option value="videoGames">Video Games</option> 
+          <option value="Books">Books</option>
+          <option value="Movies">Movies</option>
+          <option value="VideoGames">Video Games</option> 
       </select>
       <input id="itemID"></input>
       <button id="addFavItemB" onClick={addFavItem}>Add</button>
@@ -280,15 +300,16 @@ const SharedList = () => {
 
       <br></br>
 
+      <HorizontalGrid gridItems={booksObj} listName="Books" gridTitle="Books" removalHandler={removeLikedItem}/>
+      <HorizontalGrid gridItems={movieObj} listName="Movies" gridTitle="Movies" removalHandler={removeLikedItem}/>
+      <HorizontalGrid gridItems={videoGameObj} listName="Video Games" gridTitle="Video Games" removalHandler={removeLikedItem}/>
+      
       <h3 className="subheading">My Books</h3>
       <p>{booksLists}</p>
-      {/* <HorizontalGrid gridItems={booksLists} listName="Books" gridTitle="Books" removalHandler={removeLikedItem}/> */}
       <h3 className="subheading">My Movies</h3>
       <p>{movieLists}</p>
-      {/* <HorizontalGrid gridItems={movieLists} listName="Movies" gridTitle="Movies" removalHandler={removeLikedItem}/> */}
       <h3 className="subheading">My Video Games</h3>
       <p>{videoGameLists}</p>
-      {/* <HorizontalGrid gridItems={videoGameLists} listName="Video Games" gridTitle="Video Games" removalHandler={removeLikedItem}/> */}
     </div>
   );
 }
