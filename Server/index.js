@@ -634,6 +634,23 @@ app.delete("/deleteUser/:curList", async (req, res) => {
   }
 });
 
+// SharedList.jsx: delete the list
+app.delete("/deleteList/:curList", async (req, res) => {
+  console.log("deleting list");
+  const curList = req.params.curList;
+  try {
+    const { error } = await supabase
+    .from("AccessLists").delete()
+    .eq('tableID', curList)
+    const { error2 } = await supabase
+    .from("ListContains").delete()
+    .eq('Lists', curList)
+    res.send("delete Successful");
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 // test to see if the connection is working
 app.listen(3002, () => {
   console.log('App is running')

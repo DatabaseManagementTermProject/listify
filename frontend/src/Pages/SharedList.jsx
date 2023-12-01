@@ -225,6 +225,28 @@ const SharedList = () => {
     });
   }
 
+  // function for deleting a list
+  function deleteList() {
+    let delList = document.getElementById("newList").value;
+
+    // check if list is already exist, if not, return an alert
+    if (!totalList.includes(delList)) { alert("List not exist"); return; }
+
+    fetch(`http://localhost:3002/deleteList/${delList}`,
+      { method: "DELETE",
+        body: JSON.stringify({
+        userID: username
+      }),
+      headers: { "Content-type": "application/json; charset=UTF-8" }
+    })
+    .then((res) => {
+      alert(`${delList} has been deleted`);
+      setLists(lists.filter((item) => item !== delList));
+      setTotalList(totalList.filter((item) => item !== delList));
+      window.location.reload(false);
+    });
+  }
+
   // output the pages
   return (
     <div>
@@ -240,9 +262,10 @@ const SharedList = () => {
 
       <br></br>
 
-      Create a list: &emsp;
+      Create/Delete a list: &emsp;
       <input id="newList"></input>
       <button id="createListB" onClick={createList}>Create</button>
+      <button id="deleteListB" onClick={deleteList}>Delete</button>
 
       <br></br>
 
