@@ -553,15 +553,15 @@ app.get("/gettable/:listName", async (req, res) => {
 });
 
 // SharedList.jsx: add into shared list
-app.post("/addToList/:access", async (req, res) => {
+app.post("/addToList/:curList", async (req, res) => {
   console.log("adding to list");
-  const access = req.params.access;
+  const curList = req.params.curList;
   const categories = req.body.categories;
   const itemID = req.body.itemID;
   try {
     let { data: Lists, error } = await supabase
-    .from(access).insert([
-      { 'category': categories, 'itemID': itemID },
+    .from("ListContains").insert([
+      { 'Lists': curList, 'category': categories, 'itemID': itemID },
     ])
     .select("*")
     res.send(Lists);
@@ -571,15 +571,14 @@ app.post("/addToList/:access", async (req, res) => {
 });
 
 // SharedList.jsx: delete from shared list
-app.delete("/deleteFromList/:access", async (req, res) => {
+app.delete("/deleteFromList/:curList", async (req, res) => {
   console.log("deleting from list");
-  const access = req.params.access;
+  const curList = req.params.curList;
   const deleteCategories = req.body.categories;
   const itemID = req.body.itemID;
-  console.log(access, deleteCategories, itemID)
   try {
     const { error } = await supabase
-    .from(access).delete()
+    .from("ListContains").delete()
     .eq('category', deleteCategories)
     .eq('itemID', itemID)
     res.send({category: deleteCategories, itemID: itemID});
