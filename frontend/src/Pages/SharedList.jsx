@@ -79,14 +79,14 @@ const SharedList = () => {
   }, [lists]);
 
   useEffect(() => {
-    fetchObject();
+    fetchObjects(booksLists, movieLists, videoGameLists);
   }, [booksLists, movieLists, videoGameLists]);
 
   // function for changing the likes when the list changes
   function change() {
     let listName = document.getElementById("access").value;
     fetchCurListInformation(listName);
-    fetchObject();
+    fetchObjects(booksLists, movieLists, videoGameLists);
   }
 
   // function for fetching likes from the list
@@ -113,37 +113,42 @@ const SharedList = () => {
       setSharedppl(temp);
     })
     .catch((error) => { console.log(error); });
-
   }
 
   // function for fetching the object from the list
-  function fetchObject() {
+  function fetchObjects(booksLists, movieLists, videoGameLists) {
+
     // fetch the likes book object from the list
-    fetch(`http://localhost:3002/getObject/Books`)
-    .then((res) => { return res.json() })
-    .then((data) => { 
-      let temp = [];
-      booksLists.forEach((item) => { temp.push(data[item-1]); });
-      setBooksObj(temp); })
-    .catch((error) => { console.log(error); });
+    let tempBook = [];
+    booksLists.forEach((id) => {
+      fetch(`http://localhost:3002/getObject/Books/${id}`)
+      .then((res) => { return res.json() })
+      .then((data) => { tempBook.push(data[0]); })
+      .catch((error) => { console.log(error); });
+    });
+    console.log(tempBook);
+    setBooksObj(tempBook);
 
     // fetch the likes movie object from the list
-    fetch(`http://localhost:3002/getObject/Movies`)
-    .then((res) => { return res.json() })
-    .then((data) => { 
-      let temp = [];
-      movieLists.forEach((item) => { temp.push(data[item-1]); });
-      setMovieObj(temp); })
-    .catch((error) => { console.log(error); });
+    let tempMovie = [];
+    movieLists.forEach((id) => {
+      fetch(`http://localhost:3002/getObject/Movies/${id}`)
+      .then((res) => { return res.json() })
+      .then((data) => { tempMovie.push(data[0]); })
+      .catch((error) => { console.log(error); });
+    });
+    console.log(tempMovie);
+    setMovieObj(tempMovie);
 
-    // fetch the likes movie object from the list
-    fetch(`http://localhost:3002/getObject/VideoGames`)
-    .then((res) => { return res.json() })
-    .then((data) => { 
-      let temp = [];
-      videoGameLists.forEach((item) => { temp.push(data[item-1]); });
-      setVideoGameObj(temp); })
-    .catch((error) => { console.log(error); });
+    // fetch the likes videogame object from the list
+    let tempVideoGame = [];
+    videoGameLists.forEach((id) => {
+      fetch(`http://localhost:3002/getObject/VideoGames/${id}`)
+      .then((res) => { return res.json() })
+      .then((data) => { tempVideoGame.push(data[0]); })
+      .catch((error) => { console.log(error); });
+    });
+    console.log(tempVideoGame);
   }
 
   // function for adding a like to the list, and then update the states
@@ -172,6 +177,39 @@ const SharedList = () => {
       else { setVideoGameLists([...videoGameLists, data[0].id]); }
     });
   }
+
+  // function removeLikedItem(itemID, index, listName) {
+  //   console.log("itemID", itemID)
+  //   console.log("index", index)
+  //   console.log("listName", listName)
+  //   let curList = document.getElementById("access").value;
+  //   fetch(`http://localhost:3002/deleteFromList/${curList}`,
+  //   { method: "DELETE",
+  //     body: JSON.stringify({
+  //     categories: listName,
+  //     id: itemID
+  //   }),
+  //   headers: {
+  //     "Content-type": "application/json; charset=UTF-8"
+  //   }
+  //   })
+  //   .then((res) => { return res.json() })
+  //   .then((data) => {
+  //     console.log("data", data)
+  //     if (data.category === "Books") { 
+  //       setBooksLists(booksLists.filter((item) => item !== data.itemID));
+  //       setBooksObj(booksObj.filter((item) => item.itemID !== data.itemID));
+  //     }
+  //     else if (data.category === "Movies") {
+  //       setMovieLists(movieLists.filter((item) => item !== data.itemID));
+  //       setMovieObj(movieObj.filter((item) => item.itemID !== data.itemID));
+  //     }
+  //     else { 
+  //       setVideoGameLists(videoGameLists.filter((item) => item !== data.itemID));
+  //       setVideoGameObj(videoGameObj.filter((item) => item.itemID !== data.itemID));
+  //     }
+  //   });
+  // }
 
   // function for deleting a like from the list
   function delFavItem() {
@@ -298,6 +336,8 @@ const SharedList = () => {
     });
   }
 
+  console.log("booksObj check", booksObj);
+
   // output the pages
   return (
     <div>
@@ -330,21 +370,20 @@ const SharedList = () => {
       <button id="delFavItemB" onClick={delFavItem}>Delete</button>
 
       <br></br>
+
       <HorizontalGrid gridItems={booksObj} listName="Books" gridTitle="Books" />
       <HorizontalGrid gridItems={movieObj} listName="Movies" gridTitle="Movies" />
       <HorizontalGrid gridItems={videoGameObj} listName="Video Games" gridTitle="Video Games" />
 
-      {/* <h3 className="subheading">My Books</h3>
-      {booksObj.map((item) => <p key={item.id}>{item.title}</p>)}
-      <h3 className="subheading">My Movies</h3>
-      {movieObj.map((item) => <p key={item.id}>{item.title}</p>)}
-      <h3 className="subheading">My Video Games</h3>
-      {videoGameObj.map((item) => <p key={item.id}>{item.title}</p>)} */}
+      <br></br>
 
+      Book list: <p>{booksObj.map((item) => <span>{item.id}</span>)}</p>
 
+      <br></br>
       <p>{booksLists}</p>
       <p>{movieLists}</p>
       <p>{videoGameLists}</p>
+
     </div>
   );
 }

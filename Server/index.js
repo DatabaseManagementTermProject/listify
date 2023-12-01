@@ -579,9 +579,10 @@ app.delete("/deleteFromList/:curList", async (req, res) => {
   try {
     const { error } = await supabase
     .from("ListContains").delete()
+    .eq('Lists', curList)
     .eq('category', deleteCategories)
     .eq('id', id)
-    res.send({category: deleteCategories, id: id});
+    res.send({category: deleteCategories, itemID: id});
   } catch (err) {
     console.error(err);
   }
@@ -652,12 +653,26 @@ app.delete("/deleteList/:curList", async (req, res) => {
 });
 
 // SharedList.jsx: fetchObject
-app.get("/getObject/:category", async (req, res) => {
+app.get("/getObject/:category/:id", async (req, res) => {
   console.log("fetching object");
   const category = req.params.category;
+  const id = req.params.id;
   try {
     let { data: Lists, error } = await supabase
     .from(category).select('*')
+    .eq('id', id)
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// testing endpoint
+app.get("/test", async (req, res) => {
+  console.log("testing");
+  try {
+    let { data: Lists, error } = await supabase
+    .from("Books").select('*')
     res.send(Lists);
   } catch (err) {
     console.error(err);
