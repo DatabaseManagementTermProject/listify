@@ -86,7 +86,6 @@ const SharedList = () => {
   function change() {
     let listName = document.getElementById("access").value;
     fetchCurListInformation(listName);
-    fetchObjects(booksLists, movieLists, videoGameLists);
   }
 
   // function for fetching likes from the list
@@ -149,6 +148,7 @@ const SharedList = () => {
       .catch((error) => { console.log(error); });
     });
     console.log(tempVideoGame);
+    setVideoGameObj(tempVideoGame);
   }
 
   // function for adding a like to the list, and then update the states
@@ -337,6 +337,9 @@ const SharedList = () => {
   }
 
   console.log("booksObj check", booksObj);
+  console.log("movieObj check", movieObj);
+  console.log("videoGameObj check", videoGameObj);
+  console.log(booksObj[0])
 
   // output the pages
   return (
@@ -377,7 +380,7 @@ const SharedList = () => {
 
       <br></br>
 
-      Book list: <p>{booksObj.map((item) => <span>{item.id}</span>)}</p>
+      Book list: <p>{booksObj.forEach((item) => <span key={item.id}> "{item}" </span>)}</p>
 
       <br></br>
       <p>{booksLists}</p>
