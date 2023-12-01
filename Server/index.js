@@ -498,43 +498,154 @@ bcrypt.hash(password, 10, (err, hashedPassword) => {
 }); });
 
 
-// get the accessed lists
-app.get("/getAccessedLists/:userID", async (req, res) => {
-    const userID = req.params.userID;
-    try {
-      const query = "SELECT tableID FROM AccessLists WHERE userID = " + userID + ";";
-      const [rows] = await connection.query(query, [userID]);
-      res.status(200).json(rows);
-    } catch (err) {
-      console.error(err);
-    }
+// SharedList.jsx: get the username base on UserID
+app.get('/username/:userID', async (req, res) => {
+  console.log("fetching username");
+  const userID = req.params.userID;
+  try {
+    let { data: userName, error } = await supabase
+    .from('Users').select('username')
+    .eq('id', userID)
+    res.send(userName);
+  } catch (err) {
+    // console.log(err)
+  }
+})
+
+// // SharedList.jsx: get all lists
+// app.get("/getAllLists", async (req, res) => {
+//   console.log("fetching all lists");
+//   try {
+//     let { data: Lists, error } = await supabase
+//     .from('AccessLists').select('tableID')
+//     res.send(Lists);
+//   } catch (err) {
+//     console.error(err);
+//   }
+// });
+
+// SharedList.jsx: get the accessed lists for that user
+app.get("/getAccessedLists/:userName", async (req, res) => {
+  console.log("fetching accessed lists");
+  const userName = req.params.userName;
+  try {
+    let { data: Lists, error } = await supabase
+    .from('AccessLists').select('tableID')
+    .eq('userID', userName)
+    res.send(Lists);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
-// get the liked in that lists
+// SharedList.jsx: get the list from the table
 app.get("/gettable/:tableName", async (req, res) => {
-    const tableName = req.params.tableName;
-    try {
-      const query = "SELECT * FROM " + tableName + ";";
-      const [rows] = await connection.query(query, [tableName]);
-      res.status(200).json(rows);
-    } catch (err) {
-      console.error(err);
-    }
+  console.log("fetching table");
+  const tableName = req.params.tableName;
+  try {
+    let { data: Lists, error } = await supabase
+    .from(tableName).select("*")
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
 });
 
-// add into shared list
-app.get("/addToList/:access/:addCategories/:addID", async (req, res) => {
-    const access = req.params.access;
-    const addCategories = req.params.addCategories;
-    const addID = req.params.addID;
-    try {
-      const query = "INSERT INTO " + access + " (category, itemID) VALUES ( \"" + addCategories + "\", " + addID + ");";
-      console.log(query);
-      await connection.query(query, [addCategories, addID]);
-    } catch (err) {
-      console.error(err);
-    }
+// SharedList.jsx: add into shared list
+app.post("/addToList/:access", async (req, res) => {
+  console.log("adding to list");
+  const access = req.params.access;
+  const categories = req.body.categories;
+  const itemID = req.body.itemID;
+  try {
+    let { data: Lists, error } = await supabase
+    .from(access).insert([
+      { 'category': categories, 'itemID': itemID },
+    ])
+    .select("*")
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
 });
+
+// SharedList.jsx: delete from shared list
+app.delete("/deleteFromList/:access", async (req, res) => {
+  console.log("deleting from list");
+  const access = req.params.access;
+  const deleteCategories = req.body.categories;
+  const itemID = req.body.itemID;
+  console.log(access, deleteCategories, itemID)
+  try {
+    const { error } = await supabase
+    .from(access).delete()
+    .eq('category', deleteCategories)
+    .eq('itemID', itemID)
+    res.send({category: deleteCategories, itemID: itemID});
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: get people who have access to the same list
+app.get("/getSharedppl/:tableID", async (req, res) => {
+  console.log("fetching Shared People");
+  const tableID = req.params.tableID;
+  try {
+    const { data: Lists, error } = await supabase
+    .from("AccessLists").select("userID")
+    .eq('tableID', tableID)
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: adding user to the list
+app.post("/addUser/:curList", async (req, res) => {
+  console.log("adding user");
+  const curList = req.params.curList;
+  const userID = req.body.userID;
+  try {
+    const { data: Lists, error } = await supabase
+    .from("AccessLists").insert([
+      { 'userID': userID, 'tableID': curList },
+    ])
+    .select("*")
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: delete user from the list
+app.delete("/deleteUser/:curList", async (req, res) => {
+  console.log("deleting user");
+  const curList = req.params.curList;
+  const userID = req.body.userID;
+  try {
+    const { error } = await supabase
+    .from("AccessLists").delete()
+    .eq('userID', userID)
+    .eq('tableID', curList)
+    res.send({userID: userID});
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// // SharedList.jsx: create new list
+// app.post("/createList", async (req, res) => {
+//   console.log("creating list");
+//   const newList = req.body.newList;
+//   console.log(newList)
+//   try {
+//     const { data: Lists, error } = await supabase
+//       .rpc('createSharedList', { tableName: newList })
+//   } catch (err) {
+//     console.error(err);
+//   }
+// });
 
 // test to see if the connection is working
 app.listen(3002, () => {
