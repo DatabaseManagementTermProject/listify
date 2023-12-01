@@ -80,8 +80,8 @@ const SharedList = () => {
 
   // function for fetching likes from the list
   // using in initial fetch and when the list changes
-  function fetchCurListInformation(tableName) {
-    fetch(`http://localhost:3002/gettable/${tableName}`)
+  function fetchCurListInformation(listName) {
+    fetch(`http://localhost:3002/gettable/${listName}`)
     .then((res) => { return res.json() })
     .then((data) => {
       let temp = {"movies": [], "books": [], "videoGames": []};
@@ -94,7 +94,7 @@ const SharedList = () => {
     })
     .catch((error) => { console.log(error); });
 
-    fetch(`http://localhost:3002/getSharedppl/${tableName}`)
+    fetch(`http://localhost:3002/getSharedppl/${listName}`)
     .then((res) => { return res.json() })
     .then((data) => { 
       let temp = [];
