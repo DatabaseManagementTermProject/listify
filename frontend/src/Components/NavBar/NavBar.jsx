@@ -44,6 +44,7 @@ function NavBar() {
             <Nav.Link className='navLink' onClick={() => navigate('/home')}>Home</Nav.Link>
             <Nav.Link className='navLink' onClick={() => navigate('/profile')}>My Lists</Nav.Link>
             <Nav.Link className='navLink' onClick={() => navigate('/SharedList')}>Shared List</Nav.Link>
+            <Nav.Link className='navLink' onClick={() => navigate('/Test')}>Test</Nav.Link>
             <NavDropdown className='navDropDown' title="Browse" id="navbarScrollingDropdown">
               <NavDropdown.Item onClick={() => navigate('/books')}>Books</NavDropdown.Item>
               <NavDropdown.Item onClick={() => navigate('/movies')}>Movies</NavDropdown.Item>

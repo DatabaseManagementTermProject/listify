@@ -11,6 +11,7 @@ import Books from './Pages/Books';
 import VideoGames from './Pages/VideoGames';
 import SharedList from './Pages/SharedList';
 import SearchResults from './Pages/SearchResults';
+import Test from './Pages/Test.jsx';
 
 function App() {
     return (
@@ -26,7 +27,7 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/SharedList" element={<SharedList />} />
                 <Route path="/searchresults" element={<SearchResults />} />
-
+                <Route path="/Test" element={<Test />} />
             </Routes>
         </>
     )
