@@ -544,7 +544,7 @@ app.get("/gettable/:listName", async (req, res) => {
   const listName = req.params.listName;
   try {
     let { data: Lists, error } = await supabase
-    .from("ListContains").select("category, itemID")
+    .from("ListContains").select("category, id")
     .eq("Lists", listName)
     res.send(Lists);
   } catch (err) {
@@ -557,11 +557,11 @@ app.post("/addToList/:curList", async (req, res) => {
   console.log("adding to list");
   const curList = req.params.curList;
   const categories = req.body.categories;
-  const itemID = req.body.itemID;
+  const id = req.body.id;
   try {
     let { data: Lists, error } = await supabase
     .from("ListContains").insert([
-      { 'Lists': curList, 'category': categories, 'itemID': itemID },
+      { 'Lists': curList, 'category': categories, 'id': id },
     ])
     .select("*")
     res.send(Lists);
@@ -575,13 +575,14 @@ app.delete("/deleteFromList/:curList", async (req, res) => {
   console.log("deleting from list");
   const curList = req.params.curList;
   const deleteCategories = req.body.categories;
-  const itemID = req.body.itemID;
+  const id = req.body.id;
   try {
     const { error } = await supabase
     .from("ListContains").delete()
+    .eq('Lists', curList)
     .eq('category', deleteCategories)
-    .eq('itemID', itemID)
-    res.send({category: deleteCategories, itemID: itemID});
+    .eq('id', id)
+    res.send({category: deleteCategories, itemID: id});
   } catch (err) {
     console.error(err);
   }
@@ -646,6 +647,33 @@ app.delete("/deleteList/:curList", async (req, res) => {
     .from("ListContains").delete()
     .eq('Lists', curList)
     res.send("delete Successful");
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: fetchObject
+app.get("/getObject/:category/:id", async (req, res) => {
+  console.log("fetching object");
+  const category = req.params.category;
+  const id = req.params.id;
+  try {
+    let { data: Lists, error } = await supabase
+    .from(category).select('*')
+    .eq('id', id)
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// testing endpoint
+app.get("/test", async (req, res) => {
+  console.log("testing");
+  try {
+    let { data: Lists, error } = await supabase
+    .from("Books").select('*')
+    res.send(Lists);
   } catch (err) {
     console.error(err);
   }
