@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useEffect } from 'react';
-import { supabase } from '../database';
 import NavBar from "../Components/NavBar/NavBar";
 import HorizontalGrid from "../Components/HorizontalGrid/HorizontalGrid";
 import './profile.css'
