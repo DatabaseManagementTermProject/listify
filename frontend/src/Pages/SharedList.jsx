@@ -122,10 +122,10 @@ const SharedList = () => {
     booksLists.forEach((id) => {
       fetch(`http://localhost:3002/getObject/Books/${id}`)
       .then((res) => { return res.json() })
-      .then((data) => { tempBook.push(data[0]); })
+      .then((data) => { tempBook.push(data[0].coverImg); })
       .catch((error) => { console.log(error); });
     });
-    console.log(tempBook);
+    console.log("tempBook", tempBook)
     setBooksObj(tempBook);
 
     // fetch the likes movie object from the list
@@ -136,7 +136,6 @@ const SharedList = () => {
       .then((data) => { tempMovie.push(data[0]); })
       .catch((error) => { console.log(error); });
     });
-    console.log(tempMovie);
     setMovieObj(tempMovie);
 
     // fetch the likes videogame object from the list
@@ -147,7 +146,6 @@ const SharedList = () => {
       .then((data) => { tempVideoGame.push(data[0]); })
       .catch((error) => { console.log(error); });
     });
-    console.log(tempVideoGame);
     setVideoGameObj(tempVideoGame);
   }
 
@@ -335,7 +333,8 @@ const SharedList = () => {
       window.location.reload(false);
     });
   }
-
+  
+  console.log(booksObj[0])
   console.log("booksObj check", booksObj);
   console.log("movieObj check", movieObj);
   console.log("videoGameObj check", videoGameObj);
@@ -372,6 +371,12 @@ const SharedList = () => {
       <button id="addFavItemB" onClick={addFavItem}>Add</button>
       <button id="delFavItemB" onClick={delFavItem}>Delete</button>
 
+      <br></br><br></br><br></br>
+
+      <p>My Book: {booksLists.map((item) => <span> {item} </span>)}</p>
+      <p>My Movie: {movieLists.map((item) => <span> {item} </span>)}</p>
+      <p>My Video Games: {videoGameLists.map((item) => <span> {item} </span>)}</p>
+
       <br></br>
 
       <HorizontalGrid gridItems={booksObj} listName="Books" gridTitle="Books" />
@@ -380,12 +385,7 @@ const SharedList = () => {
 
       <br></br>
 
-      Book list: <p>{booksObj.forEach((item) => <span key={item.id}> "{item}" </span>)}</p>
-
-      <br></br>
-      <p>{booksLists}</p>
-      <p>{movieLists}</p>
-      <p>{videoGameLists}</p>
+      {/* Book list: <p>{booksObj.forEach((item) => <img src={item} className='images'/>)}</p> */}
 
     </div>
   );
