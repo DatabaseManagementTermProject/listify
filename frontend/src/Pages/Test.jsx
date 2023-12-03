@@ -31,6 +31,39 @@ const Test = () => {
     .catch((error) => { console.log(error); });
   }, []);
 
+  useEffect(() => {
+    // fetch the likes book object from the list
+    let tempBook = [];
+    booksLists.forEach((id) => {
+      fetch(`http://localhost:3002/getObject/Books/${id}`)
+      .then((res) => { return res.json() })
+      .then((data) => { tempBook.push(data[0].coverImg); })
+      .catch((error) => { console.log(error); });
+    });
+    console.log("tempBook", tempBook)
+    setBooksObj(tempBook);
+
+    // fetch the likes movie object from the list
+    let tempMovie = [];
+    movieLists.forEach((id) => {
+      fetch(`http://localhost:3002/getObject/Movies/${id}`)
+      .then((res) => { return res.json() })
+      .then((data) => { tempMovie.push(data[0]); })
+      .catch((error) => { console.log(error); });
+    });
+    setMovieObj(tempMovie);
+
+    // fetch the likes videogame object from the list
+    let tempVideoGame = [];
+    videoGameLists.forEach((id) => {
+      fetch(`http://localhost:3002/getObject/VideoGames/${id}`)
+      .then((res) => { return res.json() })
+      .then((data) => { tempVideoGame.push(data[0]); })
+      .catch((error) => { console.log(error); });
+    });
+    setVideoGameObj(tempVideoGame);
+  }, [booksLists, movieLists, videoGameLists]);
+
   return (
     <div>
       <NavBar />
