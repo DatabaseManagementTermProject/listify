@@ -78,10 +78,6 @@ const SharedList = () => {
     fetchCurListInformation(lists[0]);
   }, [lists]);
 
-  useEffect(() => {
-    fetchObjects(booksLists, movieLists, videoGameLists);
-  }, [booksLists, movieLists, videoGameLists]);
-
   // function for changing the likes when the list changes
   function change() {
     let listName = document.getElementById("access").value;
@@ -112,41 +108,12 @@ const SharedList = () => {
       setSharedppl(temp);
     })
     .catch((error) => { console.log(error); });
-  }
-
-  // function for fetching the object from the list
-  function fetchObjects(booksLists, movieLists, videoGameLists) {
 
     // fetch the likes book object from the list
-    let tempBook = [];
-    booksLists.forEach((id) => {
-      fetch(`http://localhost:3002/getObject/Books/${id}`)
-      .then((res) => { return res.json() })
-      .then((data) => { tempBook.push(data[0].coverImg); })
-      .catch((error) => { console.log(error); });
-    });
-    console.log("tempBook", tempBook)
-    setBooksObj(tempBook);
-
-    // fetch the likes movie object from the list
-    let tempMovie = [];
-    movieLists.forEach((id) => {
-      fetch(`http://localhost:3002/getObject/Movies/${id}`)
-      .then((res) => { return res.json() })
-      .then((data) => { tempMovie.push(data[0]); })
-      .catch((error) => { console.log(error); });
-    });
-    setMovieObj(tempMovie);
-
-    // fetch the likes videogame object from the list
-    let tempVideoGame = [];
-    videoGameLists.forEach((id) => {
-      fetch(`http://localhost:3002/getObject/VideoGames/${id}`)
-      .then((res) => { return res.json() })
-      .then((data) => { tempVideoGame.push(data[0]); })
-      .catch((error) => { console.log(error); });
-    });
-    setVideoGameObj(tempVideoGame);
+    fetch(`http://localhost:3002/getObject/Books/${listName}`)
+    .then((res) => { return res.json() })
+    .then((data) => { setBooksObj(data); })
+    .catch((error) => { console.log(error); });
   }
 
   // function for adding a like to the list, and then update the states

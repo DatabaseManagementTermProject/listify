@@ -653,15 +653,12 @@ app.delete("/deleteList/:curList", async (req, res) => {
 });
 
 // SharedList.jsx: fetchObject
-app.get("/getObject/:category/:id", async (req, res) => {
+app.get("/getObject/Books/:userList", async (req, res) => {
   console.log("fetching object");
-  const category = req.params.category;
-  const id = req.params.id;
   try {
-    let { data: Lists, error } = await supabase
-    .from(category).select('*')
-    .eq('id', id)
-    res.send(Lists);
+    let { data, error } = await supabase
+    .rpc('getbooksobject', {userlist: req.params.userList})
+    res.send(data);
   } catch (err) {
     console.error(err);
   }
