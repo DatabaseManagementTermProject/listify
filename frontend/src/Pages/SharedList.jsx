@@ -5,7 +5,7 @@ import { supabase } from '../database';
 import NavBar from "../Components/NavBar/NavBar";
 import HorizontalGrid from "../Components/HorizontalGrid/HorizontalGrid";
 
-import './profile.css'
+import './SharedList.css';
 
 const SharedList = () => {
 
@@ -78,10 +78,6 @@ const SharedList = () => {
     fetchCurListInformation(lists[0]);
   }, [lists]);
 
-  useEffect(() => {
-    fetchObjects(booksLists, movieLists, videoGameLists);
-  }, [booksLists, movieLists, videoGameLists]);
-
   // function for changing the likes when the list changes
   function change() {
     let listName = document.getElementById("access").value;
@@ -112,41 +108,10 @@ const SharedList = () => {
       setSharedppl(temp);
     })
     .catch((error) => { console.log(error); });
-  }
 
-  // function for fetching the object from the list
-  function fetchObjects(booksLists, movieLists, videoGameLists) {
-
-    // fetch the likes book object from the list
-    let tempBook = [];
-    booksLists.forEach((id) => {
-      fetch(`http://localhost:3002/getObject/Books/${id}`)
-      .then((res) => { return res.json() })
-      .then((data) => { tempBook.push(data[0].coverImg); })
-      .catch((error) => { console.log(error); });
-    });
-    console.log("tempBook", tempBook)
-    setBooksObj(tempBook);
-
-    // fetch the likes movie object from the list
-    let tempMovie = [];
-    movieLists.forEach((id) => {
-      fetch(`http://localhost:3002/getObject/Movies/${id}`)
-      .then((res) => { return res.json() })
-      .then((data) => { tempMovie.push(data[0]); })
-      .catch((error) => { console.log(error); });
-    });
-    setMovieObj(tempMovie);
-
-    // fetch the likes videogame object from the list
-    let tempVideoGame = [];
-    videoGameLists.forEach((id) => {
-      fetch(`http://localhost:3002/getObject/VideoGames/${id}`)
-      .then((res) => { return res.json() })
-      .then((data) => { tempVideoGame.push(data[0]); })
-      .catch((error) => { console.log(error); });
-    });
-    setVideoGameObj(tempVideoGame);
+    fetchBooksObjects(listName);
+    fetchMoviesObjects(listName);
+    fetchVideoGamesObjects(listName);
   }
 
   // function for adding a like to the list, and then update the states
@@ -170,82 +135,53 @@ const SharedList = () => {
     })
     .then((res) => { return res.json() })
     .then((data) => {
-      if (data[0].category === "Books") { setBooksLists([...booksLists, data[0].id]); }
-      else if (data[0].category === "movies") { setMovieLists([...movieLists, data[0].id]); }
-      else { setVideoGameLists([...videoGameLists, data[0].id]); }
+      if (data[0].category === "Books") { 
+        setBooksLists([...booksLists, data[0].id]);
+        fetchBooksObjects(curList);
+      }
+      else if (data[0].category === "movies") {
+        fetchMoviesObjects(curList);
+        setMovieLists([...movieLists, data[0].id]); 
+      }
+      else { 
+        fetchVideoGamesObjects(curList);
+        setVideoGameLists([...videoGameLists, data[0].id]);
+      }
     });
   }
 
-  // function removeLikedItem(itemID, index, listName) {
-  //   console.log("itemID", itemID)
-  //   console.log("index", index)
-  //   console.log("listName", listName)
-  //   let curList = document.getElementById("access").value;
-  //   fetch(`http://localhost:3002/deleteFromList/${curList}`,
-  //   { method: "DELETE",
-  //     body: JSON.stringify({
-  //     categories: listName,
-  //     id: itemID
-  //   }),
-  //   headers: {
-  //     "Content-type": "application/json; charset=UTF-8"
-  //   }
-  //   })
-  //   .then((res) => { return res.json() })
-  //   .then((data) => {
-  //     console.log("data", data)
-  //     if (data.category === "Books") { 
-  //       setBooksLists(booksLists.filter((item) => item !== data.itemID));
-  //       setBooksObj(booksObj.filter((item) => item.itemID !== data.itemID));
-  //     }
-  //     else if (data.category === "Movies") {
-  //       setMovieLists(movieLists.filter((item) => item !== data.itemID));
-  //       setMovieObj(movieObj.filter((item) => item.itemID !== data.itemID));
-  //     }
-  //     else { 
-  //       setVideoGameLists(videoGameLists.filter((item) => item !== data.itemID));
-  //       setVideoGameObj(videoGameObj.filter((item) => item.itemID !== data.itemID));
-  //     }
-  //   });
-  // }
-
-  // function for deleting a like from the list
-  function delFavItem() {
+  function removeLikedItem(itemID, index, listName) {
+    console.log("itemID", itemID)
+    console.log("index", index)
+    console.log("listName", listName)
     let curList = document.getElementById("access").value;
-    let categories = document.getElementById("categories").value;
-    let id = parseInt(document.getElementById("id").value);
-
-    // check if item is in the list, if not, return an alert
-    if (categories === "Books" && !booksLists.includes(id)) { alert("Item not in bookslist"); return; }
-    else if (categories === "Movies" && !movieLists.includes(id)) { alert("Item not in Movieslist"); return; }
-    else if (categories === "VideoGames" && !videoGameLists.includes(id)) { alert("Item not in VideoGameslist"); return; }
-  
     fetch(`http://localhost:3002/deleteFromList/${curList}`,
-      { method: "DELETE",
-        body: JSON.stringify({
-        categories: categories,
-        id: id
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
+    { method: "DELETE",
+      body: JSON.stringify({
+      categories: listName,
+      id: itemID
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
     })
     .then((res) => { return res.json() })
     .then((data) => {
+      console.log("data", data)
       if (data.category === "Books") { 
-        setBooksLists(booksLists.filter((item) => item !== id));
-        setBooksObj(booksObj.filter((item) => item.id !== id));
+        setBooksLists(booksLists.filter((item) => item !== data.itemID));
+        fetchBooksObjects(curList);
       }
       else if (data.category === "Movies") {
-        setMovieLists(movieLists.filter((item) => item !== id));
-        setMovieObj(movieObj.filter((item) => item.id !== id));
+        setMovieLists(movieLists.filter((item) => item !== data.itemID));
+        fetchMoviesObjects(curList);
       }
-      else { 
-        setVideoGameLists(videoGameLists.filter((item) => item !== id));
-        setVideoGameObj(videoGameObj.filter((item) => item.id !== id));
+      else if (data.category === "VideoGames") { 
+        setVideoGameLists(videoGameLists.filter((item) => item !== data.itemID));
+        fetchVideoGamesObjects(curList);
       }
     });
-  };
+  }
 
   // function for adding a user to the list
   function addUser() {
@@ -334,11 +270,29 @@ const SharedList = () => {
     });
   }
   
-  console.log(booksObj[0])
-  console.log("booksObj check", booksObj);
-  console.log("movieObj check", movieObj);
-  console.log("videoGameObj check", videoGameObj);
-  console.log(booksObj[0])
+  function fetchBooksObjects(listName) {
+    // fetch the likes book object from the list
+    fetch(`http://localhost:3002/getObject/Books/${listName}`)
+    .then((res) => { return res.json() })
+    .then((data) => { setBooksObj(data); })
+    .catch((error) => { console.log(error); });
+  }
+
+  function fetchMoviesObjects(listName) {
+    // fetch the likes book object from the list
+    fetch(`http://localhost:3002/getObject/Movies/${listName}`)
+    .then((res) => { return res.json() })
+    .then((data) => { setMovieObj(data); })
+    .catch((error) => { console.log(error); });
+  }
+
+  function fetchVideoGamesObjects(listName) {
+    // fetch the likes book object from the list
+    fetch(`http://localhost:3002/getObject/VideoGames/${listName}`)
+    .then((res) => { return res.json() })
+    .then((data) => { setVideoGameObj(data); })
+    .catch((error) => { console.log(error); });
+  }
 
   // output the pages
   return (
@@ -349,16 +303,16 @@ const SharedList = () => {
       </select>
       &emsp;
       This List is Share with: { sharedppl.map((item) => <span key={item}> "{item}" </span>) }
-      <input id="userName"></input>
-      <button id="addUserB" onClick={addUser}>Add</button>
-      <button id="delUserB" onClick={delUser}>Delete</button>
+      <input id="userName"></input>&ensp;
+      <button className="Button" id="addUserB" onClick={addUser}>Add</button>&ensp;
+      <button className="Button" id="delUserB" onClick={delUser}>Delete</button>
 
       <br></br>
 
-      Create/Delete a list: &emsp;
-      <input id="newList"></input>
-      <button id="createListB" onClick={createList}>Create</button>
-      <button id="deleteListB" onClick={deleteList}>Delete</button>
+      Create/Delete a list:&ensp;
+      <input id="newList"></input>&ensp;
+      <button className="Button" id="createListB" onClick={createList}>Create</button>&ensp;
+      <button className="Button" id="deleteListB" onClick={deleteList}>Delete</button>
 
       <br></br>
 
@@ -366,26 +320,15 @@ const SharedList = () => {
           <option value="Books">Books</option>
           <option value="Movies">Movies</option>
           <option value="VideoGames">Video Games</option> 
-      </select>
-      <input id="id"></input>
-      <button id="addFavItemB" onClick={addFavItem}>Add</button>
-      <button id="delFavItemB" onClick={delFavItem}>Delete</button>
-
-      <br></br><br></br><br></br>
-
-      <p>My Book: {booksLists.map((item) => <span> {item} </span>)}</p>
-      <p>My Movie: {movieLists.map((item) => <span> {item} </span>)}</p>
-      <p>My Video Games: {videoGameLists.map((item) => <span> {item} </span>)}</p>
+      </select>&ensp;
+      <input id="id"></input>&ensp;
+      <button className="Button" id="addFavItemB" onClick={addFavItem}>Add</button>
 
       <br></br>
 
-      <HorizontalGrid gridItems={booksObj} listName="Books" gridTitle="Books" />
-      <HorizontalGrid gridItems={movieObj} listName="Movies" gridTitle="Movies" />
-      <HorizontalGrid gridItems={videoGameObj} listName="Video Games" gridTitle="Video Games" />
-
-      <br></br>
-
-      {/* Book list: <p>{booksObj.forEach((item) => <img src={item} className='images'/>)}</p> */}
+      <HorizontalGrid gridItems={booksObj} listName="Books" gridTitle="Books" removalHandler={removeLikedItem}/>
+      <HorizontalGrid gridItems={movieObj} listName="Movies" gridTitle="Movies" removalHandler={removeLikedItem}/>
+      <HorizontalGrid gridItems={videoGameObj} listName="Video Games" gridTitle="Video Games" removalHandler={removeLikedItem}/>
 
     </div>
   );

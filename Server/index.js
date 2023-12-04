@@ -574,8 +574,9 @@ app.post("/addToList/:curList", async (req, res) => {
 app.delete("/deleteFromList/:curList", async (req, res) => {
   console.log("deleting from list");
   const curList = req.params.curList;
-  const deleteCategories = req.body.categories;
+  let deleteCategories = req.body.categories;
   const id = req.body.id;
+  if (deleteCategories == "Video Games") deleteCategories = "VideoGames";
   try {
     const { error } = await supabase
     .from("ListContains").delete()
@@ -652,16 +653,37 @@ app.delete("/deleteList/:curList", async (req, res) => {
   }
 });
 
-// SharedList.jsx: fetchObject
-app.get("/getObject/:category/:id", async (req, res) => {
-  console.log("fetching object");
-  const category = req.params.category;
-  const id = req.params.id;
+// SharedList.jsx: fetch book Object
+app.get("/getObject/Books/:userList", async (req, res) => {
+  console.log("fetching book object");
   try {
-    let { data: Lists, error } = await supabase
-    .from(category).select('*')
-    .eq('id', id)
-    res.send(Lists);
+    let { data, error } = await supabase
+    .rpc('getBooksObject', {userlist: req.params.userList})
+    res.send(data);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: fetch movie Object
+app.get("/getObject/Movies/:userList", async (req, res) => {
+  console.log("fetching movie object");
+  try {
+    let { data, error } = await supabase
+    .rpc('getMoviesObject', {userlist: req.params.userList})
+    res.send(data);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: fetch video gameObject
+app.get("/getObject/VideoGames/:userList", async (req, res) => {
+  console.log("fetching video game object");
+  try {
+    let { data, error } = await supabase
+    .rpc('getVideoGamesObject', {userlist: req.params.userList})
+    res.send(data);
   } catch (err) {
     console.error(err);
   }
