@@ -150,38 +150,38 @@ const SharedList = () => {
     });
   }
 
-  // function removeLikedItem(itemID, index, listName) {
-  //   console.log("itemID", itemID)
-  //   console.log("index", index)
-  //   console.log("listName", listName)
-  //   let curList = document.getElementById("access").value;
-  //   fetch(`http://localhost:3002/deleteFromList/${curList}`,
-  //   { method: "DELETE",
-  //     body: JSON.stringify({
-  //     categories: listName,
-  //     id: itemID
-  //   }),
-  //   headers: {
-  //     "Content-type": "application/json; charset=UTF-8"
-  //   }
-  //   })
-  //   .then((res) => { return res.json() })
-  //   .then((data) => {
-  //     console.log("data", data)
-  //     if (data.category === "Books") { 
-  //       setBooksLists(booksLists.filter((item) => item !== data.itemID));
-  //       setBooksObj(booksObj.filter((item) => item.itemID !== data.itemID));
-  //     }
-  //     else if (data.category === "Movies") {
-  //       setMovieLists(movieLists.filter((item) => item !== data.itemID));
-  //       setMovieObj(movieObj.filter((item) => item.itemID !== data.itemID));
-  //     }
-  //     else { 
-  //       setVideoGameLists(videoGameLists.filter((item) => item !== data.itemID));
-  //       setVideoGameObj(videoGameObj.filter((item) => item.itemID !== data.itemID));
-  //     }
-  //   });
-  // }
+  function removeLikedItem(itemID, index, listName) {
+    console.log("itemID", itemID)
+    console.log("index", index)
+    console.log("listName", listName)
+    let curList = document.getElementById("access").value;
+    fetch(`http://localhost:3002/deleteFromList/${curList}`,
+    { method: "DELETE",
+      body: JSON.stringify({
+      categories: listName,
+      id: itemID
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+    })
+    .then((res) => { return res.json() })
+    .then((data) => {
+      console.log("data", data)
+      if (data.category === "Books") { 
+        setBooksLists(booksLists.filter((item) => item !== data.itemID));
+        fetchBooksObjects(curList);
+      }
+      else if (data.category === "Movies") {
+        setMovieLists(movieLists.filter((item) => item !== data.itemID));
+        fetchMoviesObjects(curList);
+      }
+      else if (data.category === "VideoGames") { 
+        setVideoGameLists(videoGameLists.filter((item) => item !== data.itemID));
+        fetchVideoGamesObjects(curList);
+      }
+    });
+  }
 
   // function for deleting a like from the list
   function delFavItem() {
@@ -365,9 +365,16 @@ const SharedList = () => {
 
       <br></br>
 
-      <HorizontalGrid gridItems={booksObj} listName="Books" gridTitle="Books" />
-      <HorizontalGrid gridItems={movieObj} listName="Movies" gridTitle="Movies" />
-      <HorizontalGrid gridItems={videoGameObj} listName="Video Games" gridTitle="Video Games" />
+      <HorizontalGrid gridItems={booksObj} listName="Books" gridTitle="Books" removalHandler={removeLikedItem}/>
+      <HorizontalGrid gridItems={movieObj} listName="Movies" gridTitle="Movies" removalHandler={removeLikedItem}/>
+      <HorizontalGrid gridItems={videoGameObj} listName="Video Games" gridTitle="Video Games" removalHandler={removeLikedItem}/>
+
+      <br></br>
+
+      Books: { booksLists.map((item) => <span key={item}> "{item}" </span>) }
+      Videos: { movieLists.map((item) => <span key={item}> "{item}" </span>) }
+      Video Games: { videoGameLists.map((item) => <span key={item}> "{item}" </span>) }
+
 
     </div>
   );
