@@ -8,59 +8,19 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../database';
 
 import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
-import Row from 'react-bootstrap/Row';
 
-function MydModalWithGrid(props) {
-	return (
-	  <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
-		<Modal.Header closeButton style={{backgroundColor: 'black'}}>
-		  <Modal.Title id="contained-modal-title-vcenter">
-			Using Grid in Modal
-		  </Modal.Title>
-		</Modal.Header>
-		<Modal.Body className="grid-example" style={{backgroundColor: 'black'}}>
-		  <Container>
-			<Row>
-			  <Col xs={12} md={8}>
-				.col-xs-12 .col-md-8
-			  </Col>
-			  <Col xs={6} md={4}>
-				.col-xs-6 .col-md-4
-			  </Col>
-			</Row>
-  
-			<Row>
-			  <Col xs={6} md={4}>
-				.col-xs-6 .col-md-4
-			  </Col>
-			  <Col xs={6} md={4}>
-				.col-xs-6 .col-md-4
-			  </Col>
-			  <Col xs={6} md={4}>
-				.col-xs-6 .col-md-4
-			  </Col>
-			</Row>
-		  </Container>
-		</Modal.Body>
-		<Modal.Footer style={{backgroundColor: 'black'}}>
-		  <Button onClick={props.onHide}>Close</Button>
-		</Modal.Footer>
-	  </Modal>
-	);
-  }
+
+
 
 // Grid renders a grid of whatever parameter is passed in ('books', 'movies', 'videoGames')
 function Grid(list) {
 
     // initialize state variables
     const [item, setItem] = useState([]);
+	const [selectedItem, setSelectedItem] = useState();
     const [likes, setLikes] = useState([emptyBookmark]);
 	const [modalShow, setModalShow] = useState(false);
-	
-    console.log(list.list)
 
     useEffect(() => {
 
@@ -123,12 +83,52 @@ function Grid(list) {
 		})
     }
 
+	function MyVerticallyCenteredModal(props) {
+		return (
+		  <Modal
+			{...props}
+			size="lg"
+			aria-labelledby="contained-modal-title-vcenter"
+			centered
+
+		  >
+			<Modal.Header style={{backgroundColor: 'black'}}>
+			  <Modal.Title id="contained-modal-title-vcenter">
+				<p className='modalTitle'>{selectedItem?.title}</p>
+				<p className='modalGenre'>{selectedItem?.author}</p>
+				<p className='modalGenre'>{selectedItem?.publishedYear}</p>
+				{selectedItem?.genre ? <p className='modalGenre'>{selectedItem?.genre}</p> : ""}
+			  </Modal.Title>
+			</Modal.Header>
+			<Modal.Body style={{backgroundColor: 'black', overflow: 'auto', display: 'block'}}>
+				<img src={selectedItem?.coverImg} alt="" style={{width: '200px', height: '300px'}}/>
+			  	<p className='modalDescription'>
+
+				
+					{selectedItem?.description}
+				</p>
+			</Modal.Body>
+			<Modal.Footer style={{backgroundColor: 'black'}}>
+			  <Button onClick={props.onHide}>Close</Button>
+			</Modal.Footer>
+		  </Modal>
+		);
+	  }
+
+
+
 	// This adds a "save" tooltip that gets called when you hover over the bookmark icon
 	const renderTooltip = (props) => (
 		<Tooltip id="button-tooltip" {...props}>
 		  Save
 		</Tooltip>
 	  );
+
+	const populateModal = (item) => {
+		setSelectedItem(item);
+		setModalShow(true);
+		console.log(item);
+	}
 
 	
     return (
@@ -139,9 +139,9 @@ function Grid(list) {
             <div key={i} className='container'>
                 <img src={ d.coverImg } className='images'/>
                 <div className='overlay'>  
-                <div className='titleContainer' onClick={() => setModalShow(true)}>{d.title}</div>
-                <div className='categoryContainer' onClick={() => setModalShow(true)}>{d.author}</div>
-                <div className='description' onClick={() => setModalShow(true)}>{d.description}</div>
+                <div className='titleContainer' onClick={() => populateModal(d)}>{d.title}</div>
+                <div className='categoryContainer' onClick={() => populateModal(d)}>{d.author}</div>
+                <div className='description' onClick={() => populateModal(d)}>{d.description}</div>
                 <div className='buttonContainer'>
                   <OverlayTrigger
                   placement="bottom"
@@ -157,7 +157,10 @@ function Grid(list) {
           </ul>
           </div>
 
-		  <MydModalWithGrid show={modalShow} onHide={() => setModalShow(false)} />
+		  <MyVerticallyCenteredModal
+			show={modalShow}
+			onHide={() => setModalShow(false)}
+			/>
       </>
       );
 }

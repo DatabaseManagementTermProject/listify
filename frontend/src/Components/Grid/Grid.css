@@ -11,3 +11,29 @@
     font-size: 30px;
     align-items: left;
 }
+
+.modalDescription {
+    margin-right: 1rem;
+    margin-left: 1rem;
+    margin-bottom: 4rem;
+    display: inline;
+    position: absolute;
+
+}
+
+.modalGenre {
+    text-align: center;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    color: rgba(255, 255, 255, 0.57);
+    font-size: 1rem;
+}
+
+.modalTitle{
+    margin-bottom: 1rem;
+}
+
+.modal-header {
+    justify-content: center;
+    text-align: center;
+}
