@@ -183,44 +183,6 @@ const SharedList = () => {
     });
   }
 
-  // function for deleting a like from the list
-  function delFavItem() {
-    let curList = document.getElementById("access").value;
-    let categories = document.getElementById("categories").value;
-    let id = parseInt(document.getElementById("id").value);
-
-    // check if item is in the list, if not, return an alert
-    if (categories === "Books" && !booksLists.includes(id)) { alert("Item not in bookslist"); return; }
-    else if (categories === "Movies" && !movieLists.includes(id)) { alert("Item not in Movieslist"); return; }
-    else if (categories === "VideoGames" && !videoGameLists.includes(id)) { alert("Item not in VideoGameslist"); return; }
-  
-    fetch(`http://localhost:3002/deleteFromList/${curList}`,
-      { method: "DELETE",
-        body: JSON.stringify({
-        categories: categories,
-        id: id
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    })
-    .then((res) => { return res.json() })
-    .then((data) => {
-      if (data.category === "Books") { 
-        setBooksLists(booksLists.filter((item) => item !== id));
-        setBooksObj(booksObj.filter((item) => item.id !== id));
-      }
-      else if (data.category === "Movies") {
-        setMovieLists(movieLists.filter((item) => item !== id));
-        setMovieObj(movieObj.filter((item) => item.id !== id));
-      }
-      else { 
-        setVideoGameLists(videoGameLists.filter((item) => item !== id));
-        setVideoGameObj(videoGameObj.filter((item) => item.id !== id));
-      }
-    });
-  };
-
   // function for adding a user to the list
   function addUser() {
     let curList = document.getElementById("access").value;
@@ -361,7 +323,6 @@ const SharedList = () => {
       </select>
       <input id="id"></input>
       <button id="addFavItemB" onClick={addFavItem}>Add</button>
-      <button id="delFavItemB" onClick={delFavItem}>Delete</button>
 
       <br></br>
 
