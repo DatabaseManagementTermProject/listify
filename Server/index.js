@@ -652,12 +652,36 @@ app.delete("/deleteList/:curList", async (req, res) => {
   }
 });
 
-// SharedList.jsx: fetchObject
+// SharedList.jsx: fetch book Object
 app.get("/getObject/Books/:userList", async (req, res) => {
-  console.log("fetching object");
+  console.log("fetching book object");
   try {
     let { data, error } = await supabase
-    .rpc('getbooksobject', {userlist: req.params.userList})
+    .rpc('getBooksObject', {userlist: req.params.userList})
+    res.send(data);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: fetch movie Object
+app.get("/getObject/Movies/:userList", async (req, res) => {
+  console.log("fetching movie object");
+  try {
+    let { data, error } = await supabase
+    .rpc('getMoviesObject', {userlist: req.params.userList})
+    res.send(data);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: fetch video gameObject
+app.get("/getObject/VideoGames/:userList", async (req, res) => {
+  console.log("fetching video game object");
+  try {
+    let { data, error } = await supabase
+    .rpc('getVideoGamesObject', {userlist: req.params.userList})
     res.send(data);
   } catch (err) {
     console.error(err);
