@@ -114,6 +114,18 @@ const SharedList = () => {
     .then((res) => { return res.json() })
     .then((data) => { setBooksObj(data); })
     .catch((error) => { console.log(error); });
+
+    // fetch the likes book object from the list
+    fetch(`http://localhost:3002/getObject/Movies/${listName}`)
+    .then((res) => { return res.json() })
+    .then((data) => { setMovieObj(data); })
+    .catch((error) => { console.log(error); });
+
+    // fetch the likes book object from the list
+    fetch(`http://localhost:3002/getObject/VideoGames/${listName}`)
+    .then((res) => { return res.json() })
+    .then((data) => { setVideoGameObj(data); })
+    .catch((error) => { console.log(error); });
   }
 
   // function for adding a like to the list, and then update the states
@@ -338,21 +350,11 @@ const SharedList = () => {
       <button id="addFavItemB" onClick={addFavItem}>Add</button>
       <button id="delFavItemB" onClick={delFavItem}>Delete</button>
 
-      <br></br><br></br><br></br>
-
-      <p>My Book: {booksLists.map((item) => <span> {item} </span>)}</p>
-      <p>My Movie: {movieLists.map((item) => <span> {item} </span>)}</p>
-      <p>My Video Games: {videoGameLists.map((item) => <span> {item} </span>)}</p>
-
       <br></br>
 
       <HorizontalGrid gridItems={booksObj} listName="Books" gridTitle="Books" />
       <HorizontalGrid gridItems={movieObj} listName="Movies" gridTitle="Movies" />
       <HorizontalGrid gridItems={videoGameObj} listName="Video Games" gridTitle="Video Games" />
-
-      <br></br>
-
-      {/* Book list: <p>{booksObj.forEach((item) => <img src={item} className='images'/>)}</p> */}
 
     </div>
   );
