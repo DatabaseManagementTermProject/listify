@@ -109,23 +109,9 @@ const SharedList = () => {
     })
     .catch((error) => { console.log(error); });
 
-    // fetch the likes book object from the list
-    fetch(`http://localhost:3002/getObject/Books/${listName}`)
-    .then((res) => { return res.json() })
-    .then((data) => { setBooksObj(data); })
-    .catch((error) => { console.log(error); });
-
-    // fetch the likes book object from the list
-    fetch(`http://localhost:3002/getObject/Movies/${listName}`)
-    .then((res) => { return res.json() })
-    .then((data) => { setMovieObj(data); })
-    .catch((error) => { console.log(error); });
-
-    // fetch the likes book object from the list
-    fetch(`http://localhost:3002/getObject/VideoGames/${listName}`)
-    .then((res) => { return res.json() })
-    .then((data) => { setVideoGameObj(data); })
-    .catch((error) => { console.log(error); });
+    fetchBooksObjects(listName);
+    fetchMoviesObjects(listName);
+    fetchVideoGamesObjects(listName);
   }
 
   // function for adding a like to the list, and then update the states
@@ -149,9 +135,18 @@ const SharedList = () => {
     })
     .then((res) => { return res.json() })
     .then((data) => {
-      if (data[0].category === "Books") { setBooksLists([...booksLists, data[0].id]); }
-      else if (data[0].category === "movies") { setMovieLists([...movieLists, data[0].id]); }
-      else { setVideoGameLists([...videoGameLists, data[0].id]); }
+      if (data[0].category === "Books") { 
+        setBooksLists([...booksLists, data[0].id]);
+        fetchBooksObjects(curList);
+      }
+      else if (data[0].category === "movies") {
+        fetchMoviesObjects(curList);
+        setMovieLists([...movieLists, data[0].id]); 
+      }
+      else { 
+        fetchVideoGamesObjects(curList);
+        setVideoGameLists([...videoGameLists, data[0].id]);
+      }
     });
   }
 
@@ -313,11 +308,29 @@ const SharedList = () => {
     });
   }
   
-  console.log(booksObj[0])
-  console.log("booksObj check", booksObj);
-  console.log("movieObj check", movieObj);
-  console.log("videoGameObj check", videoGameObj);
-  console.log(booksObj[0])
+  function fetchBooksObjects(listName) {
+    // fetch the likes book object from the list
+    fetch(`http://localhost:3002/getObject/Books/${listName}`)
+    .then((res) => { return res.json() })
+    .then((data) => { setBooksObj(data); })
+    .catch((error) => { console.log(error); });
+  }
+
+  function fetchMoviesObjects(listName) {
+    // fetch the likes book object from the list
+    fetch(`http://localhost:3002/getObject/Movies/${listName}`)
+    .then((res) => { return res.json() })
+    .then((data) => { setMovieObj(data); })
+    .catch((error) => { console.log(error); });
+  }
+
+  function fetchVideoGamesObjects(listName) {
+    // fetch the likes book object from the list
+    fetch(`http://localhost:3002/getObject/VideoGames/${listName}`)
+    .then((res) => { return res.json() })
+    .then((data) => { setVideoGameObj(data); })
+    .catch((error) => { console.log(error); });
+  }
 
   // output the pages
   return (
