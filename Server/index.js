@@ -574,8 +574,9 @@ app.post("/addToList/:curList", async (req, res) => {
 app.delete("/deleteFromList/:curList", async (req, res) => {
   console.log("deleting from list");
   const curList = req.params.curList;
-  const deleteCategories = req.body.categories;
+  let deleteCategories = req.body.categories;
   const id = req.body.id;
+  if (deleteCategories == "Video Games") deleteCategories = "VideoGames";
   try {
     const { error } = await supabase
     .from("ListContains").delete()
