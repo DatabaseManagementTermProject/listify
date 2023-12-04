@@ -7,12 +7,58 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { useState, useEffect } from 'react';
 import { supabase } from '../../database';
 
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Modal from 'react-bootstrap/Modal';
+import Row from 'react-bootstrap/Row';
+
+function MydModalWithGrid(props) {
+	return (
+	  <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+		<Modal.Header closeButton style={{backgroundColor: 'black'}}>
+		  <Modal.Title id="contained-modal-title-vcenter">
+			Using Grid in Modal
+		  </Modal.Title>
+		</Modal.Header>
+		<Modal.Body className="grid-example" style={{backgroundColor: 'black'}}>
+		  <Container>
+			<Row>
+			  <Col xs={12} md={8}>
+				.col-xs-12 .col-md-8
+			  </Col>
+			  <Col xs={6} md={4}>
+				.col-xs-6 .col-md-4
+			  </Col>
+			</Row>
+  
+			<Row>
+			  <Col xs={6} md={4}>
+				.col-xs-6 .col-md-4
+			  </Col>
+			  <Col xs={6} md={4}>
+				.col-xs-6 .col-md-4
+			  </Col>
+			  <Col xs={6} md={4}>
+				.col-xs-6 .col-md-4
+			  </Col>
+			</Row>
+		  </Container>
+		</Modal.Body>
+		<Modal.Footer style={{backgroundColor: 'black'}}>
+		  <Button onClick={props.onHide}>Close</Button>
+		</Modal.Footer>
+	  </Modal>
+	);
+  }
+
 // Grid renders a grid of whatever parameter is passed in ('books', 'movies', 'videoGames')
 function Grid(list) {
 
     // initialize state variables
     const [item, setItem] = useState([]);
     const [likes, setLikes] = useState([emptyBookmark]);
+	const [modalShow, setModalShow] = useState(false);
 	
     console.log(list.list)
 
@@ -93,9 +139,9 @@ function Grid(list) {
             <div key={i} className='container'>
                 <img src={ d.coverImg } className='images'/>
                 <div className='overlay'>  
-                <div className='titleContainer'>{d.title}</div>
-                <div className='categoryContainer'>{d.author}</div>
-                <div className='description'>{d.description}</div>
+                <div className='titleContainer' onClick={() => setModalShow(true)}>{d.title}</div>
+                <div className='categoryContainer' onClick={() => setModalShow(true)}>{d.author}</div>
+                <div className='description' onClick={() => setModalShow(true)}>{d.description}</div>
                 <div className='buttonContainer'>
                   <OverlayTrigger
                   placement="bottom"
@@ -110,6 +156,8 @@ function Grid(list) {
             ))}
           </ul>
           </div>
+
+		  <MydModalWithGrid show={modalShow} onHide={() => setModalShow(false)} />
       </>
       );
 }
