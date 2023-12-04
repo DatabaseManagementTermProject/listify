@@ -1,0 +1,18 @@
+.Button {
+  text-align: center;
+  padding: 2px 10px;
+  border-radius: 5px;
+  border: gray 1px solid;
+}
+
+.Button:hover {
+  background-color: #e6e6e6;
+}
+
+input {
+  padding: 2px 10px;
+  border-radius: 5px;
+  text-align: center;
+  border: gray 1px solid;
+  width: 150px;
+}

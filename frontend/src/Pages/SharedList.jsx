@@ -5,7 +5,7 @@ import { supabase } from '../database';
 import NavBar from "../Components/NavBar/NavBar";
 import HorizontalGrid from "../Components/HorizontalGrid/HorizontalGrid";
 
-import './profile.css'
+import './SharedList.css';
 
 const SharedList = () => {
 
@@ -303,16 +303,16 @@ const SharedList = () => {
       </select>
       &emsp;
       This List is Share with: { sharedppl.map((item) => <span key={item}> "{item}" </span>) }
-      <input id="userName"></input>
-      <button id="addUserB" onClick={addUser}>Add</button>
-      <button id="delUserB" onClick={delUser}>Delete</button>
+      <input id="userName"></input>&ensp;
+      <button className="Button" id="addUserB" onClick={addUser}>Add</button>&ensp;
+      <button className="Button" id="delUserB" onClick={delUser}>Delete</button>
 
       <br></br>
 
-      Create/Delete a list: &emsp;
-      <input id="newList"></input>
-      <button id="createListB" onClick={createList}>Create</button>
-      <button id="deleteListB" onClick={deleteList}>Delete</button>
+      Create/Delete a list:&ensp;
+      <input id="newList"></input>&ensp;
+      <button className="Button" id="createListB" onClick={createList}>Create</button>&ensp;
+      <button className="Button" id="deleteListB" onClick={deleteList}>Delete</button>
 
       <br></br>
 
@@ -320,22 +320,15 @@ const SharedList = () => {
           <option value="Books">Books</option>
           <option value="Movies">Movies</option>
           <option value="VideoGames">Video Games</option> 
-      </select>
-      <input id="id"></input>
-      <button id="addFavItemB" onClick={addFavItem}>Add</button>
+      </select>&ensp;
+      <input id="id"></input>&ensp;
+      <button className="Button" id="addFavItemB" onClick={addFavItem}>Add</button>
 
       <br></br>
 
       <HorizontalGrid gridItems={booksObj} listName="Books" gridTitle="Books" removalHandler={removeLikedItem}/>
       <HorizontalGrid gridItems={movieObj} listName="Movies" gridTitle="Movies" removalHandler={removeLikedItem}/>
       <HorizontalGrid gridItems={videoGameObj} listName="Video Games" gridTitle="Video Games" removalHandler={removeLikedItem}/>
-
-      <br></br>
-
-      Books: { booksLists.map((item) => <span key={item}> "{item}" </span>) }
-      Videos: { movieLists.map((item) => <span key={item}> "{item}" </span>) }
-      Video Games: { videoGameLists.map((item) => <span key={item}> "{item}" </span>) }
-
 
     </div>
   );
