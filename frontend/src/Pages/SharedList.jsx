@@ -76,7 +76,8 @@ const SharedList = () => {
   // fetch the initial information from the initial list
   useEffect(() => {
     fetchCurListInformation(lists[0]);
-  }, [lists]);
+  }, // eslint-disable-next-line 
+    [lists]);
 
   // function for changing the likes when the list changes
   function change() {
