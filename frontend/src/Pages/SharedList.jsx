@@ -152,9 +152,6 @@ const SharedList = () => {
   }
 
   function removeLikedItem(itemID, index, listName) {
-    console.log("itemID", itemID)
-    console.log("index", index)
-    console.log("listName", listName)
     let curList = document.getElementById("access").value;
     fetch(`http://localhost:3002/deleteFromList/${curList}`,
     { method: "DELETE",
