@@ -9,6 +9,7 @@ import Profile from './Pages/Profile';
 import Movies from './Pages/Movies';
 import Books from './Pages/Books';
 import VideoGames from './Pages/VideoGames';
+import SharedList from './Pages/SharedList';
 import SearchResults from './Pages/SearchResults';
 import OtherUser from './Pages/OtherUser';
 
@@ -24,9 +25,13 @@ function App() {
                 <Route path="/VideoGames" element={<VideoGames />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/SharedList" element={<SharedList />} />
                 <Route path="/searchresults" element={<SearchResults />} />
+<<<<<<< HEAD
                 <Route path="/profile/:viewedUserId" element={<OtherUser />} />
 
+=======
+>>>>>>> main
             </Routes>
         </>
     )

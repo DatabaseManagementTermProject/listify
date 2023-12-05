@@ -17,7 +17,7 @@ connection.connect((err) => {
     console.error('Error connecting to the database:', err);
     return;
   }
-  console.log('Connected to PlanetScale!');
+  // console.log('Connected to PlanetScale!');
 });
 
 // ------------------- Set up express server
@@ -91,52 +91,57 @@ app.get('/home/search/:letters', async (req, res) => {
 
 // ------------- get all
 
-app.get('/Books', async (req, res) => {
+app.get('/Books/:pageNumber', async (req, res) => {
+
+  const pageNumber = req.params.pageNumber;
 
   // already switched to supabase
     try {
       let { data: Books, error } = await supabase
       .from('Books')
       .select('*')
-      .range(0, 31)
+      .range((pageNumber - 1) * 23, pageNumber * 23)
       .order('id', { ascending: true })
-      console.log(Books);
+      // console.log(Books);
       res.send(Books);
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     }
 })
-app.get('/Movies', async (req, res) => {
+app.get('/Movies/:pageNumber', async (req, res) => {
+
+  const pageNumber = req.params.pageNumber;
 
   // already switched to supabase
     try {
       let { data: Movies, error } = await supabase
       .from('Movies')
       .select('*')
-      .range(0, 31)
+      .range((pageNumber - 1) * 23, pageNumber * 23)
       .order('id', { ascending: true })
 
-      console.log(Movies);
+      // console.log(Movies);
       res.send(Movies);
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     }
 })
-app.get('/VideoGames', async (req, res) => {
+app.get('/VideoGames/:pageNumber', async (req, res) => {
 
+  const pageNumber = req.params.pageNumber;
 
   // already switched to supabase
     try {
       let { data: VideoGames, error } = await supabase
       .from('VideoGames')
       .select('*')
-      .range(0, 31)
+      .range((pageNumber - 1) * 23, pageNumber * 23)
       .order('id', { ascending: true })
       
-      console.log(VideoGames);
+      // console.log(VideoGames);
       res.send(VideoGames);
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     }
 })
 
@@ -155,7 +160,7 @@ app.get('/getLikedBooks/:uid', async (req, res) => {
 
     res.send(Books);
   } catch (err) {
-    console.log(err)
+    // console.log(err)
   }
 })
 app.post('/removeLikedBooks', async (req, res) => {
@@ -328,7 +333,7 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
       try {
         const query = 'SELECT * FROM ' + library + ';';
         const [rows] = await connection.query(query);
-        console.log("inserver ", rows);
+        // console.log("inserver ", rows);
         res.status(200).send(rows);
       } catch (err) {
         console.error(err);
@@ -374,7 +379,7 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
                       'FROM ' + library + ' JOIN ' + likedLibrary + ' ' +
                       'ON ' + library + '.' + libraryAttr + ' = ' + likedLibrary + '.' + libraryAttr + ' ' +
                       'WHERE userID = ' + userID + ';';
-        console.log(query);
+        // console.log(query);
         const [rows] = await connection.query(query);
 
         // probably change this error message into something more UI friendly later
@@ -427,6 +432,274 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
   }
 })
 
+<<<<<<< HEAD
+=======
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+  connection.query("SELECT * FROM users WHERE email = ?", [email], (err, results) => {
+    if (err) {
+        console.error("Error finding user:", err);
+        return res.status(500).json({ message: "Server error" });
+    }
+
+    if (results.length === 0) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    const user = results[0];
+
+    bcrypt.compare(password, user.password, (err, passwordMatch) => {
+      if (err) {
+          console.error("Password comparison error:", err);
+          return res.status(500).json({ message: "Server error" });
+      }
+
+      if (passwordMatch) {
+          // if passwords match, a token which keeps the user logged in for 3 hours (jwt = jason web token)
+          const token = jwt.sign({ email: user.email, id: user.id }, "your-secret-key", { expiresIn: "3h" });
+          // http response 200 indicates success
+          return res.status(200).json({ token });
+      } else {
+          // http response 401 indicates user is unauthorized
+          return res.status(401).json({ message: "Username or Password Invalid" });
+      }
+    });
+  });
+});
+
+// user registration (work in progress)
+// added AUTO_INCREMENT constraint to userID so no need to modify that value
+app.post('/register', (req, res) => {
+  const { userName, email, password } = req.body;
+
+// for user input, hashes user password before storing into database
+bcrypt.hash(password, 10, (err, hashedPassword) => {
+  if (err) {
+    console.error('Error hashing password: ', err);
+    res.status(500).json({ error: 'Registration Error' });
+  }
+  else {
+  const query = 'INSERT INTO users (userName, email, password) VALUES (?, ?, ?)';
+  // inserts the hashed password into the database
+  connection.query(query, [userName, email, hashedPassword], (err) => {
+    if (err) {
+      console.error('Error registering account: ', err);
+      // http 500 server error response
+      res.status(500).json({ error: 'Registration failed' });
+    } else {
+      // http response 201 created (the request succeed, and new resource created)
+      res.status(201).json({ message: 'Account made' });
+    }
+  });
+  }
+}); });
+
+
+// SharedList.jsx: get the username base on UserID
+app.get('/username/:userID', async (req, res) => {
+  console.log("fetching username");
+  const userID = req.params.userID;
+  try {
+    let { data: userName, error } = await supabase
+    .from('Users').select('username')
+    .eq('id', userID)
+    res.send(userName);
+  } catch (err) {
+    // console.log(err)
+  }
+})
+
+// SharedList.jsx: get all lists
+app.get("/getAllLists", async (req, res) => {
+  console.log("fetching all lists");
+  try {
+    let { data: Lists, error } = await supabase
+    .from('AccessLists').select('tableID')
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: get the accessed lists for that user
+app.get("/getAccessedLists/:userName", async (req, res) => {
+  console.log("fetching accessed lists");
+  const userName = req.params.userName;
+  try {
+    let { data: Lists, error } = await supabase
+    .from('AccessLists').select('tableID')
+    .eq('userID', userName)
+    res.send(Lists);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// SharedList.jsx: get the list from the table
+app.get("/gettable/:listName", async (req, res) => {
+  console.log("fetching table");
+  const listName = req.params.listName;
+  try {
+    let { data: Lists, error } = await supabase
+    .from("ListContains").select("category, id")
+    .eq("Lists", listName)
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: add into shared list
+app.post("/addToList/:curList", async (req, res) => {
+  console.log("adding to list");
+  const curList = req.params.curList;
+  const categories = req.body.categories;
+  const id = req.body.id;
+  try {
+    let { data: Lists, error } = await supabase
+    .from("ListContains").insert([
+      { 'Lists': curList, 'category': categories, 'id': id },
+    ])
+    .select("*")
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: delete from shared list
+app.delete("/deleteFromList/:curList", async (req, res) => {
+  console.log("deleting from list");
+  const curList = req.params.curList;
+  let deleteCategories = req.body.categories;
+  const id = req.body.id;
+  if (deleteCategories == "Video Games") deleteCategories = "VideoGames";
+  try {
+    const { error } = await supabase
+    .from("ListContains").delete()
+    .eq('Lists', curList)
+    .eq('category', deleteCategories)
+    .eq('id', id)
+    res.send({category: deleteCategories, itemID: id});
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: get people who have access to the same list
+app.get("/getSharedppl/:tableID", async (req, res) => {
+  console.log("fetching Shared People");
+  const tableID = req.params.tableID;
+  try {
+    const { data: Lists, error } = await supabase
+    .from("AccessLists").select("userID")
+    .eq('tableID', tableID)
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: adding user to the list
+app.post("/addUser/:curList", async (req, res) => {
+  console.log("adding user");
+  const curList = req.params.curList;
+  const userID = req.body.userID;
+  try {
+    const { data: Lists, error } = await supabase
+    .from("AccessLists").insert([
+      { 'userID': userID, 'tableID': curList },
+    ])
+    .select("*")
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: delete user from the list
+app.delete("/deleteUser/:curList", async (req, res) => {
+  console.log("deleting user");
+  const curList = req.params.curList;
+  const userID = req.body.userID;
+  try {
+    const { error } = await supabase
+    .from("AccessLists").delete()
+    .eq('userID', userID)
+    .eq('tableID', curList)
+    res.send({userID: userID});
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: delete the list
+app.delete("/deleteList/:curList", async (req, res) => {
+  console.log("deleting list");
+  const curList = req.params.curList;
+  try {
+    const { error } = await supabase
+    .from("AccessLists").delete()
+    .eq('tableID', curList)
+    const { error2 } = await supabase
+    .from("ListContains").delete()
+    .eq('Lists', curList)
+    res.send("delete Successful");
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: fetch book Object
+app.get("/getObject/Books/:userList", async (req, res) => {
+  console.log("fetching book object");
+  try {
+    let { data, error } = await supabase
+    .rpc('getBooksObject', {userlist: req.params.userList})
+    res.send(data);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: fetch movie Object
+app.get("/getObject/Movies/:userList", async (req, res) => {
+  console.log("fetching movie object");
+  try {
+    let { data, error } = await supabase
+    .rpc('getMoviesObject', {userlist: req.params.userList})
+    res.send(data);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// SharedList.jsx: fetch video gameObject
+app.get("/getObject/VideoGames/:userList", async (req, res) => {
+  console.log("fetching video game object");
+  try {
+    let { data, error } = await supabase
+    .rpc('getVideoGamesObject', {userlist: req.params.userList})
+    res.send(data);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// testing endpoint
+app.get("/test", async (req, res) => {
+  console.log("testing");
+  try {
+    let { data: Lists, error } = await supabase
+    .from("Books").select('*')
+    res.send(Lists);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+>>>>>>> main
 // test to see if the connection is working
 app.listen(3002, () => {
   console.log('App is running')

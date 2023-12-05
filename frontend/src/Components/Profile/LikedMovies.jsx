@@ -6,6 +6,7 @@ import filledBookmark from './bookmarkfill.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 
 import { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { supabase } from '../../database';
 
 function LikedMovies() {
@@ -54,6 +55,40 @@ function LikedMovies() {
 			"Content-type": "application/json; charset=UTF-8"
 				}
 			})
+=======
+
+function LikedMovies() {
+
+    const [movies, setMovies] = useState([]);
+    
+    useEffect(() => {
+
+        var url = "http://localhost:3002/get/1/movies/getArray/-1";
+
+        fetch(url)
+            .then((res) => {
+                return res.json()
+            })
+            .then((data) => {
+                console.log(data);
+                setMovies(data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+
+
+    function likeMovie(movie, index){
+
+
+      var id = movie.movieID;
+  
+      // replace 1 with userID of person logged on
+      var url = `http://localhost:3002/get/1/movies/delete/${id}`;
+  
+      fetch(url)
+>>>>>>> main
           .then((res) => {
               return res.json()
           })
@@ -80,18 +115,30 @@ function LikedMovies() {
         <ul style={{display: 'inline', whiteSpace: 'nowrap', overflow: 'auto'}}>
           {movies.map((d, i) => (
             <div className='container'>
+<<<<<<< HEAD
             <img src={require('../Grid/MoviesImages/' + d.Movies.id + '.jpg')} className='images'/>
             <div className='overlay'>
             <div className='titleContainer'>{d.Movies.title}</div>
             <div className='categoryContainer'>{d.Movies.director}</div>
             <div className='description'>{d.Movies.description}</div>
+=======
+            <img src={require('../Grid/moviesImages/' + d.movieID + '.jpg')} className='images'/>
+            <div className='overlay'>
+            <div className='titleContainer'>{d.title}</div>
+            <div className='categoryContainer'>{d.director}</div>
+            <div className='description'>{d.description}</div>
+>>>>>>> main
             <div className='buttonContainer'>
               <OverlayTrigger
                 placement="bottom"
                 delay={{ show: 0, hide: 100 }}
                 overlay={renderTooltip}
                 >
+<<<<<<< HEAD
                 <img src={filledBookmark} className='bookmark' onClick={() => removeLikedMovie(d.Movies.id, i)} />
+=======
+                <img src={filledBookmark} className='bookmark' onClick={() => likeMovie(d, i)} />
+>>>>>>> main
               </OverlayTrigger>
             </div>
             </div>
