@@ -25,7 +25,7 @@ function Grid(list) {
 	const [pageNumber, setPageNumber] = useState(1);
 
 	// change 7 to be the number of pages required to display each page
-	var pageNumbers = [...Array(7).keys()].map(foo => foo + 1)
+	var pageNumbers = [...Array(9).keys()].map(foo => foo + 1)
 	
 
     useEffect(() => {
@@ -227,17 +227,14 @@ function Grid(list) {
 		/>
 		<div style={{alignItems: 'center', width: '100%'}}>
 			<Pagination bg="dark" data-bs-theme="dark">
-				{/* <Pagination.First /> */}
-				<Pagination.Prev />
+				<Pagination.Prev onClick={() => getBooks(pageNumber - 1)} />
 				{pageNumbers.map((number, index) => (
 					<Pagination.Item key={number} active={number == pageNumber} onClick={() => getBooks(number)}>{number}</Pagination.Item>
 				))}
-				<Pagination.Next />
-				{/* <Pagination.Last /> */}
+				<Pagination.Next onClick={() => getBooks(pageNumber + 1)} />
 			</Pagination>
 		</div>
       </>
-
 	  
       );
 }
