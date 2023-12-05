@@ -1,5 +1,5 @@
 .container {
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 .gridContainer {
@@ -18,7 +18,6 @@
     margin-bottom: 4rem;
     display: inline;
     position: absolute;
-
 }
 
 .modalGenre {
@@ -36,4 +35,44 @@
 .modal-header {
     justify-content: center;
     text-align: center;
+    border-bottom: none;
 }
+
+.modal-body {
+    overflow: auto;
+    border-top: none;
+    background-color: black;
+}
+
+.modal-footer {
+    background-color: black;
+    border-top: none;
+    padding-top: 1rem;
+}
+
+.modalImage {
+    width: 200px;
+    height: 300px;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+.modalBookmark {
+    height: 2.5rem;
+
+}
+
+/* .modalBookmark:hover {
+    background-size: 1.3rem 2rem;
+    display: inline-block;
+    cursor: pointer;
+} */
+
+.bookmark {
+    position: absolute;
+    width: 1.3rem;
+    right: 1.3rem;
+    bottom: 1.3rem;
+    cursor: pointer;
+}
+
