@@ -10,6 +10,7 @@ import Movies from './Pages/Movies';
 import Books from './Pages/Books';
 import VideoGames from './Pages/VideoGames';
 import SearchResults from './Pages/SearchResults';
+import OtherUser from './Pages/OtherUser';
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/searchresults" element={<SearchResults />} />
+                <Route path="/profile/:viewedUserId" element={<OtherUser />} />
 
             </Routes>
         </>

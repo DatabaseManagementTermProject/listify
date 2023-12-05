@@ -3,9 +3,6 @@
     padding-top: 0%;
 }
 
-/* .scrollContainer {
-} */
-
 .scrollContainer::-webkit-scrollbar{
     display: none;
 }
@@ -62,7 +59,6 @@
     font-family:Arial, Helvetica, sans-serif;
     display: -webkit-box; 
     -webkit-box-orient: vertical; 
-    /* The amount of lines to show before ellipsis */
     -webkit-line-clamp: 8; 
     overflow: hidden; 
     text-overflow: ellipsis; 
@@ -85,7 +81,6 @@
 
     display: -webkit-box; 
     -webkit-box-orient: vertical; 
-    /* The amount of lines to show before ellipsis */
     -webkit-line-clamp: 2; 
     overflow: hidden; 
     text-overflow: ellipsis; 

@@ -1,74 +1,76 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../database';
-import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import "./likedItems.css";
-import bookmark from './bookmark.png'
-import filledBookmark from './bookmarkfill.png'
+import HorizontalGrid from '../HorizontalGrid/HorizontalGrid';
 
-function SharedLikedItems({ loggedInUserID, viewedUserID, contentType }) {
+function SharedLikedItems({ viewedUserId, loggedInUserId, contentType }) {
     const [commonLikedItems, setCommonLikedItems] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         async function fetchCommonLikedItems() {
             try {
+                let data, error;
 
-                // trying to perform a natural join with the content table (based on the content type)
-                // writing this is hurting my brain
-                // I'll come back to it later
-                const { data: commonLikedItemsData, error: joinError } = await supabase
-                    .from(`liked${contentType}`)
-                    .select(`liked${contentType}.*, ${contentType}.*`)
-                    .eq(`liked${contentType}.userID`, loggedInUserID)
-                    .eq(`liked${contentType}.userID`, viewedUserID);
-
-                // throws the error if the join doesn't work
-                if (joinError) {
-                    throw joinError;
+                switch (contentType) {
+                    case 'Books':
+                        ({ data, error } = await supabase.rpc('get_shared_liked_books', {
+                            logged_in_user_id: loggedInUserId,
+                            viewed_user_id: viewedUserId,
+                        }));
+                        break;
+                    case 'Movies':
+                        ({ data, error } = await supabase.rpc('get_shared_liked_movies', {
+                            logged_in_user_id: loggedInUserId,
+                            viewed_user_id: viewedUserId,
+                        }));
+                        break;
+                    case 'VideoGames':
+                        ({ data, error } = await supabase.rpc('get_shared_liked_videogames', {
+                            logged_in_user_id: loggedInUserId,
+                            viewed_user_id: viewedUserId,
+                        }));
+                        break;
+                    default:
+                        throw new Error(`Unsupported content type: ${contentType}`);
                 }
 
-                setCommonLikedItems(commonLikedItemsData);
+                if (error) {
+                    console.error('Error fetching data:', error);
+                    setError(error);
+                    return;
+                }
+
+                setCommonLikedItems(data);
+                console.log("Fetched data:", data);
             } catch (err) {
+                console.error('Error:', err);
                 setError(err);
             }
         }
-
+    
         fetchCommonLikedItems();
-    }, [loggedInUserID, viewedUserID, contentType]);
-
-    const renderTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props}>
-            Remove
-        </Tooltip>
-    );
-
+    }, [viewedUserId, loggedInUserId, contentType]);
+    
     if (error) {
-        throw error;
+        return <div>Error loading data</div>;
+    }
+
+    if (commonLikedItems.length === 0) {
+        return <div>No shared liked {contentType} found.</div>;
     }
 
     return (
-        <div style={{ overflowX: 'scroll' }} className="scrollContainer">
-            <ul style={{ display: 'inline', whiteSpace: 'nowrap', overflow: 'auto' }}>
-                {commonLikedItems.map((item, index) => (
-                    <div key={index} className="container">
-                        <img src={require(`../Grid/${contentType}Images/${item[contentType].id}.jpg`)} className="images" />
-                        <div className="overlay">
-                            <div className="titleContainer">{item[contentType].title}</div>
-                            <div className="categoryContainer">{item[contentType].author}</div>
-                            <div className="description">{item[contentType].description}</div>
-                            <div className="buttonContainer">
-                                <OverlayTrigger placement="bottom" delay={{ show: 0, hide: 100 }} overlay={renderTooltip}>
-                                    <img
-                                        src={liked ? filledBookmark : bookmark}
-                                        className="bookmark"
-                                    />
-                                </OverlayTrigger>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </ul>
-        </div>
+        <>
+            <div style={{ overflowX: 'scroll' }} className="scrollContainer">
+                {/* Call the HorizontalGrid component and pass the props */}
+                <HorizontalGrid
+                    gridItems={commonLikedItems} // Pass your commonLikedItems array
+                    listName={contentType} // Pass the content type as the listName
+                    gridTitle={`Mutual ${contentType}`} // Set the grid title
+                />
+            </div>
+        </>
     );
 }
 
