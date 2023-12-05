@@ -12,12 +12,6 @@ import Tooltip from 'react-bootstrap/Tooltip';
 // removalHandler: this must be passed if you have a list where it makes sense for something to be removed. this is called when the bookmark image is clicked
 function HorizontalGrid({gridItems, listName, gridTitle, removalHandler}) {
 
-	const renderTooltip = (props) => (
-		<Tooltip id="button-tooltip" {...props}>
-		  Remove
-		</Tooltip>
-	);
-
     return (
         <>
             <h3 className="subheading">My {gridTitle}</h3>
@@ -30,15 +24,6 @@ function HorizontalGrid({gridItems, listName, gridTitle, removalHandler}) {
                             <div className='titleContainer'>{d.title}</div>
                             <div className='categoryContainer'>{d.genre}</div>
                             <div className='description'>{d.description}</div>
-                                <div className='buttonContainer'>
-                                    <OverlayTrigger
-                                    placement="bottom"
-                                    delay={{ show: 0, hide: 100 }}
-                                    overlay={renderTooltip}
-                                    >
-                                    <img src={filledBookmark} className='bookmark' onClick={() => removalHandler(d.id, i, listName)} /> 
-                                    </OverlayTrigger>
-                                </div>
                         </div>
                     </div> 
                 ))}

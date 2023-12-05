@@ -60,17 +60,9 @@
     display: -webkit-box; 
     -webkit-box-orient: vertical; 
     /* The amount of lines to show before ellipsis */
-    -webkit-line-clamp: 8; 
+    -webkit-line-clamp: 10; 
     overflow: hidden; 
     text-overflow: ellipsis; 
-}
-
-.bookmark {
-    width: 8%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    cursor: pointer;
 }
 
 .titleContainer {
