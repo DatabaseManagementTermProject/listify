@@ -7,7 +7,6 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { useState, useEffect } from 'react';
 import { supabase } from '../../database';
 
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 
