@@ -35,3 +35,9 @@ margin: 5px;
 .userName {
     color: white;
 }
+
+.searchResultTitle {
+    margin: 3%;
+    font-size: 30px;
+    align-items: left;
+}
