@@ -6,7 +6,7 @@ import emptyBookmark from './Images/bookmark.png'
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useState, useEffect } from 'react';
 import { supabase } from '../../database';
-
+import Pagination from 'react-bootstrap/Pagination';
 import Modal from 'react-bootstrap/Modal';
 
 
@@ -22,10 +22,26 @@ function Grid(list) {
 	const [modalShow, setModalShow] = useState(false);
 	const [bookmarkState, setBookmarkState] = useState(false);
 	const [UID, setUID] = useState();
+	const [pageNumber, setPageNumber] = useState(1);
 
+	// change 7 to be the number of pages required to display each page
+	var pageNumbers = [...Array(7).keys()].map(foo => foo + 1)
+	
 
     useEffect(() => {
 
+		getBooks();
+
+    }, []);
+
+	const getBooks = (pageNumberSelected) => {
+
+		if (pageNumbers.includes(pageNumberSelected)){
+			setPageNumber(pageNumberSelected);
+		} else {
+			pageNumberSelected = 1;
+		}
+		
 		// calls our backend to retrieve a full list of items and list of liked items within the current user's relevant liked list (to fill bookmark icons)
 		supabase.auth.getUser().then((data) => {
 					
@@ -37,7 +53,8 @@ function Grid(list) {
 
         Promise.all(
           [
-            fetch(`http://localhost:3002/${list.list}`),
+			// pass the pagination number
+            fetch(`http://localhost:3002/${list.list}/${pageNumberSelected}`),
             fetch(`http://localhost:3002/getLiked${list.list}/${userId}`)
           ]
         ).then(([resItem, resLikes]) => {
@@ -52,8 +69,7 @@ function Grid(list) {
         })
 
       })
-
-    }, []);
+	}
 
 
 	// TODO: This may not be useful anymore
@@ -205,11 +221,24 @@ function Grid(list) {
           </ul>
           </div>
 
-		  <MyVerticallyCenteredModal
-			show={modalShow}
-			onHide={() => setModalShow(false)}
-			/>
+		<MyVerticallyCenteredModal
+		show={modalShow}
+		onHide={() => setModalShow(false)}
+		/>
+		<div style={{alignItems: 'center', width: '100%'}}>
+			<Pagination bg="dark" data-bs-theme="dark">
+				{/* <Pagination.First /> */}
+				<Pagination.Prev />
+				{pageNumbers.map((number, index) => (
+					<Pagination.Item key={number} active={number == pageNumber} onClick={() => getBooks(number)}>{number}</Pagination.Item>
+				))}
+				<Pagination.Next />
+				{/* <Pagination.Last /> */}
+			</Pagination>
+		</div>
       </>
+
+	  
       );
 }
 
