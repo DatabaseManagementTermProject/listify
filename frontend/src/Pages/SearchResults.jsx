@@ -126,7 +126,7 @@ const SearchResults = () => {
             <img src={d.coverImg} className='images'/>
             <div className='overlay' onClick={() => populateModal(d)}>
               <div className='titleContainer'>{d.title}</div>
-              <div className='categoryContainer'>{d.genre}</div>
+              <div className='categoryContainer'>{d.author}</div>
               <div className='description'>{d.description}</div>
               <div className='buttonContainer'>
               </div>
@@ -237,7 +237,7 @@ const SearchResults = () => {
   return (
     <div>
     <NavBar />
-    <h1>Search Results</h1>
+    <h1 className="searchResultTitle">Search Results</h1>
     {mediaType === 'users' ? (
       <div>
         {info.map((d, i) => renderContent(d, i))}
