@@ -76,7 +76,8 @@ const SharedList = () => {
   // fetch the initial information from the initial list
   useEffect(() => {
     fetchCurListInformation(lists[0]);
-  }, [lists]);
+  }, // eslint-disable-next-line 
+    [lists]);
 
   // function for changing the likes when the list changes
   function change() {
@@ -139,21 +140,18 @@ const SharedList = () => {
         setBooksLists([...booksLists, data[0].id]);
         fetchBooksObjects(curList);
       }
-      else if (data[0].category === "movies") {
-        fetchMoviesObjects(curList);
+      else if (data[0].category === "Movies") {
         setMovieLists([...movieLists, data[0].id]); 
+        fetchMoviesObjects(curList);
       }
       else { 
-        fetchVideoGamesObjects(curList);
         setVideoGameLists([...videoGameLists, data[0].id]);
+        fetchVideoGamesObjects(curList);
       }
     });
   }
 
   function removeLikedItem(itemID, index, listName) {
-    console.log("itemID", itemID)
-    console.log("index", index)
-    console.log("listName", listName)
     let curList = document.getElementById("access").value;
     fetch(`http://localhost:3002/deleteFromList/${curList}`,
     { method: "DELETE",
@@ -200,7 +198,6 @@ const SharedList = () => {
     })
     .then((res) => { return res.json() })
     .then((data) => {
-      console.log(data);
       setSharedppl([...sharedppl, data[0].userID]);
     });
   }
