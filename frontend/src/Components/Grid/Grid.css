@@ -76,3 +76,7 @@
     cursor: pointer;
 }
 
+.pagination {
+    padding-bottom: 5rem;
+    justify-content: center;
+}

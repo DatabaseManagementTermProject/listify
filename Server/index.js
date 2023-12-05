@@ -100,14 +100,16 @@ app.get('/home/search/:letters', async (req, res) => {
 
 // ------------- get all
 
-app.get('/Books', async (req, res) => {
+app.get('/Books/:pageNumber', async (req, res) => {
+
+  const pageNumber = req.params.pageNumber;
 
   // already switched to supabase
     try {
       let { data: Books, error } = await supabase
       .from('Books')
       .select('*')
-      .range(0, 31)
+      .range((pageNumber - 1) * 23, pageNumber * 23)
       .order('id', { ascending: true })
       // console.log(Books);
       res.send(Books);
@@ -115,14 +117,16 @@ app.get('/Books', async (req, res) => {
       // console.log(err)
     }
 })
-app.get('/Movies', async (req, res) => {
+app.get('/Movies/:pageNumber', async (req, res) => {
+
+  const pageNumber = req.params.pageNumber;
 
   // already switched to supabase
     try {
       let { data: Movies, error } = await supabase
       .from('Movies')
       .select('*')
-      .range(0, 31)
+      .range((pageNumber - 1) * 23, pageNumber * 23)
       .order('id', { ascending: true })
 
       // console.log(Movies);
@@ -131,15 +135,16 @@ app.get('/Movies', async (req, res) => {
       // console.log(err)
     }
 })
-app.get('/VideoGames', async (req, res) => {
+app.get('/VideoGames/:pageNumber', async (req, res) => {
 
+  const pageNumber = req.params.pageNumber;
 
   // already switched to supabase
     try {
       let { data: VideoGames, error } = await supabase
       .from('VideoGames')
       .select('*')
-      .range(0, 31)
+      .range((pageNumber - 1) * 23, pageNumber * 23)
       .order('id', { ascending: true })
       
       // console.log(VideoGames);
