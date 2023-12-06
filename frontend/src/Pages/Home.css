@@ -1,0 +1,16 @@
+.welcome-message {
+    color: #5b14ea;
+    font-size: 24px;
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight:bold;
+    transition: color 0.3s; 
+    font-size: 100px;
+  }
+
+  .welcome-message:hover {
+    color: #580ba1
+  }
