@@ -10,20 +10,6 @@ import cors from 'cors'
 
 dotenv.config( { path : '.env' } );
 
-const connection = await mysql.createConnection(process.env.DATABASE_URL)
-
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err);
-    return;
-  }
-  // console.log('Connected to PlanetScale!');
-});
-
-// ------------------- Set up express server
-
-const app = express()
-
 // Needed for express POST requests to parse a JSON req.body
 app.use(express.json());
 
