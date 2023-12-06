@@ -64,13 +64,13 @@
     text-overflow: ellipsis; 
 }
 
-.bookmark {
+/* .bookmark {
     width: 8%;
     position: absolute;
     bottom: 0;
     left: 0;
     cursor: pointer;
-}
+} */
 
 .titleContainer {
     text-align: center;

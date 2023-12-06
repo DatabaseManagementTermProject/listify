@@ -141,11 +141,14 @@ const SearchResults = () => {
     }
   };
 
-  useEffect(() => {
-    setBookmarkState(likes.includes(selectedItem?.id));
-  }, [likes, selectedItem, setBookmarkState]);
+  // useEffect(() => {
+  //   setBookmarkState(likes.includes(selectedItem?.id));
+  // }, [likes, selectedItem, setBookmarkState]);
 
   const bookmark = () => {
+
+    setBookmarkState(likes.includes(selectedItem?.id));
+
     return (
       <>
         <OverlayTrigger
