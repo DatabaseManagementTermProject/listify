@@ -63,11 +63,10 @@ function SharedLikedItems({ viewedUserId, loggedInUserId, contentType }) {
     return (
         <>
             <div style={{ overflowX: 'scroll' }} className="scrollContainer">
-                {/* Call the HorizontalGrid component and pass the props */}
                 <HorizontalGrid
-                    gridItems={commonLikedItems} // Pass your commonLikedItems array
-                    listName={contentType} // Pass the content type as the listName
-                    gridTitle={`Mutual ${contentType}`} // Set the grid title
+                    gridItems={commonLikedItems}
+                    listName={contentType}
+                    gridTitle={`Mutual ${contentType}`}
                 />
             </div>
         </>

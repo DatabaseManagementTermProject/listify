@@ -108,6 +108,7 @@ app.get('/Books/:pageNumber', async (req, res) => {
       // console.log(err)
     }
 })
+
 app.get('/Movies/:pageNumber', async (req, res) => {
 
   const pageNumber = req.params.pageNumber;
@@ -432,70 +433,6 @@ app.get('/get/:userID/:library/:action/:itemID', async (req,res) => {
   }
 })
 
-<<<<<<< HEAD
-=======
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-
-  connection.query("SELECT * FROM users WHERE email = ?", [email], (err, results) => {
-    if (err) {
-        console.error("Error finding user:", err);
-        return res.status(500).json({ message: "Server error" });
-    }
-
-    if (results.length === 0) {
-        return res.status(404).json({ message: "User not found" });
-    }
-
-    const user = results[0];
-
-    bcrypt.compare(password, user.password, (err, passwordMatch) => {
-      if (err) {
-          console.error("Password comparison error:", err);
-          return res.status(500).json({ message: "Server error" });
-      }
-
-      if (passwordMatch) {
-          // if passwords match, a token which keeps the user logged in for 3 hours (jwt = jason web token)
-          const token = jwt.sign({ email: user.email, id: user.id }, "your-secret-key", { expiresIn: "3h" });
-          // http response 200 indicates success
-          return res.status(200).json({ token });
-      } else {
-          // http response 401 indicates user is unauthorized
-          return res.status(401).json({ message: "Username or Password Invalid" });
-      }
-    });
-  });
-});
-
-// user registration (work in progress)
-// added AUTO_INCREMENT constraint to userID so no need to modify that value
-app.post('/register', (req, res) => {
-  const { userName, email, password } = req.body;
-
-// for user input, hashes user password before storing into database
-bcrypt.hash(password, 10, (err, hashedPassword) => {
-  if (err) {
-    console.error('Error hashing password: ', err);
-    res.status(500).json({ error: 'Registration Error' });
-  }
-  else {
-  const query = 'INSERT INTO users (userName, email, password) VALUES (?, ?, ?)';
-  // inserts the hashed password into the database
-  connection.query(query, [userName, email, hashedPassword], (err) => {
-    if (err) {
-      console.error('Error registering account: ', err);
-      // http 500 server error response
-      res.status(500).json({ error: 'Registration failed' });
-    } else {
-      // http response 201 created (the request succeed, and new resource created)
-      res.status(201).json({ message: 'Account made' });
-    }
-  });
-  }
-}); });
-
-
 // SharedList.jsx: get the username base on UserID
 app.get('/username/:userID', async (req, res) => {
   console.log("fetching username");
@@ -699,7 +636,6 @@ app.get("/test", async (req, res) => {
   }
 });
 
->>>>>>> main
 // test to see if the connection is working
 app.listen(3002, () => {
   console.log('App is running')

@@ -27,11 +27,8 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/SharedList" element={<SharedList />} />
                 <Route path="/searchresults" element={<SearchResults />} />
-<<<<<<< HEAD
                 <Route path="/profile/:viewedUserId" element={<OtherUser />} />
 
-=======
->>>>>>> main
             </Routes>
         </>
     )

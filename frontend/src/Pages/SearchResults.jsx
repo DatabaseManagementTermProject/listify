@@ -31,35 +31,38 @@ const SearchResults = () => {
 
 
   useEffect(() => {
-
-
-		supabase.auth.getUser().then((data) => {
-					
-			let userId = data.data.user.id;
-			setUID(userId);
-			return userId;
-
-		}).then((userId) => {
-
-        Promise.all(
-          [
-            fetch(`http://localhost:3002/search/${mediaType}/${searchTerm}`),
-            fetch(`http://localhost:3002/getLiked${mediaType}/${userId}`)
-          ]
-        ).then(([resResults, resLikes]) => {
-           return Promise.all([resResults.json(), resLikes.json()])
-        }).then(([dataResults, dataLikes]) => {
-			setInfo(dataResults);
-		 	 var likesArray = [];
-          	dataLikes.forEach(item => {
-				likesArray.push(item.itemId)
-		  	})
-		  	setLikes(likesArray);
-        }).catch(error => console.error('Error fetching data:', error));
-
-      })
-
-  }, [searchParams]);
+    supabase.auth.getUser().then((data) => {
+      let userId = data.data.user.id;
+      setUID(userId);
+      return userId;
+    }).then((userId) => {
+      if (mediaType !== 'users') {
+        Promise.all([
+          fetch(`http://localhost:3002/search/${mediaType}/${searchTerm}`),
+          fetch(`http://localhost:3002/getLiked${mediaType}/${userId}`)
+        ])
+        .then(([resResults, resLikes]) => {
+          return Promise.all([resResults.json(), resLikes.json()])
+        })
+        .then(([dataResults, dataLikes]) => {
+          setInfo(dataResults);
+          var likesArray = [];
+          dataLikes.forEach(item => {
+            likesArray.push(item.itemId)
+          })
+          setLikes(likesArray);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+      } else {
+        fetch(`http://localhost:3002/search/${mediaType}/${searchTerm}`)
+        .then(resResults => resResults.json())
+        .then(dataResults => {
+          setInfo(dataResults);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+      }
+    })
+  }, [searchParams, mediaType, searchTerm]);
 
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
@@ -67,14 +70,7 @@ const SearchResults = () => {
     </Tooltip>
     );
 
-  // to get the appropraite capitalization for the media type when using it for the endpoint
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-  }
-
   function addLikedItem(){
-    // capitalize first letter of media type
-    const capitalizedMediaType = capitalizeFirstLetter(mediaType);
 	setBookmarkState(!bookmarkState)
 	setLikes([...likes, selectedItem?.id]);
 
@@ -145,27 +141,25 @@ const SearchResults = () => {
     }
   };
 
-	const bookmark = () => {
+  useEffect(() => {
+    setBookmarkState(likes.includes(selectedItem?.id));
+  }, [likes, selectedItem, setBookmarkState]);
 
-		if (likes.includes(selectedItem?.id)){
-			setBookmarkState(true);
-		} else {
-			setBookmarkState(false);
-		}
-
-		return (
-			<>
-				<OverlayTrigger
-				placement="bottom"
-				delay={{ show: 0, hide: 100 }}
-				overlay={renderTooltip}
-				>
-					<img src={bookmarkState ? filledBookmark : emptyBookmark} className='bookmark' alt="" onClick={bookmarkState ? removeLikedItem : addLikedItem}/>
-				</OverlayTrigger>
-			</>
-
-		)
-	}
+  const bookmark = () => {
+    return (
+      <>
+        <OverlayTrigger
+          placement="bottom"
+          delay={{ show: 0, hide: 100 }}
+          overlay={renderTooltip}
+        >
+          <img 
+            src={bookmarkState ? filledBookmark : emptyBookmark} className='bookmark' alt="" onClick={bookmarkState ? removeLikedItem : addLikedItem}
+          />
+        </OverlayTrigger>
+      </>
+    )
+  };
 
 	const populateModal = (item) => {
 		setSelectedItem(item);

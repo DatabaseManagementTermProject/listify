@@ -10,7 +10,7 @@ import "./OtherUser.css";
 const OtherUserProfile = () => {
     const { viewedUserId } = useParams();
     const [loggedInUserId, setLoggedInUserId] = useState(null);
-    // allows for all the data to be loaded before rendering
+    // allows for all the data to be retrieved before rendering
     const [loading, setLoading] = useState(true);
     const [viewedUsername, setViewedUsername] = useState("");
 
@@ -50,7 +50,7 @@ const OtherUserProfile = () => {
                     throw error;
                 }
 
-                // it only works when structured like this, interestingly
+                // it only works when structured like this
                 if (data && data.length > 0) {
                     setViewedUsername(data[0].username);
                 }
