@@ -11,6 +11,7 @@ import cors from 'cors'
 dotenv.config( { path : '.env' } );
 
 // Needed for express POST requests to parse a JSON req.body
+const app = express();
 app.use(express.json());
 
 app.options(cors());
