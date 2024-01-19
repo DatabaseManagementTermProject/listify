@@ -1,4 +1,4 @@
-# ImBoredDotCom
+# Listify
 
 A database-driven web application that allows users to explore, save, and share interests in books, movies, and videogames.
 
