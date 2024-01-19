@@ -1,6 +1,6 @@
 # ImBoredDotCom
 
-A content aggregator for different media types (movies, TV shows, videogames, books, etc).
+A database-driven web application that allows users to explore, save, and share interests in books, movies, and videogames.
 
 ## Table of Contents
 
@@ -17,4 +17,4 @@ This is a database management course term project which is meant to be a databas
 - CSS
 - React.js
 - Node.js
-- MySQL
+- Supabase
